@@ -1,7 +1,10 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import Image from 'next/image';
+import Script from 'next/script';
 import { products, Product } from '../data/products';
+import { getShopifyCheckoutUrl } from '../utils/shopify';
 
 interface CartItem {
   product: Product;
@@ -18,13 +21,14 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState<'shop' | 'checkout' | 'success'>('shop');
+  const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'shopify' | 'whatsapp'>('paystack');
+  const [mounted, setMounted] = useState(false);
 
   // Modal customization selection
   const [chosenSize, setChosenSize] = useState<string>('');
   const [chosenColor, setChosenColor] = useState<string>('');
 
-  // Cinematic and Dossier states
-  const [isCinematicOpen, setIsCinematicOpen] = useState(false);
+  // Dossier states
   const [activeDossierTab, setActiveDossierTab] = useState<'info' | 'fit' | 'specs'>('info');
   
   // Fit Finder Calculator state
@@ -41,14 +45,36 @@ export default function Home() {
     notes: ''
   });
 
+  // Load cart on client mount
+  useEffect(() => {
+    setMounted(true);
+    const savedCart = localStorage.getItem('ynks_cart');
+    if (savedCart) {
+      try {
+        setCart(JSON.parse(savedCart));
+      } catch (e) {
+        console.error('Failed to parse cart', e);
+      }
+    }
+  }, []);
+
+  // Sync cart changes to local storage
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('ynks_cart', JSON.stringify(cart));
+    }
+  }, [cart, mounted]);
+
   // Calculate cart metrics
   const cartItemCount = useMemo(() => {
+    if (!mounted) return 0;
     return cart.reduce((acc, item) => acc + item.quantity, 0);
-  }, [cart]);
+  }, [cart, mounted]);
 
   const cartSubtotal = useMemo(() => {
+    if (!mounted) return 0;
     return cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
-  }, [cart]);
+  }, [cart, mounted]);
 
   // Filter products based on search and category
   const filteredProducts = useMemo(() => {
@@ -124,7 +150,43 @@ export default function Home() {
       alert('Please fill out all required shipping fields.');
       return;
     }
-    setCheckoutStep('success');
+
+    if (paymentMethod === 'whatsapp') {
+      setCheckoutStep('success');
+      const waLink = getWhatsAppLink();
+      window.open(waLink, '_blank');
+    } else if (paymentMethod === 'shopify') {
+      const shopifyItems = cart.map(item => ({
+        variantId: item.product.shopifyVariantId,
+        quantity: item.quantity
+      }));
+      const checkoutUrl = getShopifyCheckoutUrl(shopifyItems);
+      window.open(checkoutUrl, '_blank');
+      setCheckoutStep('success');
+    } else {
+      // Paystack Checkout Flow
+      const PaystackPop = (window as any).PaystackPop;
+      if (!PaystackPop) {
+        alert('Payment gateway script loading. Please try again in a moment.');
+        return;
+      }
+      
+      const handler = PaystackPop.setup({
+        key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || 'pk_test_e3df911961bf386c954546a188f6c561b32f2fba', // Configurable public key with sandbox fallback
+        email: checkoutForm.email || 'customer@yeenksluxe.com',
+        amount: cartSubtotal * 100, // in kobo
+        currency: 'NGN',
+        ref: 'YNKS-' + Math.floor(Math.random() * 1000000000 + 1),
+        callback: function(response: any){
+          alert('Payment Successful! Reference: ' + response.reference);
+          setCheckoutStep('success');
+        },
+        onClose: function(){
+          alert('Transaction cancelled.');
+        }
+      });
+      handler.openIframe();
+    }
   };
 
   // Format currency
@@ -204,60 +266,15 @@ export default function Home() {
             </button>
           </div>
         </div>
-      </nav>
-
-      <div className="main-content">
+      </nav>      <div className="main-content">
         {/* VIEW 1: SHOP / STOREFRONT */}
         {checkoutStep === 'shop' && (
           <>
             {/* HERO COMPOSITION — Immersive Full-Screen Campaign Visual */}
             <header className="hero">
               <div className="hero-bg-media">
-                <img src="/images/hero_campaign.png" alt="YEENKSLUXE SS26 Campaign" className="hero-bg-image" />
+                <Image src="/images/snaptik_7625367276497292565_0_v2.jpeg" alt="YEENKSLUXE SS26 Campaign" fill priority className="hero-bg-image object-cover" sizes="100vw" />
                 <div className="hero-vignette"></div>
-              </div>
-
-              {/* Shoppable Hotspots */}
-              <div className="hero-hotspots-layer">
-                {/* Hotspot 1: Campaign Tee */}
-                <div className="hero-hotspot" style={{ top: '42%', left: '48%' }}>
-                  <div className="hotspot-pin"></div>
-                  <div className="hotspot-tooltip">
-                    <span className="hotspot-tooltip-cat">Shirts</span>
-                    <span className="hotspot-tooltip-name">Editorial Campaign Tee</span>
-                    <span className="hotspot-tooltip-price">₦95,000</span>
-                    <button 
-                      className="hotspot-tooltip-btn" 
-                      onClick={(e) => { 
-                        e.stopPropagation(); 
-                        const prod = products.find(p => p.id === 'shirt-3'); 
-                        if (prod) openQuickView(prod); 
-                      }}
-                    >
-                      QUICK VIEW
-                    </button>
-                  </div>
-                </div>
-
-                {/* Hotspot 2: Chrome Sneakers */}
-                <div className="hero-hotspot" style={{ top: '78%', left: '47%' }}>
-                  <div className="hotspot-pin"></div>
-                  <div className="hotspot-tooltip">
-                    <span className="hotspot-tooltip-cat">Shoes</span>
-                    <span className="hotspot-tooltip-name">Chrome Luxury Sneakers</span>
-                    <span className="hotspot-tooltip-price">₦155,000</span>
-                    <button 
-                      className="hotspot-tooltip-btn" 
-                      onClick={(e) => { 
-                        e.stopPropagation(); 
-                        const prod = products.find(p => p.id === 'shoe-1'); 
-                        if (prod) openQuickView(prod); 
-                      }}
-                    >
-                      QUICK VIEW
-                    </button>
-                  </div>
-                </div>
               </div>
 
               {/* Overlay Content */}
@@ -271,12 +288,6 @@ export default function Home() {
                   <div className="hero-cta-group">
                     <button className="hero-cta-btn" onClick={scrollToShop}>
                       SHOP THE LOOKS
-                    </button>
-                    <button className="hero-reel-btn" onClick={() => setIsCinematicOpen(true)}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px' }}>
-                        <path d="M8 5v14l11-7z"/>
-                      </svg>
-                      WATCH REEL
                     </button>
                   </div>
                 </div>
@@ -309,8 +320,8 @@ export default function Home() {
             <section className="featured-section">
               <div className="container">
                 <div className="featured-inner">
-                  <div className="featured-image">
-                    <img src="/images/sneakers_spotlight.png" alt="Featured Chrome Luxury Sneakers" />
+                  <div className="featured-image" style={{ position: 'relative', width: '100%', height: '480px' }}>
+                    <Image src="/images/yeenksluxe_shoe.jpg" alt="Featured Chrome Luxury Sneakers" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
                   </div>
                   <div className="featured-info">
                     <span className="featured-badge">NEW SEASON HERO</span>
@@ -404,17 +415,18 @@ export default function Home() {
                           </div>
                         )}
                         <div className="product-card" onClick={() => openQuickView(product)}>
-                          <div className="card-img-wrapper">
+                          <div className="card-img-wrapper" style={{ position: 'relative' }}>
                             {product.badge && (
                               <span className={`product-badge ${product.badge === 'Sale' ? 'badge-sale' : ''}`}>
                                 {product.badge}
                               </span>
                             )}
-                            <img 
+                            <Image 
                               src={product.image} 
                               alt={product.name} 
-                              className="card-img" 
-                              loading="lazy"
+                              fill
+                              className="card-img object-cover" 
+                              sizes="(max-width: 480px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             />
                             <div className="card-overlay">
                               <button className="quick-view-btn" onClick={(e) => { e.stopPropagation(); openQuickView(product); }}>
@@ -444,8 +456,8 @@ export default function Home() {
             {/* EDITORIAL LIFESTYLE PANELS */}
             <section className="editorial-section">
               <div className="editorial-grid">
-                <div className="editorial-panel" onClick={() => { setSelectedCategory('Shirts'); scrollToShop(); }}>
-                  <img src="/images/WhatsApp Image 2026-05-12 at 11.02.55 AM.jpeg" alt="New Arrivals Apparel" />
+                <div className="editorial-panel" style={{ position: 'relative' }} onClick={() => { setSelectedCategory('Shirts'); scrollToShop(); }}>
+                  <Image src="/images/snaptik_7625367276497292565_2_v2.jpeg" alt="New Arrivals Apparel" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
                   <div className="editorial-panel-overlay"></div>
                   <div className="editorial-caption">
                     <h3>NEW STREETWEAR ARRIVALS</h3>
@@ -453,8 +465,8 @@ export default function Home() {
                     <span className="editorial-btn">EXPLORE</span>
                   </div>
                 </div>
-                <div className="editorial-panel" onClick={() => { setSelectedCategory('Shoes'); scrollToShop(); }}>
-                  <img src="/images/WhatsApp Image 2026-05-12 at 10.30.44 AM.jpeg" alt="Footwear Collection" />
+                <div className="editorial-panel" style={{ position: 'relative' }} onClick={() => { setSelectedCategory('Shoes'); scrollToShop(); }}>
+                  <Image src="/images/snaptik_7621552137285192981_1_v2.jpeg" alt="Footwear Collection" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
                   <div className="editorial-panel-overlay"></div>
                   <div className="editorial-caption">
                     <h3>PREMIUM FOOTWEAR</h3>
@@ -470,9 +482,24 @@ export default function Home() {
               <div className="brand-strip-content container">
                 <p className="brand-strip-tagline">PREMIUM STREETWEAR. WORN BY THE BOLD.</p>
                 <div className="brand-strip-socials">
-                  <a href="https://instagram.com/yeenksluxe" target="_blank" rel="noopener noreferrer">INSTAGRAM</a>
-                  <a href="https://twitter.com/yeenksluxe" target="_blank" rel="noopener noreferrer">TWITTER</a>
-                  <a href="https://tiktok.com/@yeenksluxe" target="_blank" rel="noopener noreferrer">TIKTOK</a>
+                  <a href="https://instagram.com/yeenksluxe" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                  </a>
+                  <a href="https://twitter.com/yeenksluxe" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+                      <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                    </svg>
+                  </a>
+                  <a href="https://tiktok.com/@yeenksluxe" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+                    </svg>
+                  </a>
                 </div>
               </div>
             </section>
@@ -506,6 +533,7 @@ export default function Home() {
             </section>
           </>
         )}
+
 
         {/* VIEW 2: CHECKOUT PAGE */}
         {checkoutStep === 'checkout' && (
@@ -588,9 +616,59 @@ export default function Home() {
                       />
                     </div>
 
-                    <div className="form-group-full" style={{ marginTop: '1.5rem' }}>
+                    <div className="form-field form-group-full" style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
+                      <label className="form-label" style={{ display: 'block', marginBottom: '0.75rem' }}>Payment Gateway / Method *</label>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
+                        <div 
+                          onClick={() => setPaymentMethod('paystack')}
+                          style={{
+                            border: `1px solid ${paymentMethod === 'paystack' ? 'var(--accent)' : 'var(--border-color)'}`,
+                            padding: '1rem',
+                            cursor: 'pointer',
+                            background: paymentMethod === 'paystack' ? 'rgba(200, 169, 110, 0.05)' : 'var(--bg-tertiary)',
+                            transition: 'all 0.3s ease',
+                            textAlign: 'center'
+                          }}
+                        >
+                          <div style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em', color: paymentMethod === 'paystack' ? 'white' : 'var(--text-secondary)' }}>NAIRA CHECKOUT</div>
+                          <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--accent)', marginTop: '0.25rem' }}>Paystack (Local)</div>
+                        </div>
+                        <div 
+                          onClick={() => setPaymentMethod('shopify')}
+                          style={{
+                            border: `1px solid ${paymentMethod === 'shopify' ? 'var(--accent)' : 'var(--border-color)'}`,
+                            padding: '1rem',
+                            cursor: 'pointer',
+                            background: paymentMethod === 'shopify' ? 'rgba(200, 169, 110, 0.05)' : 'var(--bg-tertiary)',
+                            transition: 'all 0.3s ease',
+                            textAlign: 'center'
+                          }}
+                        >
+                          <div style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em', color: paymentMethod === 'shopify' ? 'white' : 'var(--text-secondary)' }}>INTL CHECKOUT</div>
+                          <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--accent)', marginTop: '0.25rem' }}>Shopify Checkout</div>
+                        </div>
+                        <div 
+                          onClick={() => setPaymentMethod('whatsapp')}
+                          style={{
+                            border: `1px solid ${paymentMethod === 'whatsapp' ? 'var(--accent)' : 'var(--border-color)'}`,
+                            padding: '1rem',
+                            cursor: 'pointer',
+                            background: paymentMethod === 'whatsapp' ? 'rgba(200, 169, 110, 0.05)' : 'var(--bg-tertiary)',
+                            transition: 'all 0.3s ease',
+                            textAlign: 'center'
+                          }}
+                        >
+                          <div style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em', color: paymentMethod === 'whatsapp' ? 'white' : 'var(--text-secondary)' }}>VIP MANUAL</div>
+                          <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--accent)', marginTop: '0.25rem' }}>WhatsApp Order</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="form-group-full">
                       <button type="submit" className="place-order-btn">
-                        PLACE ORDER ON WHATSAPP
+                        {paymentMethod === 'paystack' && 'PAY SECURELY WITH PAYSTACK'}
+                        {paymentMethod === 'shopify' && 'PROCEED TO SHOPIFY CHECKOUT'}
+                        {paymentMethod === 'whatsapp' && 'PLACE ORDER ON WHATSAPP'}
                       </button>
                       <button 
                         type="button" 
@@ -692,6 +770,98 @@ export default function Home() {
         )}
       </div>
 
+      {/* LOOKBOOK FILMSTRIP */}
+      <section className="lookbook-filmstrip">
+        <div className="filmstrip-header">
+          <span className="section-eyebrow">DIGITAL LOOKBOOK</span>
+          <h2 className="section-title">THE SS26 EDITORIALS</h2>
+        </div>
+        <div className="filmstrip-container">
+          <div className="filmstrip-track">
+            {/* Slide 1 */}
+            <div className="filmstrip-item">
+              <Image src="/images/snaptik_7625367276497292565_0_v2.jpeg" alt="System 01 Campaign" fill className="filmstrip-image" sizes="260px" />
+              <div className="filmstrip-caption">
+                <span className="filmstrip-caption-title">System 01 Campaign</span>
+              </div>
+            </div>
+            {/* Slide 2 */}
+            <div className="filmstrip-item">
+              <Image src="/images/snaptik_7621552137285192981_0_v2.jpeg" alt="Street Editorial" fill className="filmstrip-image" sizes="260px" />
+              <div className="filmstrip-caption">
+                <span className="filmstrip-caption-title">Street Editorial</span>
+              </div>
+            </div>
+            {/* Slide 3 */}
+            <div className="filmstrip-item">
+              <Image src="/images/snaptik_7621552137285192981_1_v2.jpeg" alt="Raw Silhouettes" fill className="filmstrip-image" sizes="260px" />
+              <div className="filmstrip-caption">
+                <span className="filmstrip-caption-title">Raw Silhouettes</span>
+              </div>
+            </div>
+            {/* Slide 4 */}
+            <div className="filmstrip-item">
+              <Image src="/images/snaptik_7621552137285192981_2_v2.jpeg" alt="Chrome Luxury" fill className="filmstrip-image" sizes="260px" />
+              <div className="filmstrip-caption">
+                <span className="filmstrip-caption-title">Chrome Luxury</span>
+              </div>
+            </div>
+            {/* Slide 5 */}
+            <div className="filmstrip-item">
+              <Image src="/images/snaptik_7625367276497292565_1_v2.jpeg" alt="Modern Essentials" fill className="filmstrip-image" sizes="260px" />
+              <div className="filmstrip-caption">
+                <span className="filmstrip-caption-title">Modern Essentials</span>
+              </div>
+            </div>
+            {/* Slide 6 */}
+            <div className="filmstrip-item">
+              <Image src="/images/snaptik_7625367276497292565_2_v2.jpeg" alt="System Edit" fill className="filmstrip-image" sizes="260px" />
+              <div className="filmstrip-caption">
+                <span className="filmstrip-caption-title">System Edit</span>
+              </div>
+            </div>
+
+            {/* Duplicate for seamless infinite scroll */}
+            <div className="filmstrip-item">
+              <Image src="/images/snaptik_7625367276497292565_0_v2.jpeg" alt="System 01 Campaign" fill className="filmstrip-image" sizes="260px" />
+              <div className="filmstrip-caption">
+                <span className="filmstrip-caption-title">System 01 Campaign</span>
+              </div>
+            </div>
+            <div className="filmstrip-item">
+              <Image src="/images/snaptik_7621552137285192981_0_v2.jpeg" alt="Street Editorial" fill className="filmstrip-image" sizes="260px" />
+              <div className="filmstrip-caption">
+                <span className="filmstrip-caption-title">Street Editorial</span>
+              </div>
+            </div>
+            <div className="filmstrip-item">
+              <Image src="/images/snaptik_7621552137285192981_1_v2.jpeg" alt="Raw Silhouettes" fill className="filmstrip-image" sizes="260px" />
+              <div className="filmstrip-caption">
+                <span className="filmstrip-caption-title">Raw Silhouettes</span>
+              </div>
+            </div>
+            <div className="filmstrip-item">
+              <Image src="/images/snaptik_7621552137285192981_2_v2.jpeg" alt="Chrome Luxury" fill className="filmstrip-image" sizes="260px" />
+              <div className="filmstrip-caption">
+                <span className="filmstrip-caption-title">Chrome Luxury</span>
+              </div>
+            </div>
+            <div className="filmstrip-item">
+              <Image src="/images/snaptik_7625367276497292565_1_v2.jpeg" alt="Modern Essentials" fill className="filmstrip-image" sizes="260px" />
+              <div className="filmstrip-caption">
+                <span className="filmstrip-caption-title">Modern Essentials</span>
+              </div>
+            </div>
+            <div className="filmstrip-item">
+              <Image src="/images/snaptik_7625367276497292565_2_v2.jpeg" alt="System Edit" fill className="filmstrip-image" sizes="260px" />
+              <div className="filmstrip-caption">
+                <span className="filmstrip-caption-title">System Edit</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FOOTER */}
       <footer className="footer">
         <div className="container">
@@ -740,9 +910,24 @@ export default function Home() {
           <div className="footer-bottom">
             <p>&copy; {new Date().getFullYear()} YEENKSLUXE. All Rights Reserved.</p>
             <div className="social-links">
-              <a href="https://instagram.com/yeenksluxe" target="_blank" rel="noopener noreferrer" className="social-link">INSTAGRAM</a>
-              <a href="https://twitter.com/yeenksluxe" target="_blank" rel="noopener noreferrer" className="social-link">TWITTER</a>
-              <a href="https://tiktok.com/@yeenksluxe" target="_blank" rel="noopener noreferrer" className="social-link">TIKTOK</a>
+              <a href="https://instagram.com/yeenksluxe" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Instagram">
+                <svg viewBox="0 0 24 24">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <a href="https://twitter.com/yeenksluxe" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Twitter">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+                  <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                </svg>
+              </a>
+              <a href="https://tiktok.com/@yeenksluxe" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="TikTok">
+                <svg viewBox="0 0 24 24">
+                  <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+                </svg>
+              </a>
             </div>
           </div>
           <div className="footer-watermark">
@@ -784,7 +969,9 @@ export default function Home() {
               ) : (
                 cart.map((item, index) => (
                   <div key={index} className="cart-item">
-                    <img src={item.product.image} alt={item.product.name} className="cart-item-img" />
+                    <div style={{ position: 'relative', width: '70px', height: '90px', flexShrink: 0 }}>
+                      <Image src={item.product.image} alt={item.product.name} fill className="cart-item-img object-cover" sizes="70px" />
+                    </div>
                     <div className="cart-item-details">
                       <h4 className="cart-item-name">{item.product.name}</h4>
                       <span className="cart-item-meta">
@@ -854,7 +1041,9 @@ export default function Home() {
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 />
               ) : (
-                <img src={selectedProduct.image} alt={selectedProduct.name} />
+                <div style={{ position: 'relative', width: '100%', height: '440px' }}>
+                  <Image src={selectedProduct.image} alt={selectedProduct.name} fill className="object-contain" sizes="(max-width: 768px) 100vw, 50vw" />
+                </div>
               )}
             </div>
 
@@ -1047,26 +1236,11 @@ export default function Home() {
         </div>
       )}
 
-      {/* CINEMATIC CAMPAIGN REEL MODAL */}
-      {isCinematicOpen && (
-        <div className="cinematic-overlay" onClick={() => setIsCinematicOpen(false)}>
-          <button className="close-cinematic-btn" onClick={() => setIsCinematicOpen(false)} aria-label="Close cinematic reel">
-            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-          <div className="cinematic-video-wrapper" onClick={(e) => e.stopPropagation()}>
-            <video 
-              src="/images/WhatsApp Video 2026-05-12 at 10.35.08 AM.mp4" 
-              autoPlay 
-              loop 
-              controls 
-              playsInline
-            />
-          </div>
-        </div>
-      )}
+      {/* Paystack Inline SDK */}
+      <Script 
+        src="https://js.paystack.co/v1/inline.js" 
+        strategy="lazyOnload" 
+      />
     </div>
   );
 }

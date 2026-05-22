@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Montserrat } from "next/font/google";
+import { Space_Grotesk, Montserrat } from "next/font/google";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
+const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${montserrat.variable}`}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${montserrat.variable}`}>
       <body>{children}</body>
     </html>
   );
