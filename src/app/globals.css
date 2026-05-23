@@ -788,7 +788,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .product-card:hover { z-index: 2; }
 .card-img-wrapper {
-  position: relative; aspect-ratio: 1/1;
+  position: relative; aspect-ratio: 3/4;
   overflow: hidden; background: #070707;
 }
 .card-img {
@@ -1475,33 +1475,43 @@ img { max-width: 100%; height: auto; display: block; }
     object-fit: cover;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.6s ease;
+    transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .upper-display-imgstack img.ud-img-active {
     opacity: 1;
     pointer-events: auto;
 }
-/* Image-only enter animations */
-.upper-display-imgstack img.ud-img-entering-fade {
-    animation: ud-img-fade 0.75s ease forwards;
+
+/* Inactive / Initial state for each transition type */
+.upper-display-imgstack img.ud-trans-zoom {
+    transform: scale(1.08);
 }
-.upper-display-imgstack img.ud-img-entering-slideLeft {
-    animation: ud-img-slideLeft 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
+.upper-display-imgstack img.ud-trans-slideLeft {
+    transform: translateX(40px);
 }
-.upper-display-imgstack img.ud-img-entering-slideUp {
-    animation: ud-img-slideUp 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
+.upper-display-imgstack img.ud-trans-slideUp {
+    transform: translateY(30px);
 }
-.upper-display-imgstack img.ud-img-entering-zoom {
-    animation: ud-img-zoom 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+.upper-display-imgstack img.ud-trans-flip {
+    transform: perspective(600px) rotateY(20deg);
 }
-.upper-display-imgstack img.ud-img-entering-flip {
-    animation: ud-img-flip 0.7s ease forwards;
+.upper-display-imgstack img.ud-trans-fade {
+    transform: none;
 }
-@keyframes ud-img-fade      { from{opacity:0}                                        to{opacity:1} }
-@keyframes ud-img-slideLeft { from{opacity:0; transform:translateX(40px)}            to{opacity:1; transform:translateX(0)} }
-@keyframes ud-img-slideUp   { from{opacity:0; transform:translateY(30px)}            to{opacity:1; transform:translateY(0)} }
-@keyframes ud-img-zoom      { from{opacity:0; transform:scale(1.08)}                 to{opacity:1; transform:scale(1)} }
-@keyframes ud-img-flip      { from{opacity:0; transform:perspective(600px) rotateY(20deg)} to{opacity:1; transform:perspective(600px) rotateY(0)} }
+
+/* Active / Final state for each transition type */
+.upper-display-imgstack img.ud-img-active.ud-trans-zoom {
+    transform: scale(1);
+}
+.upper-display-imgstack img.ud-img-active.ud-trans-slideLeft {
+    transform: translateX(0);
+}
+.upper-display-imgstack img.ud-img-active.ud-trans-slideUp {
+    transform: translateY(0);
+}
+.upper-display-imgstack img.ud-img-active.ud-trans-flip {
+    transform: perspective(600px) rotateY(0);
+}
 
 .ud-dots {
     display: flex; gap: 8px;

@@ -16,8 +16,8 @@ interface CartItem {
 const heroSlides = [
   {
     image: "/images/snaptik_7625367276497292565_0_v2.jpeg",
-    eyebrow: "SYSTEM 01 / SS26 COLLECTION",
-    title: "SYSTEM 01 / DROP",
+    eyebrow: "SS26 PRE-RELEASE COLLECTION",
+    title: "YEENKSLUXE APPAREL",
     subtitle: "Where streetwear meets luxury. Designed for those who move different.",
   },
   {
@@ -36,7 +36,7 @@ const heroSlides = [
 
 const upperDisplaySlides = [
   {
-    image: "/images/a3548e8a-a0bd-4271-ae46-c588155d8144.jpg",
+    image: "/images/WhatsApp Image 2026-05-23 at 9.44.46 AM.jpeg",
     heading: "MADE FOR THE ONES WHO RUN THE CITY",
     sub: "untouchable. built to take over",
     btnText: "SECURE THE DRIP",
@@ -44,7 +44,7 @@ const upperDisplaySlides = [
     trans: "zoom"
   },
   {
-    image: "/images/ca25884a-e701-435e-9a8e-e21ceff2a72c.jpg",
+    image: "/images/snaptik_7621552137285192981_2_v2.jpeg",
     heading: "DISTINCTIVE SILHOUETTES & SHAPES",
     sub: "designed for movement. crafted for luxury",
     btnText: "SHOP ARMLESS TOPS",
@@ -52,7 +52,7 @@ const upperDisplaySlides = [
     trans: "slideLeft"
   },
   {
-    image: "/images/7683c590-dc42-47ec-b0e4-28d748076d05.jpg",
+    image: "/images/snaptik_7625367276497292565_3_v2.jpeg",
     heading: "SS26 CAMPAIGN CAPS & ACCS",
     sub: "limited rotation. wear the difference",
     btnText: "SHOP CAPS",
@@ -300,14 +300,14 @@ export default function Home() {
       <nav className="navbar">
         <div className="container navbar-inner">
           <div className="logo-container" onClick={() => { setCheckoutStep('shop'); setSelectedCategory('All'); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div className="logo" style={{ position: 'relative', width: '44px', height: '44px', flexShrink: 0 }}>
+            <div className="logo" style={{ position: 'relative', width: '54px', height: '54px', flexShrink: 0 }}>
               <Image 
                 src="/images/logoo.jpg" 
                 alt="YEENKSLUXE" 
                 fill 
                 priority 
                 className="logo-img object-contain" 
-                sizes="44px"
+                sizes="54px"
               />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -401,7 +401,7 @@ export default function Home() {
         {/* VIEW 1: SHOP / STOREFRONT */}
         {checkoutStep === 'shop' && (
           <>
-            {/* HERO COMPOSITION — Immersive Full-Screen Campaign Visual */}
+            {/* HERO COMPOSITION - Immersive Full-Screen Campaign Visual */}
             <header className="hero">
               <div className="hero-bg-media">
                 <div className="hero-slideshow">
@@ -440,11 +440,11 @@ export default function Home() {
                 <div className="hero-meta-grid">
                   <div className="hero-meta-cell">
                     <span className="meta-label">Season</span>
-                    <span className="meta-value">System 01 / SS26</span>
+                    <span className="meta-value">SS26 Collection</span>
                   </div>
                   <div className="hero-meta-cell">
                     <span className="meta-label">Origin</span>
-                    <span className="meta-value">Lagos / Milan</span>
+                    <span className="meta-value">Lagos, Nigeria</span>
                   </div>
                   <div className="hero-meta-cell">
                     <span className="meta-label">Release</span>
@@ -504,7 +504,7 @@ export default function Home() {
                       fill
                       priority={imgIdx === 0}
                       sizes="(max-width: 768px) 100vw, 460px"
-                      className={`object-cover ${udIndex === imgIdx ? `ud-img-active ud-img-entering-${slide.trans}` : ''}`}
+                      className={`object-cover ud-trans-${slide.trans} ${udIndex === imgIdx ? 'ud-img-active' : ''}`}
                     />
                   ))}
                 </div>
@@ -1002,13 +1002,13 @@ export default function Home() {
           <div className="footer-inner">
             <div className="footer-brand">
               <div className="footer-logo-container" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                <div className="footer-logo" style={{ position: 'relative', width: '44px', height: '44px', flexShrink: 0 }}>
+                <div className="footer-logo" style={{ position: 'relative', width: '54px', height: '54px', flexShrink: 0 }}>
                   <Image 
                     src="/images/logoo.jpg" 
                     alt="YEENKSLUXE" 
                     fill 
                     className="logo-img object-contain" 
-                    sizes="44px"
+                    sizes="54px"
                   />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -1333,7 +1333,7 @@ export default function Home() {
                       <ul className="specs-list">
                         <li><strong>Fabric:</strong> {['Shirts', 'Armless Tops'].includes(selectedProduct.category) ? '100% Organic Heavyweight Cotton (280GSM)' : 'Heavy-Duty Technical Canvas'}</li>
                         <li><strong>Weave:</strong> Loopback pre-shrunk luxury weave</li>
-                        <li><strong>Origin:</strong> Crafted in Lagos / Milan</li>
+                        <li><strong>Origin:</strong> Crafted in Lagos</li>
                         <li><strong>Graphics:</strong> Custom eco-friendly high-density screenprint</li>
                       </ul>
                     </div>
