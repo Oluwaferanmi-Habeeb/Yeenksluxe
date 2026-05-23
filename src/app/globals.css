@@ -30,21 +30,21 @@
 }
 
 [data-theme="light"] {
-  --bg-primary: #f8f9fa;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #e9ecef;
-  --bg-glass: rgba(248, 249, 250, 0.9);
+  --bg-primary: #f5f2eb;
+  --bg-secondary: #faf9f6;
+  --bg-tertiary: #ede9df;
+  --bg-glass: rgba(245, 242, 235, 0.9);
 
   --text-primary: #0f0f0f;
-  --text-secondary: rgba(15, 15, 15, 0.7);
+  --text-secondary: rgba(15, 15, 15, 0.75);
   --text-muted: rgba(15, 15, 15, 0.45);
 
   --border-color: rgba(15, 15, 15, 0.08);
   --border-hover: rgba(15, 15, 15, 0.18);
 
-  --shadow-sm: 0 2px 10px rgba(0,0,0,0.05);
-  --shadow-md: 0 10px 40px rgba(0,0,0,0.06);
-  --shadow-lg: 0 25px 70px rgba(0,0,0,0.08);
+  --shadow-sm: 0 2px 10px rgba(15, 15, 15, 0.04);
+  --shadow-md: 0 10px 40px rgba(15, 15, 15, 0.05);
+  --shadow-lg: 0 25px 70px rgba(15, 15, 15, 0.07);
 
   --logo-filter: none;
 }

@@ -548,15 +548,6 @@ export default function Home() {
                   <div className="product-grid">
                     {filteredProducts.map((product, idx) => (
                       <React.Fragment key={product.id}>
-                        {idx === 1 && (
-                          <div className="manifesto-card">
-                            <div className="manifesto-watermark">YNKS</div>
-                            <p className="manifesto-text">
-                              "We do not build for the masses. We build for the ones who move in silence, defined by form, material, and purpose."
-                            </p>
-                            <span className="manifesto-author">YEENKSLUXE Manifesto</span>
-                          </div>
-                        )}
                         <div className="product-card" onClick={() => openQuickView(product)}>
                           <div className="card-img-wrapper" style={{ position: 'relative' }}>
                             {product.badge && (
