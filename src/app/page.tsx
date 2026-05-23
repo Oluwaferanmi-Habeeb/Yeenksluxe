@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Script from 'next/script';
-import { products, Product } from '../data/products';
+import { products, Product, categories } from '../data/products';
 import { getShopifyCheckoutUrl } from '../utils/shopify';
 
 interface CartItem {
@@ -16,21 +16,21 @@ interface CartItem {
 const heroSlides = [
   {
     image: "/images/snaptik_7625367276497292565_0_v2.jpeg",
-    eyebrow: "SYSTEM 01 / SS26",
-    title: "ALL EYES ON YOU",
-    subtitle: "Form. Material. Purpose. Elevating raw street aesthetics into modern structural silhouettes. Built for those who move in silence.",
+    eyebrow: "SYSTEM 01 / SS26 COLLECTION",
+    title: "SYSTEM 01 / DROP",
+    subtitle: "Where streetwear meets luxury. Designed for those who move different.",
   },
   {
     image: "/images/snaptik_7621552137285192981_0_v2.jpeg",
-    eyebrow: "SYSTEM 01 / EXCLUSIVE DROP",
-    title: "SHOP THE SALE",
-    subtitle: "Redefining your daily rotation with hand-crafted detailing and heavy canvas. Wear the difference.",
+    eyebrow: "EXHIBIT 02 / CAMPAIGN",
+    title: "RAW SILHOUETTES",
+    subtitle: "Heavyweight garments structured for modern daily movement. Engineered in Lagos.",
   },
   {
     image: "/images/snaptik_7625367276497292565_2_v2.jpeg",
-    eyebrow: "SYSTEM 01 / CAMPAIGN EDITORIAL",
-    title: "LET YOUR STEEZE DO THE TALKING",
-    subtitle: "Limited quantity drop designed in Milan, crafted in Lagos. A true testament to premium streetwear heritage.",
+    eyebrow: "EXHIBIT 03 / EDITORIAL",
+    title: "STREET TAILORING",
+    subtitle: "High-density embroidery, luxury hardware, and drop-shoulder forms that command attention.",
   }
 ];
 
@@ -45,6 +45,7 @@ export default function Home() {
   const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'shopify' | 'whatsapp'>('paystack');
   const [mounted, setMounted] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   // Hero slideshow timer
   useEffect(() => {
@@ -76,7 +77,7 @@ export default function Home() {
     notes: ''
   });
 
-  // Load cart on client mount
+  // Load cart and theme on client mount
   useEffect(() => {
     setMounted(true);
     const savedCart = localStorage.getItem('ynks_cart');
@@ -87,7 +88,19 @@ export default function Home() {
         console.error('Failed to parse cart', e);
       }
     }
+    const savedTheme = localStorage.getItem('ynks_theme') as 'dark' | 'light';
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
   }, []);
+
+  // Sync theme changes to document html element
+  useEffect(() => {
+    if (mounted) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('ynks_theme', theme);
+    }
+  }, [theme, mounted]);
 
   // Sync cart changes to local storage
   useEffect(() => {
@@ -250,15 +263,22 @@ export default function Home() {
       <nav className="navbar">
         <div className="container navbar-inner">
           <div className="logo-container" onClick={() => { setCheckoutStep('shop'); setSelectedCategory('All'); }} style={{ cursor: 'pointer' }}>
-            <div className="logo">
-              YEENKS<span>LUXE</span>
+            <div className="logo" style={{ position: 'relative', width: '130px', height: '24px' }}>
+              <Image 
+                src="/images/logoo.jpg" 
+                alt="YEENKSLUXE" 
+                fill 
+                priority 
+                className="logo-img object-contain" 
+                sizes="130px"
+              />
             </div>
-            <span className="logo-tagline">Your Style, My Style</span>
+            <span className="logo-tagline">Where streetwear meets luxury. Designed for those who move different</span>
           </div>
 
           {checkoutStep === 'shop' && (
             <div className="nav-links">
-              {['All', 'Shoes', 'Shirts', 'Hats', 'Accessories'].map((cat) => (
+              {['All', ...categories].map((cat) => (
                 <div
                   key={cat}
                   className={`nav-link ${selectedCategory === cat ? 'active' : ''}`}
@@ -289,6 +309,43 @@ export default function Home() {
                 </svg>
               </div>
             )}
+
+            {/* Custom B/W Theme Toggle */}
+            <button 
+              className="theme-toggle-btn" 
+              onClick={() => setTheme((prev) => prev === 'dark' ? 'light' : 'dark')}
+              aria-label="Toggle Theme"
+              style={{
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '32px',
+                height: '32px',
+                border: '1px solid var(--border-color)',
+                color: 'var(--text-primary)',
+                background: 'transparent',
+                transition: 'var(--transition-fast)'
+              }}
+            >
+              {theme === 'dark' ? (
+                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+              ) : (
+                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              )}
+            </button>
 
             <button className="cart-trigger" onClick={() => setCartOpen(true)} aria-label="Open Cart">
               <svg className="cart-icon-svg" viewBox="0 0 24 24">
@@ -369,43 +426,43 @@ export default function Home() {
               <div className="container">
                 <div className="featured-inner">
                   <div className="featured-image" style={{ position: 'relative', width: '100%', height: '480px' }}>
-                    <Image src="/images/yeenksluxe_shoe.jpg" alt="Featured Chrome Luxury Sneakers" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+                    <Image src="/images/b4fb32c7-6ce4-4dff-9ef8-a606e5684c73.jpg" alt="Featured Vanguard Tracksuit Set" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
                   </div>
                   <div className="featured-info">
                     <span className="featured-badge">NEW SEASON HERO</span>
-                    <h2 className="featured-name">Chrome Luxury Sneakers</h2>
-                    <p className="featured-price">₦155,000</p>
+                    <h2 className="featured-name">Vanguard Tracksuit Set</h2>
+                    <p className="featured-price">₦185,000</p>
                     <p className="featured-description">
-                      Elite luxury sneakers featuring signature gold chrome eyelets and top-grade Italian calfskin leather. Crafted for elevated street style, with a cushioned contour midsole for peak daily comfort.
+                      Elite heavyweight tracksuit set featuring raw-edge panel details, signature metal zippers, and an oversized drop-shoulder cut. Crafted from high-density organic cotton for the ultimate premium street steeze.
                     </p>
                     
                     <div className="featured-spec-sheet">
                       <div className="spec-row">
                         <span className="spec-label">Product Class</span>
-                        <span className="spec-value">Luxury Street Footwear</span>
+                        <span className="spec-value">Luxury Street Apparel</span>
                       </div>
                       <div className="spec-row">
                         <span className="spec-label">Origin</span>
-                        <span className="spec-value">Handcrafted in Italy</span>
+                        <span className="spec-value">Designed in Milan / Crafted in Lagos</span>
                       </div>
                       <div className="spec-row">
                         <span className="spec-label">Materials</span>
-                        <span className="spec-value">Italian Calfskin & Chrome Plated Brass</span>
+                        <span className="spec-value">100% Organic Cotton Fleece (420GSM)</span>
                       </div>
                       <div className="spec-row">
-                        <span className="spec-label">Sole Unit</span>
-                        <span className="spec-value">Cushioned Midsole / Heavy Lug Rubber</span>
+                        <span className="spec-label">Hardware</span>
+                        <span className="spec-value">Signature Custom Inscribed Pull Zippers</span>
                       </div>
                       <div className="spec-row">
                         <span className="spec-label">Edition Size</span>
-                        <span className="spec-value">100 Pieces Worldwide</span>
+                        <span className="spec-value">Limited SS26 Run</span>
                       </div>
                     </div>
 
                     <button 
                       className="featured-cta"
                       onClick={() => {
-                        const prod = products.find(p => p.id === 'shoe-1');
+                        const prod = products.find(p => p.id === 'shirt-4');
                         if (prod) openQuickView(prod);
                       }}
                     >
@@ -434,7 +491,7 @@ export default function Home() {
                 </div>
 
                 <div className="category-filters">
-                  {['All', 'Shoes', 'Shirts', 'Hats', 'Accessories'].map((cat) => (
+                  {['All', ...categories].map((cat) => (
                     <button
                       key={cat}
                       className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`}
@@ -513,12 +570,12 @@ export default function Home() {
                     <span className="editorial-btn">EXPLORE</span>
                   </div>
                 </div>
-                <div className="editorial-panel" style={{ position: 'relative' }} onClick={() => { setSelectedCategory('Shoes'); scrollToShop(); }}>
-                  <Image src="/images/snaptik_7621552137285192981_1_v2.jpeg" alt="Footwear Collection" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+                <div className="editorial-panel" style={{ position: 'relative' }} onClick={() => { setSelectedCategory('Accessories'); scrollToShop(); }}>
+                  <Image src="/images/snaptik_7621552137285192981_1_v2.jpeg" alt="Accessories Collection" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
                   <div className="editorial-panel-overlay"></div>
                   <div className="editorial-caption">
-                    <h3>PREMIUM FOOTWEAR</h3>
-                    <p>Luxury slides, calfskin sneakers & Monolith loafers designed for standout looks</p>
+                    <h3>CURATED ACCESSORIES</h3>
+                    <p>Luxury beanies, tactical utility bags & premium calfskin leather belts</p>
                     <span className="editorial-btn">EXPLORE</span>
                   </div>
                 </div>
@@ -915,16 +972,23 @@ export default function Home() {
         <div className="container">
           <div className="footer-inner">
             <div className="footer-brand">
-              <h3 className="footer-logo">YEENKS<span>LUXE</span></h3>
+              <div className="footer-logo" style={{ position: 'relative', width: '130px', height: '24px', marginBottom: '1rem' }}>
+                <Image 
+                  src="/images/logoo.jpg" 
+                  alt="YEENKSLUXE" 
+                  fill 
+                  className="logo-img object-contain" 
+                  sizes="130px"
+                />
+              </div>
               <p className="footer-description">
-                The ultimate destination for premium urban fashion, high-end sneakers, slides, and luxury streetwear aesthetics.
+                Where streetwear meets luxury. Designed for those who move different.
               </p>
             </div>
 
             <div className="footer-links-col">
               <h4 className="footer-col-title">COLLECTIONS</h4>
               <div className="footer-links">
-                <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Shoes'); setCheckoutStep('shop'); scrollToShop(); }}>SHOES</a>
                 <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Shirts'); setCheckoutStep('shop'); scrollToShop(); }}>SHIRTS</a>
                 <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Hats'); setCheckoutStep('shop'); scrollToShop(); }}>HATS</a>
                 <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Accessories'); setCheckoutStep('shop'); scrollToShop(); }}>ACCESSORIES</a>
@@ -1200,15 +1264,7 @@ export default function Home() {
                         const w = parseFloat(fitWeight);
                         if (!h || !w) return <span className="result-prompt">Enter measurements to calculate custom recommendation.</span>;
                         
-                        if (selectedProduct.category === 'Shoes') {
-                          return (
-                            <div>
-                              <span className="result-size">TRUE TO SIZE</span>
-                              <p className="result-reason">This footwear fits true to standard dimensions. We recommend choosing your standard size.</p>
-                            </div>
-                          );
-                        }
-                        
+
                         if (selectedProduct.category === 'Shirts') {
                           let rec = 'M';
                           if (h < 170 && w < 65) rec = 'S';
@@ -1241,7 +1297,7 @@ export default function Home() {
                     <div className="specs-section">
                       <h4 className="specs-title-sub">FABRIC PROFILE</h4>
                       <ul className="specs-list">
-                        <li><strong>Fabric:</strong> {selectedProduct.category === 'Shirts' ? '100% Organic Heavyweight Cotton (280GSM)' : selectedProduct.category === 'Shoes' ? 'Italian Calfskin Leather / Suede Blend' : 'Heavy-Duty Technical Canvas'}</li>
+                        <li><strong>Fabric:</strong> {selectedProduct.category === 'Shirts' ? '100% Organic Heavyweight Cotton (280GSM)' : 'Heavy-Duty Technical Canvas'}</li>
                         <li><strong>Weave:</strong> Loopback pre-shrunk luxury weave</li>
                         <li><strong>Origin:</strong> Crafted in Lagos / Milan</li>
                         <li><strong>Graphics:</strong> Custom eco-friendly high-density screenprint</li>

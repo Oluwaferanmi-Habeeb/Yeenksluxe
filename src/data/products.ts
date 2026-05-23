@@ -4,7 +4,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  category: 'Shoes' | 'Shirts' | 'Hats' | 'Accessories';
+  category: 'Shirts' | 'Hats' | 'Accessories';
   image: string;
   gallery?: string[]; // Multi-angle gallery
   video?: string;
@@ -15,52 +15,10 @@ export interface Product {
 
 export const products: Product[] = [
   {
-    id: "shoe-1",
-    shopifyVariantId: "45000000000001", // Placeholder Shopify variant ID, replace with actual Shopify ID
-    name: "Chrome Luxury Sneakers",
-    description: "Elite luxury sneakers featuring signature gold chrome eyelets and top-grade Italian calfskin leather. Engineered for street comfort and high-fashion aesthetics.",
-    price: 155000,
-    category: "Shoes",
-    image: "/images/yeenksluxe_shoe.jpg",
-    gallery: [
-      "/images/snaptik_7621552137285192981_0_v2.jpeg",
-      "/images/snaptik_7621552137285192981_1_v2.jpeg"
-    ],
-    badge: "New Drop",
-    sizes: ["39", "40", "41", "42", "43", "44", "45"],
-    colors: ["#000000", "#d4af37", "#ffffff"]
-  },
-  {
-    id: "shoe-2",
-    shopifyVariantId: "45000000000002",
-    name: "Vanguard Leather Slides",
-    description: "Sleek, black leather slides styled with a micro-embossed logo strap and responsive contoured footbeds. A summer staple re-imagined for luxury.",
-    price: 65000,
-    category: "Shoes",
-    image: "/images/0c681891-3830-45c5-acae-04a813ea84c4.jpg",
-    gallery: ["/images/snaptik_7621552137285192981_2_v2.jpeg"],
-    badge: "Best Seller",
-    sizes: ["38", "39", "40", "41", "42", "43", "44"],
-    colors: ["#000000", "#1a1a1a"]
-  },
-  {
-    id: "shoe-3",
-    shopifyVariantId: "45000000000003",
-    name: "Monolith Street Loafers",
-    description: "High-performance urban loafers made with premium suede, featuring handmade stitching and durable rubber lug soles.",
-    price: 120000,
-    category: "Shoes",
-    image: "/images/128157e9-e5e5-4d63-801d-235c61e618f4.jpg",
-    gallery: ["/images/snaptik_7621552137285192981_3_v2.jpeg"],
-    badge: "Sale",
-    sizes: ["40", "41", "42", "43", "44", "45"],
-    colors: ["#2d2d2d", "#8b4513", "#000000"]
-  },
-  {
     id: "shirt-1",
     shopifyVariantId: "45000000000004",
     name: "Signature Graphic Tee",
-    description: "Premium 280GSM heavyweight cotton graphic tee with drop shoulder silhouette and screenprinted minimal luxury typography.",
+    description: "Premium 280GSM heavyweight cotton graphic tee with drop shoulder silhouette and screenprinted minimal luxury branding.",
     price: 45000,
     category: "Shirts",
     image: "/images/48f48c19-513c-41ce-9e20-4a7ddc9539da.jpg",
@@ -78,7 +36,7 @@ export const products: Product[] = [
     category: "Shirts",
     image: "/images/508ddf59-00e6-4fcb-820a-08845c8a4d02.jpg",
     gallery: ["/images/snaptik_7625367276497292565_1_v2.jpeg"],
-    badge: "New Drop",
+    badge: "Best Seller",
     sizes: ["M", "L", "XL", "XXL"],
     colors: ["#000000", "#333333"]
   },
@@ -94,6 +52,66 @@ export const products: Product[] = [
     badge: "Campaign",
     sizes: ["S", "M", "L", "XL"],
     colors: ["#000000", "#ffffff"]
+  },
+  {
+    id: "shirt-4",
+    shopifyVariantId: "45000000000011",
+    name: "Vanguard Tracksuit Set",
+    description: "Full luxury streetwear tracksuit set. Relaxed fit pullover jacket and matching cargo sweatpants styled with signature metal zippers.",
+    price: 185000,
+    category: "Shirts",
+    image: "/images/b4fb32c7-6ce4-4dff-9ef8-a606e5684c73.jpg",
+    gallery: ["/images/1dd03c07-a8d2-4b13-83af-e01286a518a1.jpg"],
+    badge: "SS26 Premium",
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["#000000", "#1a1a1a"]
+  },
+  {
+    id: "shirt-5",
+    shopifyVariantId: "45000000000012",
+    name: "Signature Rhinestone Tee",
+    description: "Heavy cotton tee embellished with hand-placed high-index rhinestone branding across the chest. Engineered for durability and high steeze.",
+    price: 95000,
+    category: "Shirts",
+    image: "/images/24dfb707-3a60-4d06-9eed-adfa96f7af70.jpg",
+    badge: "Exclusive",
+    sizes: ["M", "L", "XL"],
+    colors: ["#000000"]
+  },
+  {
+    id: "shirt-6",
+    shopifyVariantId: "45000000000013",
+    name: "Phantom Knit Sweater",
+    description: "Premium cotton-suede blend knitted crewneck with intricate horizontal visual knit detailing and slightly cropped silhouette.",
+    price: 145000,
+    category: "Shirts",
+    image: "/images/4ee1cda2-5c57-4889-b018-deb09bd83deb.jpg",
+    badge: "New Season",
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["#1a1a1a", "#2b2b2b"]
+  },
+  {
+    id: "shirt-7",
+    shopifyVariantId: "45000000000014",
+    name: "Distressed Denim Jacket",
+    description: "Heavyweight 14oz Japanese denim jacket featuring distressed raw edge detailing, custom embossed metal buttons, and back branding panel.",
+    price: 220000,
+    category: "Shirts",
+    image: "/images/b76c8e3f-a1c4-42cf-8562-f481718d61ea.jpg",
+    badge: "Limited Drop",
+    sizes: ["M", "L", "XL"],
+    colors: ["#0a0a0a", "#1c1c1c"]
+  },
+  {
+    id: "shirt-8",
+    shopifyVariantId: "45000000000015",
+    name: "Monogram Windbreaker",
+    description: "Water-resistant matte nylon windbreaker featuring all-over tonal jacquard monogram print, adjustable bungee hems, and mesh lining.",
+    price: 175000,
+    category: "Shirts",
+    image: "/images/1dd03c07-a8d2-4b13-83af-e01286a518a1.jpg",
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["#050505"]
   },
   {
     id: "hat-1",
@@ -117,7 +135,18 @@ export const products: Product[] = [
     image: "/images/c540c115-2167-4cce-a411-6acfcc765a57.jpg",
     badge: "Best Seller",
     sizes: ["One Size"],
-    colors: ["#000000", "#ffffff", "#0c2340"]
+    colors: ["#000000", "#ffffff"]
+  },
+  {
+    id: "hat-3",
+    shopifyVariantId: "45000000000016",
+    name: "SS26 Campaign Cap",
+    description: "Distressed raw-edge cotton cap with embroidered collection branding and adjustable metal slide back closure.",
+    price: 35000,
+    category: "Hats",
+    image: "/images/7683c590-dc42-47ec-b0e4-28d748076d05.jpg",
+    sizes: ["One Size"],
+    colors: ["#111111", "#ffffff"]
   },
   {
     id: "acc-1",
@@ -140,7 +169,31 @@ export const products: Product[] = [
     image: "/images/f12d0220-a9fe-437b-b736-64a573bb8193.jpg",
     sizes: ["One Size"],
     colors: ["#000000", "#ffffff"]
+  },
+  {
+    id: "acc-3",
+    shopifyVariantId: "45000000000017",
+    name: "Luxe Leather Belt",
+    description: "Top-grain calfskin leather belt detailed with signature gold chrome metal buckle and engraved branding.",
+    price: 85000,
+    category: "Accessories",
+    image: "/images/654912a1-3e02-4f9d-9e64-c51e6ddb720b.jpg",
+    badge: "Exclusive",
+    sizes: ["85", "90", "95", "100"],
+    colors: ["#000000", "#8b4513"]
+  },
+  {
+    id: "acc-4",
+    shopifyVariantId: "45000000000018",
+    name: "Tactical Utility Bag",
+    description: "Heavy-duty tech nylon chest rig with modular webbing straps, water-repellent zippers, and gold hardware buckles.",
+    price: 120000,
+    category: "Accessories",
+    image: "/images/d4413ae8-baac-4551-838d-632fd109f35c.jpg",
+    badge: "New Release",
+    sizes: ["One Size"],
+    colors: ["#000000", "#333333"]
   }
 ];
 
-export const categories = ['All', 'Shoes', 'Shirts', 'Hats', 'Accessories'] as const;
+export const categories = ['Shirts', 'Hats', 'Accessories'] as const;
