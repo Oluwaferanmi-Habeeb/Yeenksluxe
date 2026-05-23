@@ -93,6 +93,26 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [checkoutStep]);
 
+  // Intersection Observer for scroll-driven viewport reveals
+  useEffect(() => {
+    if (checkoutStep !== 'shop') return;
+    const timer = setTimeout(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+            }
+          });
+        },
+        { threshold: 0.05, rootMargin: '0px 0px -40px 0px' }
+      );
+      document.querySelectorAll('.reveal-on-scroll').forEach((el) => observer.observe(el));
+      return () => observer.disconnect();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [checkoutStep, selectedCategory, searchQuery]);
+
   // Modal customization selection
   const [chosenSize, setChosenSize] = useState<string>('');
   const [chosenColor, setChosenColor] = useState<string>('');
@@ -462,7 +482,7 @@ export default function Home() {
             </header>
 
             {/* UPPER DISPLAY SLIDER */}
-            <section className="upper-display" id="upperDisplay">
+            <section className="upper-display reveal-on-scroll" id="upperDisplay">
               <div className="upper-display-inner">
                 {/* Text Side: displays the active slide's copy */}
                 <div className="upper-display-text">
@@ -512,7 +532,7 @@ export default function Home() {
             </section>
 
             {/* CATALOG SECTION */}
-            <section className="shop-section" id="shop-catalog">
+            <section className="shop-section reveal-on-scroll" id="shop-catalog">
               <div className="container">
                 <div className="shop-header">
                   <div className="shop-title-area">
@@ -559,9 +579,18 @@ export default function Home() {
                               src={product.image} 
                               alt={product.name} 
                               fill
-                              className="card-img object-cover" 
+                              className="card-img card-img-primary object-cover" 
                               sizes="(max-width: 480px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             />
+                            {product.gallery && product.gallery.length > 0 && (
+                              <Image 
+                                src={product.gallery[0]} 
+                                alt={product.name} 
+                                fill
+                                className="card-img card-img-secondary object-cover" 
+                                sizes="(max-width: 480px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                              />
+                            )}
                             <div className="card-overlay">
                               <button className="quick-view-btn" onClick={(e) => { e.stopPropagation(); openQuickView(product); }}>
                                 QUICK VIEW
@@ -588,7 +617,7 @@ export default function Home() {
             </section>
 
             {/* EDITORIAL LIFESTYLE PANELS */}
-            <section className="editorial-section">
+            <section className="editorial-section reveal-on-scroll">
               <div className="editorial-grid">
                 <div className="editorial-panel" style={{ position: 'relative' }} onClick={() => { setSelectedCategory('Shirts'); scrollToShop(); }}>
                   <Image src="/images/snaptik_7625367276497292565_2_v2.jpeg" alt="New Arrivals Apparel" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
@@ -639,7 +668,7 @@ export default function Home() {
             </section>
 
             {/* MEMBERSHIP DRAWERS */}
-            <section className="membership-section">
+            <section className="membership-section reveal-on-scroll">
               <div className="container">
                 <div className="membership-grid">
                   <div className="membership-col">
@@ -905,7 +934,7 @@ export default function Home() {
       </div>
 
       {/* LOOKBOOK FILMSTRIP */}
-      <section className="lookbook-filmstrip">
+      <section className="lookbook-filmstrip reveal-on-scroll">
         <div className="filmstrip-header">
           <span className="section-eyebrow">DIGITAL LOOKBOOK</span>
           <h2 className="section-title">THE SS26 EDITORIALS</h2>
@@ -1322,6 +1351,44 @@ export default function Home() {
                           </div>
                         );
                       })()}
+                    </div>
+
+                    {/* Sizing Chart Table */}
+                    <div className="size-chart-table-wrapper">
+                      <h4 className="specs-title-sub" style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: 'var(--text-secondary)' }}>SIZE CHART (INCHES)</h4>
+                      <table className="size-chart-table">
+                        <thead>
+                          <tr>
+                            <th>SIZE</th>
+                            <th>CHEST</th>
+                            <th>LENGTH</th>
+                            <th>SHOULDER</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {selectedProduct.category === 'Shirts' ? (
+                            <>
+                              <tr><td>S</td><td>44"</td><td>27"</td><td>20" (DROP)</td></tr>
+                              <tr><td>M</td><td>46"</td><td>28"</td><td>21" (DROP)</td></tr>
+                              <tr><td>L</td><td>48"</td><td>29"</td><td>22" (DROP)</td></tr>
+                              <tr><td>XL</td><td>50"</td><td>30"</td><td>23" (DROP)</td></tr>
+                            </>
+                          ) : selectedProduct.category === 'Armless Tops' ? (
+                            <>
+                              <tr><td>S</td><td>38"</td><td>26"</td><td>SLEEVELESS</td></tr>
+                              <tr><td>M</td><td>40"</td><td>27"</td><td>SLEEVELESS</td></tr>
+                              <tr><td>L</td><td>42"</td><td>28"</td><td>SLEEVELESS</td></tr>
+                              <tr><td>XL</td><td>44"</td><td>29"</td><td>SLEEVELESS</td></tr>
+                            </>
+                          ) : (
+                            <tr>
+                              <td colSpan={4} style={{ textAlign: 'center', padding: '1rem 0', color: 'var(--text-muted)' }}>
+                                ONE SIZE / ADJUSTABLE PROFILE
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 )}

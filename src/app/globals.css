@@ -121,7 +121,11 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .logo-img {
   filter: var(--logo-filter);
-  transition: filter 0.3s ease;
+  transition: filter 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.logo-container:hover .logo-img, .footer-logo-container:hover .logo-img {
+  transform: scale(1.08);
+  filter: brightness(1.1) var(--logo-filter);
 }
 .theme-toggle-btn {
   border-radius: 0;
@@ -794,9 +798,24 @@ img { max-width: 100%; height: auto; display: block; }
 .card-img {
   width: 100%; height: 100%;
   object-fit: cover;
-  transition: transform 0.8s cubic-bezier(0.25,1,0.5,1);
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
-.product-card:hover .card-img { transform: scale(1.04); }
+.card-img-primary {
+  opacity: 1;
+}
+.card-img-secondary {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.product-card:hover .card-img-secondary {
+  opacity: 1;
+  transform: scale(1.04);
+}
+.product-card:hover .card-img-primary {
+  opacity: 0;
+  transform: scale(1.04);
+}
 
 .product-badge {
   position: absolute; top: 1.25rem; left: 1.25rem;
@@ -1528,4 +1547,45 @@ img { max-width: 100%; height: auto; display: block; }
     .upper-display-inner { flex-direction: column; text-align: center; }
     .upper-display-imgstack { width: 100%; height: 320px; }
     .ud-dots { justify-content: center; }
+}
+
+/* ── SIZE CHART TABLE & SCROLL REVEALS ── */
+.size-chart-table-wrapper {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.25rem;
+}
+.size-chart-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 0.75rem;
+  color: var(--text-primary);
+}
+.size-chart-table th {
+  text-align: left;
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+.size-chart-table td {
+  padding: 0.6rem 0.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.size-chart-table tr:last-child td {
+  border-bottom: none;
+}
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
 }
