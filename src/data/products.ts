@@ -46,7 +46,7 @@ export const products: Product[] = [
     description: "Heavy cotton tee embellished with hand-placed high-index rhinestone branding across the chest. Engineered for durability and high steeze.",
     price: 35000,
     category: "Tops",
-    image: "/images/24dfb707-3a60-4d06-9eed-adfa96f7af70.jpg",
+    image: "/images/2636b850-f5d5-40db-a383-bfa29001cdde.jpg",
     badge: "Exclusive",
     sizes: ["M", "L", "XL"],
     colors: ["#000000"]
@@ -85,6 +85,18 @@ export const products: Product[] = [
     sizes: ["S", "M", "L", "XL"],
     colors: ["#1a1a1a", "#ffffff"]
   },
+  {
+    id: "shirt-12",
+    shopifyVariantId: "45000000000005",
+    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Inscription Tee",
+    description: "Premium signature t-shirt detailed with the iconic collection logo print.",
+    price: 35000,
+    category: "Tops",
+    image: "/images/c540c115-2167-4cce-a411-6acfcc765a57.jpg",
+    badge: "New Season",
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["#000000", "#ffffff"]
+  },
 
   // ── TOPS / ARMLESS TOPS (Price: ₦30,000) ──
   {
@@ -94,7 +106,7 @@ export const products: Product[] = [
     description: "Premium armless tank top styled with raw edge detailing, signature luxury stitching, and a comfortable relaxed cut.",
     price: 30000,
     category: "Tops",
-    image: "/images/ca25884a-e701-435e-9a8e-e21ceff2a72c.jpg",
+    image: "/images/c540c115-2167-4cce-a411-6acfcc765a57.jpg",
     badge: "Hot Drop",
     sizes: ["S", "M", "L", "XL"],
     colors: ["#000000", "#ffffff"]
@@ -106,7 +118,7 @@ export const products: Product[] = [
     description: "Sleek, lightweight armless top featuring high-density typography print and distressed hem borders.",
     price: 30000,
     category: "Tops",
-    image: "/images/73f7c4aa-02d0-4006-9096-e2f6bb98edfe.jpg",
+    image: "/images/48f48c19-513c-41ce-9e20-4a7ddc9539da.jpg",
     sizes: ["M", "L", "XL"],
     colors: ["#111111"]
   },
@@ -117,7 +129,7 @@ export const products: Product[] = [
     description: "High-grade rib-knit luxury tank top with low scoop neckline and gold thread logo embroidery on the back.",
     price: 30000,
     category: "Tops",
-    image: "/images/3caca3e0-ce04-4c28-ae7c-9d519ce15f6d.jpg",
+    image: "/images/2636b850-f5d5-40db-a383-bfa29001cdde.jpg",
     badge: "SS26 Hero",
     sizes: ["S", "M", "L"],
     colors: ["#ffffff", "#000000"]
@@ -129,7 +141,7 @@ export const products: Product[] = [
     description: "Designed for modern styling, this heavy cotton armless vest features structured shoulder lines and minimal screenprinting.",
     price: 30000,
     category: "Tops",
-    image: "/images/a8ecf932-d5e0-49ac-84bc-597bd8130cd0.jpg",
+    image: "/images/8b853438-c364-464e-aefc-8eb8368060b9.jpg",
     sizes: ["S", "M", "L", "XL"],
     colors: ["#000000"]
   },
@@ -140,40 +152,17 @@ export const products: Product[] = [
     description: "Raw-edge sleeveless streetwear top in luxury pre-shrunk organic cotton fleece.",
     price: 30000,
     category: "Tops",
-    image: "/images/ba2f3141-5495-4b97-a422-97be4c4ae52c.jpg",
+    image: "/images/494e40da-2c31-4f83-b377-2a1c917a900d.jpg",
     badge: "Exclusive",
     sizes: ["M", "L", "XL"],
     colors: ["#2d2d2d", "#ffffff"]
   },
 
-  // ── TOPS / HOODIES, JACKETS & OUTERWEAR (Price: ₦45,000) ──
-  {
-    id: "shirt-2",
-    shopifyVariantId: "45000000000005",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Hoodie",
-    description: "Thick double-layered luxury hoodie featuring distressed ribbing, metallic hardware details, and high-density branding.",
-    price: 45000,
-    category: "Tops",
-    image: "/images/508ddf59-00e6-4fcb-820a-08845c8a4d02.jpg",
-    badge: "Best Seller",
-    sizes: ["M", "L", "XL", "XXL"],
-    colors: ["#000000", "#333333"]
-  },
+  // ── TOPS / HOODIES (Price: ₦45,000) ──
   {
     id: "hoodie-1",
-    shopifyVariantId: "45000000000029",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Vanguard Hoodie",
-    description: "Heavyweight drop-shoulder street hoodie detailed with reinforced stitching and custom utility hardware pullers.",
-    price: 45000,
-    category: "Tops",
-    image: "/images/a3548e8a-a0bd-4271-ae46-c588155d8144.jpg",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000", "#1a1a1a"]
-  },
-  {
-    id: "hoodie-2",
     shopifyVariantId: "45000000000030",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Campaign Hoodie",
+    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Hoodie",
     description: "Runway-featured campaign hoodie featuring high-density graphic print, double-lined hood, and kangaroo pocket details.",
     price: 45000,
     category: "Tops",
@@ -181,64 +170,6 @@ export const products: Product[] = [
     badge: "Campaign",
     sizes: ["M", "L", "XL", "XXL"],
     colors: ["#111111", "#ffffff"]
-  },
-  {
-    id: "shirt-6",
-    shopifyVariantId: "45000000000013",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Knit Sweater",
-    description: "Premium cotton-suede blend knitted crewneck with intricate horizontal visual knit detailing and slightly cropped silhouette.",
-    price: 45000,
-    category: "Tops",
-    image: "/images/4ee1cda2-5c57-4889-b018-deb09bd83deb.jpg",
-    badge: "New Season",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#1a1a1a", "#2b2b2b"]
-  },
-  {
-    id: "shirt-7",
-    shopifyVariantId: "45000000000014",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Denim Jacket",
-    description: "Heavyweight 14oz Japanese denim jacket featuring distressed raw edge detailing, custom embossed metal buttons, and back branding panel.",
-    price: 45000,
-    category: "Tops",
-    image: "/images/b76c8e3f-a1c4-42cf-8562-f481718d61ea.jpg",
-    badge: "Limited Drop",
-    sizes: ["M", "L", "XL"],
-    colors: ["#0a0a0a", "#1c1c1c"]
-  },
-  {
-    id: "shirt-12",
-    shopifyVariantId: "45000000000031",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Canvas Jacket",
-    description: "Structured streetwear canvas jacket with contrast panels and metal zip closure. Designed for urban daily wear.",
-    price: 45000,
-    category: "Tops",
-    image: "/images/625d0334-5f9a-42ac-9dee-51a9bfcf0948.jpg",
-    sizes: ["M", "L", "XL"],
-    colors: ["#000000", "#333333"]
-  },
-  {
-    id: "shirt-8",
-    shopifyVariantId: "45000000000015",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Windbreaker",
-    description: "Water-resistant matte nylon windbreaker featuring all-over tonal jacquard monogram print, adjustable bungee hems, and mesh lining.",
-    price: 45000,
-    category: "Tops",
-    image: "/images/1dd03c07-a8d2-4b13-83af-e01286a518a1.jpg",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#050505"]
-  },
-  {
-    id: "shirt-4",
-    shopifyVariantId: "45000000000011",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Tracksuit Set",
-    description: "Full luxury streetwear tracksuit set. Relaxed fit pullover jacket and matching cargo sweatpants styled with signature metal zippers.",
-    price: 45000,
-    category: "Tops",
-    image: "/images/b4fb32c7-6ce4-4dff-9ef8-a606e5684c73.jpg",
-    badge: "SS26 Premium",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000", "#1a1a1a"]
   },
 
   // ── CAPS & HATS ──
@@ -249,18 +180,18 @@ export const products: Product[] = [
     description: "A vintage-inspired streetwear bucket hat in technical nylon canvas with all-over woven monogram detailing.",
     price: 22250,
     category: "Caps",
-    image: "/images/ae11ea75-fe56-4d4b-b9aa-ce625f68d750.jpg",
+    image: "/images/7683c590-dc42-47ec-b0e4-28d748076d05.jpg",
     sizes: ["One Size"],
     colors: ["#000000", "#d4af37"]
   },
   {
     id: "hat-2",
     shopifyVariantId: "45000000000008",
-    name: "STEEZY By Yeenks Inscription Snapback Cap",
+    name: "STEEZY By Yeenks - Inscription Snapback Cap",
     description: "Adjustable 6-panel snapback cap made from premium twill cotton, embroidered with the signature logo in gold thread.",
     price: 22000,
     category: "Caps",
-    image: "/images/c540c115-2167-4cce-a411-6acfcc765a57.jpg",
+    image: "/images/7683c590-dc42-47ec-b0e4-28d748076d05.jpg",
     badge: "Best Seller",
     sizes: ["One Size"],
     colors: ["#000000", "#ffffff"]
@@ -268,7 +199,7 @@ export const products: Product[] = [
   {
     id: "hat-3",
     shopifyVariantId: "45000000000016",
-    name: "MXUNDASTOOD Classic Snapback (Black)",
+    name: "MXUNDASTOOD Classic Snapback - Black",
     description: "Distressed raw-edge cotton cap with embroidered collection branding and adjustable metal slide back closure.",
     price: 22500,
     category: "Caps",
@@ -279,7 +210,7 @@ export const products: Product[] = [
   {
     id: "hat-4",
     shopifyVariantId: "45000000000032",
-    name: "MXUNDASTOOD Logo Classic Snapback (Black)",
+    name: "MXUNDASTOOD Logo Classic Snapback- Black",
     description: "Premium unstructured snapback cap with signature white/gold 3D logo embroidery across the front panel.",
     price: 22500,
     category: "Caps",
