@@ -1,10 +1,8 @@
-/* ═══════════════════════════════════════════════════════════════
-   YEENKSLUXE — Premium Luxury Streetwear Design System
-   Refined Asymmetric Editorial Aesthetic
-   ═══════════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Montserrat:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Fonts are loaded from Next.js layout variables */
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Montserrat', sans-serif;
 
   --bg-primary: #050505;
   --bg-secondary: #0a0a0a;
@@ -1131,7 +1129,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .close-modal-btn:hover { background: #fff; color: #000; }
 .modal-gallery {
-  background: #070707;
+  background: var(--bg-tertiary);
   display: flex; align-items: center; justify-content: center;
   padding: 2rem; border-right: 1px solid var(--border-color);
 }
@@ -1411,4 +1409,113 @@ img { max-width: 100%; height: auto; display: block; }
   .manifesto-card { padding: 2rem 1.5rem; text-align: center; }
   .featured-name { font-size: 1.8rem; }
   .featured-image { height: 320px !important; }
+}
+
+/* ── UPPER DISPLAY SLIDER ── */
+.upper-display {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+.upper-display-inner {
+    display: flex;
+    align-items: center;
+    gap: clamp(2rem, 6vw, 5rem);
+    min-height: clamp(320px, 50vw, 580px);
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5rem);
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+.upper-display-text { flex: 1; min-width: 0; }
+.upper-display-heading {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5.5vw, 4rem);
+    font-weight: 300;
+    color: var(--text-primary);
+    line-height: 1.05;
+    margin-bottom: 0.8rem;
+}
+.upper-display-sub {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--text-secondary);
+    letter-spacing: 0.12em;
+    margin-bottom: 2rem;
+}
+.upper-display-btn {
+    display: inline-block;
+    background: var(--text-primary);
+    color: var(--bg-secondary);
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 14px 36px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    border: none;
+    cursor: pointer;
+}
+.upper-display-btn:hover { opacity: 0.85; }
+.upper-display-imgstack {
+    flex-shrink: 0;
+    width: clamp(220px, 35%, 460px);
+    position: relative;
+    height: clamp(260px, 38vw, 460px);
+}
+.upper-display-imgstack img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+}
+.upper-display-imgstack img.ud-img-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+/* Image-only enter animations */
+.upper-display-imgstack img.ud-img-entering-fade {
+    animation: ud-img-fade 0.75s ease forwards;
+}
+.upper-display-imgstack img.ud-img-entering-slideLeft {
+    animation: ud-img-slideLeft 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.upper-display-imgstack img.ud-img-entering-slideUp {
+    animation: ud-img-slideUp 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.upper-display-imgstack img.ud-img-entering-zoom {
+    animation: ud-img-zoom 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.upper-display-imgstack img.ud-img-entering-flip {
+    animation: ud-img-flip 0.7s ease forwards;
+}
+@keyframes ud-img-fade      { from{opacity:0}                                        to{opacity:1} }
+@keyframes ud-img-slideLeft { from{opacity:0; transform:translateX(40px)}            to{opacity:1; transform:translateX(0)} }
+@keyframes ud-img-slideUp   { from{opacity:0; transform:translateY(30px)}            to{opacity:1; transform:translateY(0)} }
+@keyframes ud-img-zoom      { from{opacity:0; transform:scale(1.08)}                 to{opacity:1; transform:scale(1)} }
+@keyframes ud-img-flip      { from{opacity:0; transform:perspective(600px) rotateY(20deg)} to{opacity:1; transform:perspective(600px) rotateY(0)} }
+
+.ud-dots {
+    display: flex; gap: 8px;
+    justify-content: flex-start;
+    margin-top: 1.5rem;
+}
+.ud-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--border-color); border: none; cursor: pointer; padding: 0;
+    transition: background 0.2s, transform 0.2s;
+}
+.ud-dot.active { background: var(--text-primary); transform: scale(1.3); }
+@media (max-width: 768px) {
+    .upper-display-inner { flex-direction: column; text-align: center; }
+    .upper-display-imgstack { width: 100%; height: 320px; }
+    .ud-dots { justify-content: center; }
 }

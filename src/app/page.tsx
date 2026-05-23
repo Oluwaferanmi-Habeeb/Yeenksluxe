@@ -34,6 +34,33 @@ const heroSlides = [
   }
 ];
 
+const upperDisplaySlides = [
+  {
+    image: "/images/a3548e8a-a0bd-4271-ae46-c588155d8144.jpg",
+    heading: "MADE FOR THE ONES WHO RUN THE CITY",
+    sub: "untouchable. built to take over",
+    btnText: "SECURE THE DRIP",
+    category: "Shirts",
+    trans: "zoom"
+  },
+  {
+    image: "/images/ca25884a-e701-435e-9a8e-e21ceff2a72c.jpg",
+    heading: "DISTINCTIVE SILHOUETTES & SHAPES",
+    sub: "designed for movement. crafted for luxury",
+    btnText: "SHOP ARMLESS TOPS",
+    category: "Armless Tops",
+    trans: "slideLeft"
+  },
+  {
+    image: "/images/7683c590-dc42-47ec-b0e4-28d748076d05.jpg",
+    heading: "SS26 CAMPAIGN CAPS & ACCS",
+    sub: "limited rotation. wear the difference",
+    btnText: "SHOP CAPS",
+    category: "Hats",
+    trans: "slideUp"
+  }
+];
+
 export default function Home() {
   // Storefront states
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -45,7 +72,8 @@ export default function Home() {
   const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'shopify' | 'whatsapp'>('paystack');
   const [mounted, setMounted] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
+  const [udIndex, setUdIndex] = useState(0);
 
   // Hero slideshow timer
   useEffect(() => {
@@ -53,6 +81,15 @@ export default function Home() {
     const interval = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
+    return () => clearInterval(interval);
+  }, [checkoutStep]);
+
+  // Upper Display slider timer
+  useEffect(() => {
+    if (checkoutStep !== 'shop') return;
+    const interval = setInterval(() => {
+      setUdIndex((prev) => (prev + 1) % upperDisplaySlides.length);
+    }, 6000);
     return () => clearInterval(interval);
   }, [checkoutStep]);
 
@@ -262,18 +299,21 @@ export default function Home() {
       {/* HEADER NAVBAR */}
       <nav className="navbar">
         <div className="container navbar-inner">
-          <div className="logo-container" onClick={() => { setCheckoutStep('shop'); setSelectedCategory('All'); }} style={{ cursor: 'pointer' }}>
-            <div className="logo" style={{ position: 'relative', width: '130px', height: '24px' }}>
+          <div className="logo-container" onClick={() => { setCheckoutStep('shop'); setSelectedCategory('All'); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div className="logo" style={{ position: 'relative', width: '44px', height: '44px', flexShrink: 0 }}>
               <Image 
                 src="/images/logoo.jpg" 
                 alt="YEENKSLUXE" 
                 fill 
                 priority 
                 className="logo-img object-contain" 
-                sizes="130px"
+                sizes="44px"
               />
             </div>
-            <span className="logo-tagline">Where streetwear meets luxury. Designed for those who move different</span>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <span style={{ fontSize: '1.1rem', fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: 'var(--font-display)', lineHeight: '1.1' }}>YEENKSLUXE</span>
+              <span className="logo-tagline" style={{ marginTop: '0.15rem' }}>Where streetwear meets luxury. Designed for those who move different</span>
+            </div>
           </div>
 
           {checkoutStep === 'shop' && (
@@ -421,54 +461,52 @@ export default function Home() {
               </div>
             </header>
 
-            {/* FEATURED PRODUCT HIGHLIGHT */}
-            <section className="featured-section">
-              <div className="container">
-                <div className="featured-inner">
-                  <div className="featured-image" style={{ position: 'relative', width: '100%', height: '480px' }}>
-                    <Image src="/images/b4fb32c7-6ce4-4dff-9ef8-a606e5684c73.jpg" alt="Featured Vanguard Tracksuit Set" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+            {/* UPPER DISPLAY SLIDER */}
+            <section className="upper-display" id="upperDisplay">
+              <div className="upper-display-inner">
+                {/* Text Side: displays the active slide's copy */}
+                <div className="upper-display-text">
+                  <h2 className="upper-display-heading">
+                    {upperDisplaySlides[udIndex].heading}
+                  </h2>
+                  <p className="upper-display-sub">
+                    {upperDisplaySlides[udIndex].sub}
+                  </p>
+                  <button 
+                    className="upper-display-btn"
+                    onClick={() => {
+                      setSelectedCategory(upperDisplaySlides[udIndex].category);
+                      scrollToShop();
+                    }}
+                  >
+                    {upperDisplaySlides[udIndex].btnText}
+                  </button>
+                  
+                  <div className="ud-dots">
+                    {upperDisplaySlides.map((_, dotIdx) => (
+                      <button 
+                        key={dotIdx}
+                        className={`ud-dot ${udIndex === dotIdx ? 'active' : ''}`}
+                        onClick={() => setUdIndex(dotIdx)}
+                        aria-label={`Go to slide ${dotIdx + 1}`}
+                      />
+                    ))}
                   </div>
-                  <div className="featured-info">
-                    <span className="featured-badge">NEW SEASON HERO</span>
-                    <h2 className="featured-name">Vanguard Tracksuit Set</h2>
-                    <p className="featured-price">₦185,000</p>
-                    <p className="featured-description">
-                      Elite heavyweight tracksuit set featuring raw-edge panel details, signature metal zippers, and an oversized drop-shoulder cut. Crafted from high-density organic cotton for the ultimate premium street steeze.
-                    </p>
-                    
-                    <div className="featured-spec-sheet">
-                      <div className="spec-row">
-                        <span className="spec-label">Product Class</span>
-                        <span className="spec-value">Luxury Street Apparel</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Origin</span>
-                        <span className="spec-value">Designed in Milan / Crafted in Lagos</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Materials</span>
-                        <span className="spec-value">100% Organic Cotton Fleece (420GSM)</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Hardware</span>
-                        <span className="spec-value">Signature Custom Inscribed Pull Zippers</span>
-                      </div>
-                      <div className="spec-row">
-                        <span className="spec-label">Edition Size</span>
-                        <span className="spec-value">Limited SS26 Run</span>
-                      </div>
-                    </div>
+                </div>
 
-                    <button 
-                      className="featured-cta"
-                      onClick={() => {
-                        const prod = products.find(p => p.id === 'shirt-4');
-                        if (prod) openQuickView(prod);
-                      }}
-                    >
-                      QUICK VIEW
-                    </button>
-                  </div>
+                {/* Image Side: all images stacked, active image transitions */}
+                <div className="upper-display-imgstack">
+                  {upperDisplaySlides.map((slide, imgIdx) => (
+                    <Image 
+                      key={imgIdx}
+                      src={slide.image}
+                      alt={slide.heading}
+                      fill
+                      priority={imgIdx === 0}
+                      sizes="(max-width: 768px) 100vw, 460px"
+                      className={`object-cover ${udIndex === imgIdx ? `ud-img-active ud-img-entering-${slide.trans}` : ''}`}
+                    />
+                  ))}
                 </div>
               </div>
             </section>
@@ -885,82 +923,82 @@ export default function Home() {
           <div className="filmstrip-track">
             {/* Slide 1 */}
             <div className="filmstrip-item">
-              <Image src="/images/snaptik_7625367276497292565_0_v2.jpeg" alt="System 01 Campaign" fill className="filmstrip-image" sizes="260px" />
+              <Image src="/images/ca25884a-e701-435e-9a8e-e21ceff2a72c.jpg" alt="Vanguard Armless Top" fill className="filmstrip-image" sizes="260px" />
               <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">System 01 Campaign</span>
+                <span className="filmstrip-caption-title">Vanguard Armless Top</span>
               </div>
             </div>
             {/* Slide 2 */}
             <div className="filmstrip-item">
-              <Image src="/images/snaptik_7621552137285192981_0_v2.jpeg" alt="Street Editorial" fill className="filmstrip-image" sizes="260px" />
+              <Image src="/images/a3548e8a-a0bd-4271-ae46-c588155d8144.jpg" alt="Urban Vanguard Hoodie" fill className="filmstrip-image" sizes="260px" />
               <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Street Editorial</span>
+                <span className="filmstrip-caption-title">Urban Vanguard Hoodie</span>
               </div>
             </div>
             {/* Slide 3 */}
             <div className="filmstrip-item">
-              <Image src="/images/snaptik_7621552137285192981_1_v2.jpeg" alt="Raw Silhouettes" fill className="filmstrip-image" sizes="260px" />
+              <Image src="/images/WhatsApp Image 2026-05-23 at 9.44.46 AM.jpeg" alt="SS26 Campaign Hoodie" fill className="filmstrip-image" sizes="260px" />
               <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Raw Silhouettes</span>
+                <span className="filmstrip-caption-title">SS26 Campaign Hoodie</span>
               </div>
             </div>
             {/* Slide 4 */}
             <div className="filmstrip-item">
-              <Image src="/images/snaptik_7621552137285192981_2_v2.jpeg" alt="Chrome Luxury" fill className="filmstrip-image" sizes="260px" />
+              <Image src="/images/73f7c4aa-02d0-4006-9096-e2f6bb98edfe.jpg" alt="Phantom Sleeveless" fill className="filmstrip-image" sizes="260px" />
               <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Chrome Luxury</span>
+                <span className="filmstrip-caption-title">Phantom Sleeveless</span>
               </div>
             </div>
             {/* Slide 5 */}
             <div className="filmstrip-item">
-              <Image src="/images/snaptik_7625367276497292565_1_v2.jpeg" alt="Modern Essentials" fill className="filmstrip-image" sizes="260px" />
+              <Image src="/images/3caca3e0-ce04-4c28-ae7c-9d519ce15f6d.jpg" alt="Signature Tank Top" fill className="filmstrip-image" sizes="260px" />
               <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Modern Essentials</span>
+                <span className="filmstrip-caption-title">Signature Tank Top</span>
               </div>
             </div>
             {/* Slide 6 */}
             <div className="filmstrip-item">
-              <Image src="/images/snaptik_7625367276497292565_2_v2.jpeg" alt="System Edit" fill className="filmstrip-image" sizes="260px" />
+              <Image src="/images/b4fb32c7-6ce4-4dff-9ef8-a606e5684c73.jpg" alt="Vanguard Tracksuit Set" fill className="filmstrip-image" sizes="260px" />
               <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">System Edit</span>
+                <span className="filmstrip-caption-title">Vanguard Tracksuit Set</span>
               </div>
             </div>
 
             {/* Duplicate for seamless infinite scroll */}
             <div className="filmstrip-item">
-              <Image src="/images/snaptik_7625367276497292565_0_v2.jpeg" alt="System 01 Campaign" fill className="filmstrip-image" sizes="260px" />
+              <Image src="/images/ca25884a-e701-435e-9a8e-e21ceff2a72c.jpg" alt="Vanguard Armless Top" fill className="filmstrip-image" sizes="260px" />
               <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">System 01 Campaign</span>
+                <span className="filmstrip-caption-title">Vanguard Armless Top</span>
               </div>
             </div>
             <div className="filmstrip-item">
-              <Image src="/images/snaptik_7621552137285192981_0_v2.jpeg" alt="Street Editorial" fill className="filmstrip-image" sizes="260px" />
+              <Image src="/images/a3548e8a-a0bd-4271-ae46-c588155d8144.jpg" alt="Urban Vanguard Hoodie" fill className="filmstrip-image" sizes="260px" />
               <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Street Editorial</span>
+                <span className="filmstrip-caption-title">Urban Vanguard Hoodie</span>
               </div>
             </div>
             <div className="filmstrip-item">
-              <Image src="/images/snaptik_7621552137285192981_1_v2.jpeg" alt="Raw Silhouettes" fill className="filmstrip-image" sizes="260px" />
+              <Image src="/images/WhatsApp Image 2026-05-23 at 9.44.46 AM.jpeg" alt="SS26 Campaign Hoodie" fill className="filmstrip-image" sizes="260px" />
               <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Raw Silhouettes</span>
+                <span className="filmstrip-caption-title">SS26 Campaign Hoodie</span>
               </div>
             </div>
             <div className="filmstrip-item">
-              <Image src="/images/snaptik_7621552137285192981_2_v2.jpeg" alt="Chrome Luxury" fill className="filmstrip-image" sizes="260px" />
+              <Image src="/images/73f7c4aa-02d0-4006-9096-e2f6bb98edfe.jpg" alt="Phantom Sleeveless" fill className="filmstrip-image" sizes="260px" />
               <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Chrome Luxury</span>
+                <span className="filmstrip-caption-title">Phantom Sleeveless</span>
               </div>
             </div>
             <div className="filmstrip-item">
-              <Image src="/images/snaptik_7625367276497292565_1_v2.jpeg" alt="Modern Essentials" fill className="filmstrip-image" sizes="260px" />
+              <Image src="/images/3caca3e0-ce04-4c28-ae7c-9d519ce15f6d.jpg" alt="Signature Tank Top" fill className="filmstrip-image" sizes="260px" />
               <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Modern Essentials</span>
+                <span className="filmstrip-caption-title">Signature Tank Top</span>
               </div>
             </div>
             <div className="filmstrip-item">
-              <Image src="/images/snaptik_7625367276497292565_2_v2.jpeg" alt="System Edit" fill className="filmstrip-image" sizes="260px" />
+              <Image src="/images/b4fb32c7-6ce4-4dff-9ef8-a606e5684c73.jpg" alt="Vanguard Tracksuit Set" fill className="filmstrip-image" sizes="260px" />
               <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">System Edit</span>
+                <span className="filmstrip-caption-title">Vanguard Tracksuit Set</span>
               </div>
             </div>
           </div>
@@ -972,14 +1010,19 @@ export default function Home() {
         <div className="container">
           <div className="footer-inner">
             <div className="footer-brand">
-              <div className="footer-logo" style={{ position: 'relative', width: '130px', height: '24px', marginBottom: '1rem' }}>
-                <Image 
-                  src="/images/logoo.jpg" 
-                  alt="YEENKSLUXE" 
-                  fill 
-                  className="logo-img object-contain" 
-                  sizes="130px"
-                />
+              <div className="footer-logo-container" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                <div className="footer-logo" style={{ position: 'relative', width: '44px', height: '44px', flexShrink: 0 }}>
+                  <Image 
+                    src="/images/logoo.jpg" 
+                    alt="YEENKSLUXE" 
+                    fill 
+                    className="logo-img object-contain" 
+                    sizes="44px"
+                  />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: '1.1rem', fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: 'var(--font-display)', lineHeight: '1.1' }}>YEENKSLUXE</span>
+                </div>
               </div>
               <p className="footer-description">
                 Where streetwear meets luxury. Designed for those who move different.
@@ -1265,7 +1308,7 @@ export default function Home() {
                         if (!h || !w) return <span className="result-prompt">Enter measurements to calculate custom recommendation.</span>;
                         
 
-                        if (selectedProduct.category === 'Shirts') {
+                        if (['Shirts', 'Armless Tops'].includes(selectedProduct.category)) {
                           let rec = 'M';
                           if (h < 170 && w < 65) rec = 'S';
                           else if (h < 178 && w < 78) rec = 'M';
@@ -1297,7 +1340,7 @@ export default function Home() {
                     <div className="specs-section">
                       <h4 className="specs-title-sub">FABRIC PROFILE</h4>
                       <ul className="specs-list">
-                        <li><strong>Fabric:</strong> {selectedProduct.category === 'Shirts' ? '100% Organic Heavyweight Cotton (280GSM)' : 'Heavy-Duty Technical Canvas'}</li>
+                        <li><strong>Fabric:</strong> {['Shirts', 'Armless Tops'].includes(selectedProduct.category) ? '100% Organic Heavyweight Cotton (280GSM)' : 'Heavy-Duty Technical Canvas'}</li>
                         <li><strong>Weave:</strong> Loopback pre-shrunk luxury weave</li>
                         <li><strong>Origin:</strong> Crafted in Lagos / Milan</li>
                         <li><strong>Graphics:</strong> Custom eco-friendly high-density screenprint</li>
@@ -1309,7 +1352,7 @@ export default function Home() {
                       <div className="fit-ratings">
                         <div className="rating-row">
                           <span>Fit Style:</span>
-                          <span style={{ color: 'white', fontWeight: 600 }}>{selectedProduct.category === 'Shirts' ? 'Boxy / Oversized' : 'True to Size'}</span>
+                          <span style={{ color: 'white', fontWeight: 600 }}>{['Shirts', 'Armless Tops'].includes(selectedProduct.category) ? 'Boxy / Oversized' : 'True to Size'}</span>
                         </div>
                         <div className="rating-row">
                           <span>Stitch Work:</span>
