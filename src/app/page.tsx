@@ -39,16 +39,16 @@ const upperDisplaySlides = [
     image: "/images/WhatsApp Image 2026-05-23 at 9.44.46 AM.jpeg",
     heading: "MADE FOR THE ONES WHO RUN THE CITY",
     sub: "untouchable. built to take over",
-    btnText: "SECURE THE DRIP",
-    category: "Shirts",
+    btnText: "SECURE THE drip",
+    category: "Tops",
     trans: "zoom"
   },
   {
     image: "/images/snaptik_7621552137285192981_2_v2.jpeg",
     heading: "DISTINCTIVE SILHOUETTES & SHAPES",
     sub: "designed for movement. crafted for luxury",
-    btnText: "SHOP ARMLESS TOPS",
-    category: "Armless Tops",
+    btnText: "SHOP TOPS",
+    category: "Tops",
     trans: "slideLeft"
   },
   {
@@ -56,7 +56,7 @@ const upperDisplaySlides = [
     heading: "SS26 CAMPAIGN CAPS & ACCS",
     sub: "limited rotation. wear the difference",
     btnText: "SHOP CAPS",
-    category: "Hats",
+    category: "Caps",
     trans: "slideUp"
   }
 ];
@@ -69,7 +69,7 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState<'shop' | 'checkout' | 'success'>('shop');
-  const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'shopify' | 'whatsapp'>('paystack');
+  const [paymentMethod, setPaymentMethod] = useState<'flutterwave' | 'shopify' | 'whatsapp'>('flutterwave');
   const [mounted, setMounted] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
   const [theme, setTheme] = useState<'dark' | 'light'>('light');
@@ -264,29 +264,43 @@ export default function Home() {
       const checkoutUrl = getShopifyCheckoutUrl(shopifyItems);
       window.open(checkoutUrl, '_blank');
       setCheckoutStep('success');
-    } else {
-      // Paystack Checkout Flow
-      const PaystackPop = (window as any).PaystackPop;
-      if (!PaystackPop) {
+    } else if (paymentMethod === 'flutterwave') {
+      // Flutterwave Checkout Flow
+      const FlutterwaveCheckout = (window as any).FlutterwaveCheckout;
+      if (!FlutterwaveCheckout) {
         alert('Payment gateway script loading. Please try again in a moment.');
         return;
       }
       
-      const handler = PaystackPop.setup({
-        key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || 'pk_test_e3df911961bf386c954546a188f6c561b32f2fba', // Configurable public key with sandbox fallback
-        email: checkoutForm.email || 'customer@yeenksluxe.com',
-        amount: cartSubtotal * 100, // in kobo
+      FlutterwaveCheckout({
+        public_key: 'a8c75c71b8e2a69f5e6a877fce04b48b',
+        tx_ref: 'YNKS-' + Math.floor(Math.random() * 1000000000 + 1),
+        amount: cartSubtotal,
         currency: 'NGN',
-        ref: 'YNKS-' + Math.floor(Math.random() * 1000000000 + 1),
-        callback: function(response: any){
-          alert('Payment Successful! Reference: ' + response.reference);
-          setCheckoutStep('success');
+        payment_options: 'card, banktransfer, ussd',
+        customer: {
+          email: checkoutForm.email || 'customer@yeenksluxe.com',
+          phone_number: checkoutForm.phone,
+          name: checkoutForm.name,
         },
-        onClose: function(){
-          alert('Transaction cancelled.');
+        customizations: {
+          title: 'YEENKSLUXE APPAREL',
+          description: 'Payment for luxury streetwear garments',
+          logo: window.location.origin + '/images/logoo.jpg',
+        },
+        callback: function(data: any){
+          console.log("payment callback:", data);
+          if (data.status === "successful" || data.status === "completed") {
+            alert('Payment Successful! Transaction Reference: ' + (data.tx_ref || data.transaction_id));
+            setCheckoutStep('success');
+          } else {
+            alert('Payment was not completed successfully. Status: ' + data.status);
+          }
+        },
+        onclose: function(){
+          alert('Transaction closed.');
         }
       });
-      handler.openIframe();
     }
   };
 
@@ -619,7 +633,7 @@ export default function Home() {
             {/* EDITORIAL LIFESTYLE PANELS */}
             <section className="editorial-section reveal-on-scroll">
               <div className="editorial-grid">
-                <div className="editorial-panel" style={{ position: 'relative' }} onClick={() => { setSelectedCategory('Shirts'); scrollToShop(); }}>
+                <div className="editorial-panel" style={{ position: 'relative' }} onClick={() => { setSelectedCategory('Tops'); scrollToShop(); }}>
                   <Image src="/images/snaptik_7625367276497292565_2_v2.jpeg" alt="New Arrivals Apparel" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
                   <div className="editorial-panel-overlay"></div>
                   <div className="editorial-caption">
@@ -783,18 +797,18 @@ export default function Home() {
                       <label className="form-label" style={{ display: 'block', marginBottom: '0.75rem' }}>Payment Gateway / Method *</label>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
                         <div 
-                          onClick={() => setPaymentMethod('paystack')}
+                          onClick={() => setPaymentMethod('flutterwave')}
                           style={{
-                            border: `1px solid ${paymentMethod === 'paystack' ? 'var(--accent)' : 'var(--border-color)'}`,
+                            border: `1px solid ${paymentMethod === 'flutterwave' ? 'var(--accent)' : 'var(--border-color)'}`,
                             padding: '1rem',
                             cursor: 'pointer',
-                            background: paymentMethod === 'paystack' ? 'rgba(200, 169, 110, 0.05)' : 'var(--bg-tertiary)',
+                            background: paymentMethod === 'flutterwave' ? 'rgba(200, 169, 110, 0.05)' : 'var(--bg-tertiary)',
                             transition: 'all 0.3s ease',
                             textAlign: 'center'
                           }}
                         >
-                          <div style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em', color: paymentMethod === 'paystack' ? 'white' : 'var(--text-secondary)' }}>NAIRA CHECKOUT</div>
-                          <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--accent)', marginTop: '0.25rem' }}>Paystack (Local)</div>
+                          <div style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em', color: paymentMethod === 'flutterwave' ? 'white' : 'var(--text-secondary)' }}>NAIRA CHECKOUT</div>
+                          <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--accent)', marginTop: '0.25rem' }}>Flutterwave</div>
                         </div>
                         <div 
                           onClick={() => setPaymentMethod('shopify')}
@@ -829,7 +843,7 @@ export default function Home() {
 
                     <div className="form-group-full">
                       <button type="submit" className="place-order-btn">
-                        {paymentMethod === 'paystack' && 'PAY SECURELY WITH PAYSTACK'}
+                        {paymentMethod === 'flutterwave' && 'PAY SECURELY WITH FLUTTERWAVE'}
                         {paymentMethod === 'shopify' && 'PROCEED TO SHOPIFY CHECKOUT'}
                         {paymentMethod === 'whatsapp' && 'PLACE ORDER ON WHATSAPP'}
                       </button>
@@ -941,86 +955,43 @@ export default function Home() {
         </div>
         <div className="filmstrip-container">
           <div className="filmstrip-track">
-            {/* Slide 1 */}
-            <div className="filmstrip-item">
-              <Image src="/images/ca25884a-e701-435e-9a8e-e21ceff2a72c.jpg" alt="Vanguard Armless Top" fill className="filmstrip-image" sizes="260px" />
-              <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Vanguard Armless Top</span>
+            {[
+              "/images/snaptik_7621552137285192981_0_v2.jpeg",
+              "/images/snaptik_7621552137285192981_1_v2.jpeg",
+              "/images/snaptik_7621552137285192981_2_v2.jpeg",
+              "/images/snaptik_7621552137285192981_3_v2.jpeg",
+              "/images/snaptik_7621552137285192981_4_v2.jpeg",
+              "/images/snaptik_7625367276497292565_0_v2.jpeg",
+              "/images/snaptik_7625367276497292565_1_v2.jpeg",
+              "/images/snaptik_7625367276497292565_2_v2.jpeg",
+              "/images/snaptik_7625367276497292565_3_v2.jpeg"
+            ].map((imgUrl, idx) => (
+              <div className="filmstrip-item" key={idx}>
+                <Image src={imgUrl} alt={`SS26 Editorial ${idx + 1}`} fill className="filmstrip-image" sizes="260px" />
+                <div className="filmstrip-caption">
+                  <span className="filmstrip-caption-title">STEEZY &apos;26 EDITORIAL #{idx + 1}</span>
+                </div>
               </div>
-            </div>
-            {/* Slide 2 */}
-            <div className="filmstrip-item">
-              <Image src="/images/a3548e8a-a0bd-4271-ae46-c588155d8144.jpg" alt="Urban Vanguard Hoodie" fill className="filmstrip-image" sizes="260px" />
-              <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Urban Vanguard Hoodie</span>
-              </div>
-            </div>
-            {/* Slide 3 */}
-            <div className="filmstrip-item">
-              <Image src="/images/WhatsApp Image 2026-05-23 at 9.44.46 AM.jpeg" alt="SS26 Campaign Hoodie" fill className="filmstrip-image" sizes="260px" />
-              <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">SS26 Campaign Hoodie</span>
-              </div>
-            </div>
-            {/* Slide 4 */}
-            <div className="filmstrip-item">
-              <Image src="/images/73f7c4aa-02d0-4006-9096-e2f6bb98edfe.jpg" alt="Phantom Sleeveless" fill className="filmstrip-image" sizes="260px" />
-              <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Phantom Sleeveless</span>
-              </div>
-            </div>
-            {/* Slide 5 */}
-            <div className="filmstrip-item">
-              <Image src="/images/3caca3e0-ce04-4c28-ae7c-9d519ce15f6d.jpg" alt="Signature Tank Top" fill className="filmstrip-image" sizes="260px" />
-              <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Signature Tank Top</span>
-              </div>
-            </div>
-            {/* Slide 6 */}
-            <div className="filmstrip-item">
-              <Image src="/images/b4fb32c7-6ce4-4dff-9ef8-a606e5684c73.jpg" alt="Vanguard Tracksuit Set" fill className="filmstrip-image" sizes="260px" />
-              <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Vanguard Tracksuit Set</span>
-              </div>
-            </div>
-
+            ))}
             {/* Duplicate for seamless infinite scroll */}
-            <div className="filmstrip-item">
-              <Image src="/images/ca25884a-e701-435e-9a8e-e21ceff2a72c.jpg" alt="Vanguard Armless Top" fill className="filmstrip-image" sizes="260px" />
-              <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Vanguard Armless Top</span>
+            {[
+              "/images/snaptik_7621552137285192981_0_v2.jpeg",
+              "/images/snaptik_7621552137285192981_1_v2.jpeg",
+              "/images/snaptik_7621552137285192981_2_v2.jpeg",
+              "/images/snaptik_7621552137285192981_3_v2.jpeg",
+              "/images/snaptik_7621552137285192981_4_v2.jpeg",
+              "/images/snaptik_7625367276497292565_0_v2.jpeg",
+              "/images/snaptik_7625367276497292565_1_v2.jpeg",
+              "/images/snaptik_7625367276497292565_2_v2.jpeg",
+              "/images/snaptik_7625367276497292565_3_v2.jpeg"
+            ].map((imgUrl, idx) => (
+              <div className="filmstrip-item" key={`dup-${idx}`}>
+                <Image src={imgUrl} alt={`SS26 Editorial ${idx + 1} Duplicate`} fill className="filmstrip-image" sizes="260px" />
+                <div className="filmstrip-caption">
+                  <span className="filmstrip-caption-title">STEEZY &apos;26 EDITORIAL #{idx + 1}</span>
+                </div>
               </div>
-            </div>
-            <div className="filmstrip-item">
-              <Image src="/images/a3548e8a-a0bd-4271-ae46-c588155d8144.jpg" alt="Urban Vanguard Hoodie" fill className="filmstrip-image" sizes="260px" />
-              <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Urban Vanguard Hoodie</span>
-              </div>
-            </div>
-            <div className="filmstrip-item">
-              <Image src="/images/WhatsApp Image 2026-05-23 at 9.44.46 AM.jpeg" alt="SS26 Campaign Hoodie" fill className="filmstrip-image" sizes="260px" />
-              <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">SS26 Campaign Hoodie</span>
-              </div>
-            </div>
-            <div className="filmstrip-item">
-              <Image src="/images/73f7c4aa-02d0-4006-9096-e2f6bb98edfe.jpg" alt="Phantom Sleeveless" fill className="filmstrip-image" sizes="260px" />
-              <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Phantom Sleeveless</span>
-              </div>
-            </div>
-            <div className="filmstrip-item">
-              <Image src="/images/3caca3e0-ce04-4c28-ae7c-9d519ce15f6d.jpg" alt="Signature Tank Top" fill className="filmstrip-image" sizes="260px" />
-              <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Signature Tank Top</span>
-              </div>
-            </div>
-            <div className="filmstrip-item">
-              <Image src="/images/b4fb32c7-6ce4-4dff-9ef8-a606e5684c73.jpg" alt="Vanguard Tracksuit Set" fill className="filmstrip-image" sizes="260px" />
-              <div className="filmstrip-caption">
-                <span className="filmstrip-caption-title">Vanguard Tracksuit Set</span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -1052,8 +1023,8 @@ export default function Home() {
             <div className="footer-links-col">
               <h4 className="footer-col-title">COLLECTIONS</h4>
               <div className="footer-links">
-                <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Shirts'); setCheckoutStep('shop'); scrollToShop(); }}>SHIRTS</a>
-                <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Hats'); setCheckoutStep('shop'); scrollToShop(); }}>HATS</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Tops'); setCheckoutStep('shop'); scrollToShop(); }}>TOPS</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Caps'); setCheckoutStep('shop'); scrollToShop(); }}>CAPS</a>
                 <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Accessories'); setCheckoutStep('shop'); scrollToShop(); }}>ACCESSORIES</a>
               </div>
             </div>
@@ -1328,13 +1299,14 @@ export default function Home() {
                         if (!h || !w) return <span className="result-prompt">Enter measurements to calculate custom recommendation.</span>;
                         
 
-                        if (['Shirts', 'Armless Tops'].includes(selectedProduct.category)) {
+                        if (selectedProduct.category === 'Tops') {
                           let rec = 'M';
                           if (h < 170 && w < 65) rec = 'S';
                           else if (h < 178 && w < 78) rec = 'M';
                           else if (h < 185 && w < 90) rec = 'L';
                           else if (h >= 185 || w >= 90) rec = 'XL';
                           if (w > 85 && rec !== 'XL') rec = 'XL';
+                          if (w >= 98 && selectedProduct.sizes?.includes('XXL')) rec = 'XXL';
                           
                           return (
                             <div>
@@ -1347,7 +1319,7 @@ export default function Home() {
                         return (
                           <div>
                             <span className="result-size">ONE SIZE</span>
-                            <p className="result-reason">This accessory is designed to fit all profiles with adjustable canvas strap.</p>
+                            <p className="result-reason">This item is designed as adjustable or one-size fit.</p>
                           </div>
                         );
                       })()}
@@ -1366,27 +1338,51 @@ export default function Home() {
                           </tr>
                         </thead>
                         <tbody>
-                          {selectedProduct.category === 'Shirts' ? (
-                            <>
-                              <tr><td>S</td><td>44"</td><td>27"</td><td>20" (DROP)</td></tr>
-                              <tr><td>M</td><td>46"</td><td>28"</td><td>21" (DROP)</td></tr>
-                              <tr><td>L</td><td>48"</td><td>29"</td><td>22" (DROP)</td></tr>
-                              <tr><td>XL</td><td>50"</td><td>30"</td><td>23" (DROP)</td></tr>
-                            </>
-                          ) : selectedProduct.category === 'Armless Tops' ? (
-                            <>
-                              <tr><td>S</td><td>38"</td><td>26"</td><td>SLEEVELESS</td></tr>
-                              <tr><td>M</td><td>40"</td><td>27"</td><td>SLEEVELESS</td></tr>
-                              <tr><td>L</td><td>42"</td><td>28"</td><td>SLEEVELESS</td></tr>
-                              <tr><td>XL</td><td>44"</td><td>29"</td><td>SLEEVELESS</td></tr>
-                            </>
-                          ) : (
-                            <tr>
-                              <td colSpan={4} style={{ textAlign: 'center', padding: '1rem 0', color: 'var(--text-muted)' }}>
-                                ONE SIZE / ADJUSTABLE PROFILE
-                              </td>
-                            </tr>
-                          )}
+                          {(() => {
+                            if (selectedProduct.category === 'Tops') {
+                              const name = selectedProduct.name.toLowerCase();
+                              const isSleeveless = name.includes('armless') || name.includes('tank') || name.includes('raw cut');
+                              const isOuterwear = name.includes('hoodie') || name.includes('sweater') || name.includes('jacket') || name.includes('windbreaker') || name.includes('tracksuit');
+                              
+                              if (isSleeveless) {
+                                return (
+                                  <>
+                                    <tr><td>S</td><td>38&quot;</td><td>26&quot;</td><td>SLEEVELESS</td></tr>
+                                    <tr><td>M</td><td>40&quot;</td><td>27&quot;</td><td>SLEEVELESS</td></tr>
+                                    <tr><td>L</td><td>42&quot;</td><td>28&quot;</td><td>SLEEVELESS</td></tr>
+                                    <tr><td>XL</td><td>44&quot;</td><td>29&quot;</td><td>SLEEVELESS</td></tr>
+                                  </>
+                                );
+                              } else if (isOuterwear) {
+                                return (
+                                  <>
+                                    <tr><td>S</td><td>46&quot;</td><td>26.5&quot;</td><td>24&quot; (SLEEVE)</td></tr>
+                                    <tr><td>M</td><td>48&quot;</td><td>27.5&quot;</td><td>25&quot; (SLEEVE)</td></tr>
+                                    <tr><td>L</td><td>50&quot;</td><td>28.5&quot;</td><td>26&quot; (SLEEVE)</td></tr>
+                                    <tr><td>XL</td><td>52&quot;</td><td>29.5&quot;</td><td>27&quot; (SLEEVE)</td></tr>
+                                    {selectedProduct.sizes?.includes('XXL') && <tr><td>XXL</td><td>54&quot;</td><td>30.5&quot;</td><td>28&quot; (SLEEVE)</td></tr>}
+                                  </>
+                                );
+                              } else {
+                                return (
+                                  <>
+                                    <tr><td>S</td><td>44&quot;</td><td>27&quot;</td><td>20&quot; (DROP)</td></tr>
+                                    <tr><td>M</td><td>46&quot;</td><td>28&quot;</td><td>21&quot; (DROP)</td></tr>
+                                    <tr><td>L</td><td>48&quot;</td><td>29&quot;</td><td>22&quot; (DROP)</td></tr>
+                                    <tr><td>XL</td><td>50&quot;</td><td>30&quot;</td><td>23&quot; (DROP)</td></tr>
+                                    {selectedProduct.sizes?.includes('XXL') && <tr><td>XXL</td><td>52&quot;</td><td>31&quot;</td><td>24&quot; (DROP)</td></tr>}
+                                  </>
+                                );
+                              }
+                            }
+                            return (
+                              <tr>
+                                <td colSpan={4} style={{ textAlign: 'center', padding: '1rem 0', color: 'var(--text-muted)' }}>
+                                  ONE SIZE / ADJUSTABLE PROFILE
+                                </td>
+                              </tr>
+                            );
+                          })()}
                         </tbody>
                       </table>
                     </div>
@@ -1398,7 +1394,7 @@ export default function Home() {
                     <div className="specs-section">
                       <h4 className="specs-title-sub">FABRIC PROFILE</h4>
                       <ul className="specs-list">
-                        <li><strong>Fabric:</strong> {['Shirts', 'Armless Tops'].includes(selectedProduct.category) ? '100% Organic Heavyweight Cotton (280GSM)' : 'Heavy-Duty Technical Canvas'}</li>
+                        <li><strong>Fabric:</strong> {selectedProduct.category === 'Tops' ? '100% Organic Heavyweight Cotton (280GSM)' : 'Heavy-Duty Technical Canvas'}</li>
                         <li><strong>Weave:</strong> Loopback pre-shrunk luxury weave</li>
                         <li><strong>Origin:</strong> Crafted in Lagos</li>
                         <li><strong>Graphics:</strong> Custom eco-friendly high-density screenprint</li>
@@ -1410,7 +1406,7 @@ export default function Home() {
                       <div className="fit-ratings">
                         <div className="rating-row">
                           <span>Fit Style:</span>
-                          <span style={{ color: 'white', fontWeight: 600 }}>{['Shirts', 'Armless Tops'].includes(selectedProduct.category) ? 'Boxy / Oversized' : 'True to Size'}</span>
+                          <span style={{ color: 'white', fontWeight: 600 }}>{selectedProduct.category === 'Tops' ? 'Boxy / Oversized' : 'True to Size'}</span>
                         </div>
                         <div className="rating-row">
                           <span>Stitch Work:</span>
@@ -1441,9 +1437,9 @@ export default function Home() {
         </div>
       )}
 
-      {/* Paystack Inline SDK */}
+      {/* Flutterwave Inline SDK */}
       <Script 
-        src="https://js.paystack.co/v1/inline.js" 
+        src="https://checkout.flutterwave.com/v3.js" 
         strategy="lazyOnload" 
       />
     </div>
