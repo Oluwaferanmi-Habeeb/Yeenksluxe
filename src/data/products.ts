@@ -166,7 +166,7 @@ export const products: Product[] = [
     description: "Runway-featured campaign hoodie featuring high-density graphic print, double-lined hood, and kangaroo pocket details.",
     price: 45000,
     category: "Tops",
-    image: "/images/WhatsApp Image 2026-05-23 at 9.44.46 AM.jpeg",
+    image: "/images/a3548e8a-a0bd-4271-ae46-c588155d8144.jpg",
     badge: "Campaign",
     sizes: ["M", "L", "XL", "XXL"],
     colors: ["#111111", "#ffffff"]

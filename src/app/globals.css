@@ -317,6 +317,15 @@ img { max-width: 100%; height: auto; display: block; }
   100% { transform: translate3d(-50%, 0, 0); }
 }
 
+@keyframes scroll-right {
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+.filmstrip-track.reverse {
+  animation: scroll-right 45s linear infinite;
+}
+
 /* ── Overlay Content ── */
 .hero-overlay-content {
   position: relative;
