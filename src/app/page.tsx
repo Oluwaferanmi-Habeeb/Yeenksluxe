@@ -13,6 +13,27 @@ interface CartItem {
   selectedColor: string;
 }
 
+const heroSlides = [
+  {
+    image: "/images/snaptik_7625367276497292565_0_v2.jpeg",
+    eyebrow: "SYSTEM 01 / SS26",
+    title: "ALL EYES ON YOU",
+    subtitle: "Form. Material. Purpose. Elevating raw street aesthetics into modern structural silhouettes. Built for those who move in silence.",
+  },
+  {
+    image: "/images/snaptik_7621552137285192981_0_v2.jpeg",
+    eyebrow: "SYSTEM 01 / EXCLUSIVE DROP",
+    title: "SHOP THE SALE",
+    subtitle: "Redefining your daily rotation with hand-crafted detailing and heavy canvas. Wear the difference.",
+  },
+  {
+    image: "/images/snaptik_7625367276497292565_2_v2.jpeg",
+    eyebrow: "SYSTEM 01 / CAMPAIGN EDITORIAL",
+    title: "LET YOUR STEEZE DO THE TALKING",
+    subtitle: "Limited quantity drop designed in Milan, crafted in Lagos. A true testament to premium streetwear heritage.",
+  }
+];
+
 export default function Home() {
   // Storefront states
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -23,6 +44,16 @@ export default function Home() {
   const [checkoutStep, setCheckoutStep] = useState<'shop' | 'checkout' | 'success'>('shop');
   const [paymentMethod, setPaymentMethod] = useState<'paystack' | 'shopify' | 'whatsapp'>('paystack');
   const [mounted, setMounted] = useState(false);
+  const [heroIndex, setHeroIndex] = useState(0);
+
+  // Hero slideshow timer
+  useEffect(() => {
+    if (checkoutStep !== 'shop') return;
+    const interval = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [checkoutStep]);
 
   // Modal customization selection
   const [chosenSize, setChosenSize] = useState<string>('');
@@ -218,8 +249,11 @@ export default function Home() {
       {/* HEADER NAVBAR */}
       <nav className="navbar">
         <div className="container navbar-inner">
-          <div className="logo" onClick={() => { setCheckoutStep('shop'); setSelectedCategory('All'); }} style={{ cursor: 'pointer' }}>
-            YEENKS<span>LUXE</span>
+          <div className="logo-container" onClick={() => { setCheckoutStep('shop'); setSelectedCategory('All'); }} style={{ cursor: 'pointer' }}>
+            <div className="logo">
+              YEENKS<span>LUXE</span>
+            </div>
+            <span className="logo-tagline">Your Style, My Style</span>
           </div>
 
           {checkoutStep === 'shop' && (
@@ -273,18 +307,32 @@ export default function Home() {
             {/* HERO COMPOSITION — Immersive Full-Screen Campaign Visual */}
             <header className="hero">
               <div className="hero-bg-media">
-                <Image src="/images/snaptik_7625367276497292565_0_v2.jpeg" alt="YEENKSLUXE SS26 Campaign" fill priority className="hero-bg-image object-cover" sizes="100vw" />
+                <div className="hero-slideshow">
+                  {heroSlides.map((slide, idx) => (
+                    <div 
+                      key={idx} 
+                      className={`hero-slide ${heroIndex === idx ? 'active' : ''}`}
+                    >
+                      <Image 
+                        src={slide.image} 
+                        alt={slide.title} 
+                        fill 
+                        priority={idx === 0} 
+                        className="hero-bg-image object-cover" 
+                        sizes="100vw" 
+                      />
+                    </div>
+                  ))}
+                </div>
                 <div className="hero-vignette"></div>
               </div>
 
               {/* Overlay Content */}
               <div className="hero-overlay-content container">
                 <div className="hero-brand-card">
-                  <span className="hero-eyebrow">SYSTEM 01 / SS26</span>
-                  <h1 className="hero-title">YEENKSLUXE</h1>
-                  <p className="hero-subtitle">
-                    Form. Material. Purpose. Elevating raw street aesthetics into modern structural silhouettes. Built for those who move in silence.
-                  </p>
+                  <span className="hero-eyebrow">{heroSlides[heroIndex].eyebrow}</span>
+                  <h1 className="hero-title">{heroSlides[heroIndex].title}</h1>
+                  <p className="hero-subtitle">{heroSlides[heroIndex].subtitle}</p>
                   <div className="hero-cta-group">
                     <button className="hero-cta-btn" onClick={scrollToShop}>
                       SHOP THE LOOKS
