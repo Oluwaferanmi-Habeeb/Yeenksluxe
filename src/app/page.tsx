@@ -959,10 +959,13 @@ export default function Home() {
           <div className="filmstrip-track">
             {[
               "/images/snaptik_7621552137285192981_0_v2.jpeg",
+              "/images/7683c590-dc42-47ec-b0e4-28d748076d05.jpg",
               "/images/snaptik_7621552137285192981_1_v2.jpeg",
               "/images/snaptik_7621552137285192981_2_v2.jpeg",
+              "/images/654912a1-3e02-4f9d-9e64-c51e6ddb720b.jpg",
               "/images/snaptik_7621552137285192981_3_v2.jpeg",
               "/images/snaptik_7621552137285192981_4_v2.jpeg",
+              "/images/b4fb32c7-6ce4-4dff-9ef8-a606e5684c73.jpg",
               "/images/snaptik_7625367276497292565_0_v2.jpeg",
               "/images/snaptik_7625367276497292565_1_v2.jpeg",
               "/images/snaptik_7625367276497292565_2_v2.jpeg",
@@ -986,40 +989,11 @@ export default function Home() {
         <div className="filmstrip-container">
           <div className="filmstrip-track reverse">
             {[
-              { type: 'image', url: '/images/WhatsApp Image 2026-05-12 at 10.30.43 AM.jpeg', label: 'CLIENT FIT' },
-              { type: 'video', url: '/images/WhatsApp Video 2026-05-12 at 10.30.42 AM.mp4', label: 'COMMUNITY CLIP' },
-              { type: 'image', url: '/images/WhatsApp Image 2026-05-12 at 10.30.44 AM.jpeg', label: 'CLIENT FIT' },
-              { type: 'video', url: '/images/WhatsApp Video 2026-05-12 at 10.30.53 AM.mp4', label: 'STREET STYLE' },
-              { type: 'image', url: '/images/WhatsApp Image 2026-05-12 at 10.30.44 AM (1).jpeg', label: 'CLIENT REVIEW' },
-              { type: 'video', url: '/images/WhatsApp Video 2026-05-12 at 10.31.47 AM.mp4', label: 'STEEZY MOTION' },
-              { type: 'image', url: '/images/WhatsApp Image 2026-05-12 at 10.31.42 AM.jpeg', label: 'MIRROR SELFIE' },
-              { type: 'video', url: '/images/WhatsApp Video 2026-05-12 at 10.35.08 AM.mp4', label: 'COMMUNITY VIBE' },
-              { type: 'image', url: '/images/WhatsApp Image 2026-05-12 at 11.02.55 AM.jpeg', label: 'CLIENT REVIEW' },
-              { type: 'video', url: '/images/WhatsApp Video 2026-05-12 at 11.02.54 AM.mp4', label: 'FIT CHECK' },
-              { type: 'image', url: '/images/WhatsApp Image 2026-05-12 at 11.31.31 AM.jpeg', label: 'STREET SHOWCASE' },
-              { type: 'video', url: '/images/WhatsApp Video 2026-05-12 at 3.00.17 PM.mp4', label: 'STEEZY RUNWAY' },
-              { type: 'image', url: '/images/WhatsApp Image 2026-05-12 at 11.31.31 AM (1).jpeg', label: 'CLIENT REVIEW' },
-              { type: 'video', url: '/images/WhatsApp Video 2026-05-12 at 3.01.02 PM.mp4', label: 'COMMUNITY SHOWCASE' },
-              { type: 'image', url: '/images/WhatsApp Image 2026-05-12 at 11.31.33 AM.jpeg', label: 'CLIENT FIT' },
-              { type: 'image', url: '/images/WhatsApp Image 2026-05-12 at 11.31.33 AM (1).jpeg', label: 'STREET STYLE' },
-              { type: 'image', url: '/images/WhatsApp Image 2026-05-12 at 11.31.33 AM (2).jpeg', label: 'MIRROR SELFIE' },
-              { type: 'image', url: '/images/WhatsApp Image 2026-05-23 at 9.44.46 AM.jpeg', label: 'CLIENT HOODIE FIT' },
-              { type: 'image', url: '/images/WhatsApp Image 2026-05-23 at 9.44.46 AM (1).jpeg', label: 'COMMUNITY FIT' }
-            ].reduce<{type: string, url: string, label: string}[]>((acc, val) => [...acc, val, val], []).map((item, idx) => (
+              { url: '/images/WhatsApp Image 2026-05-23 at 9.44.46 AM.jpeg', label: 'CLIENT HOODIE FIT' },
+              { url: '/images/WhatsApp Image 2026-05-23 at 9.44.46 AM (1).jpeg', label: 'COMMUNITY FIT' }
+            ].reduce<{url: string, label: string}[]>((acc, val) => [...acc, val, val, val, val, val, val, val, val], []).map((item, idx) => (
               <div className="filmstrip-item" key={idx}>
-                {item.type === 'video' ? (
-                  <video 
-                    src={item.url} 
-                    autoPlay 
-                    loop 
-                    muted 
-                    playsInline 
-                    className="filmstrip-image"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                ) : (
-                  <Image src={item.url} alt={item.label} fill className="filmstrip-image" sizes="260px" />
-                )}
+                <Image src={item.url} alt={item.label} fill className="filmstrip-image" sizes="260px" />
                 <div className="filmstrip-caption">
                   <span className="filmstrip-caption-title">{item.label}</span>
                 </div>
