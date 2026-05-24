@@ -76,6 +76,20 @@ export default function Home() {
   const [udIndex, setUdIndex] = useState(0);
   const [cartAnimated, setCartAnimated] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Scroll listener for premium transparent-to-glass navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Hero slideshow timer
   useEffect(() => {
@@ -337,7 +351,7 @@ export default function Home() {
   return (
     <div className="app-container">
       {/* HEADER NAVBAR */}
-      <nav className="navbar">
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="container navbar-inner">
           <div className="logo-container" onClick={() => { setCheckoutStep('shop'); setSelectedCategory('All'); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div className="logo" style={{ position: 'relative', width: '54px', height: '54px', flexShrink: 0 }}>
@@ -466,7 +480,7 @@ export default function Home() {
 
               {/* Overlay Content */}
               <div className="hero-overlay-content container">
-                <div className="hero-brand-card">
+                <div key={heroIndex} className="hero-brand-card animate-fade-in-up">
                   <span className="hero-eyebrow">{heroSlides[heroIndex].eyebrow}</span>
                   <h1 className="hero-title">{heroSlides[heroIndex].title}</h1>
                   <p className="hero-subtitle">{heroSlides[heroIndex].subtitle}</p>
@@ -506,21 +520,23 @@ export default function Home() {
               <div className="upper-display-inner">
                 {/* Text Side: displays the active slide's copy */}
                 <div className="upper-display-text">
-                  <h2 className="upper-display-heading">
-                    {upperDisplaySlides[udIndex].heading}
-                  </h2>
-                  <p className="upper-display-sub">
-                    {upperDisplaySlides[udIndex].sub}
-                  </p>
-                  <button 
-                    className="upper-display-btn"
-                    onClick={() => {
-                      setSelectedCategory(upperDisplaySlides[udIndex].category);
-                      scrollToShop();
-                    }}
-                  >
-                    {upperDisplaySlides[udIndex].btnText}
-                  </button>
+                  <div key={udIndex} className="animate-fade-in-up">
+                    <h2 className="upper-display-heading">
+                      {upperDisplaySlides[udIndex].heading}
+                    </h2>
+                    <p className="upper-display-sub">
+                      {upperDisplaySlides[udIndex].sub}
+                    </p>
+                    <button 
+                      className="upper-display-btn"
+                      onClick={() => {
+                        setSelectedCategory(upperDisplaySlides[udIndex].category);
+                        scrollToShop();
+                      }}
+                    >
+                      {upperDisplaySlides[udIndex].btnText}
+                    </button>
+                  </div>
                   
                   <div className="ud-dots">
                     {upperDisplaySlides.map((_, dotIdx) => (
@@ -945,7 +961,7 @@ export default function Home() {
       </div>
 
       {/* SPOTTED IN YĒĒNKSLUXÉ / COMMUNITY SHOWCASE */}
-      <section className="community-showcase reveal-on-scroll" style={{ padding: '6rem 0', borderTop: '1px solid var(--border-color)' }}>
+      <section className="community-showcase reveal-on-scroll" style={{ padding: '9rem 0', borderTop: '1px solid var(--border-color)' }}>
         <div className="container">
           <div className="shop-header" style={{ marginBottom: '3.5rem' }}>
             <div className="shop-title-area">
@@ -1023,7 +1039,7 @@ export default function Home() {
       </section>
 
       {/* MINIMALIST FAQ / DROP INFO */}
-      <section className="faq-section reveal-on-scroll" style={{ padding: '6rem 0', borderTop: '1px solid var(--border-color)' }}>
+      <section className="faq-section reveal-on-scroll" style={{ padding: '9rem 0', borderTop: '1px solid var(--border-color)' }}>
         <div className="container" style={{ maxWidth: '800px' }}>
           <div className="shop-header" style={{ marginBottom: '3.5rem', justifyContent: 'center', textAlign: 'center' }}>
             <div className="shop-title-area">
@@ -1086,7 +1102,7 @@ export default function Home() {
       </section>
 
       {/* LOOKBOOK FILMSTRIP */}
-      <section className="lookbook-filmstrip reveal-on-scroll" style={{ padding: '6rem 0' }}>
+      <section className="lookbook-filmstrip reveal-on-scroll" style={{ padding: '8rem 0' }}>
         <div className="filmstrip-header">
           <span className="section-eyebrow">DIGITAL LOOKBOOK</span>
           <h2 className="section-title">SS26 CAMPAIGN EDITORIALS</h2>
