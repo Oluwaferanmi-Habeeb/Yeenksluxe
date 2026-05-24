@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "YEENKSLUXE | Premium Streetwear & Accessories",
-  description: "Discover premium luxury apparel, armless tees, hoodies, and exclusive accessories at YEENKSLUXE. High-end streetwear designed for those who move different.",
+  description: "Discover premium luxury apparel, armless tees, hoodies, and exclusive accessories at YEENKSLUXE. Where streetwear meets luxury.",
 };
 
 export default function RootLayout({

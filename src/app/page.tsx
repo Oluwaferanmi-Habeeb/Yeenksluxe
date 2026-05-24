@@ -18,7 +18,7 @@ const heroSlides = [
     image: "/images/snaptik_7625367276497292565_0_v2.jpeg",
     eyebrow: "SS26 PRE-RELEASE COLLECTION",
     title: "YEENKSLUXE APPAREL",
-    subtitle: "Where streetwear meets luxury. Designed for those who move different.",
+    subtitle: "Where streetwear meets luxury.",
   },
   {
     image: "/images/snaptik_7621552137285192981_0_v2.jpeg",
@@ -366,7 +366,7 @@ export default function Home() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
               <span style={{ fontSize: '1.1rem', fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: 'var(--font-display)', lineHeight: '1.1' }}>YEENKSLUXE</span>
-              <span className="logo-tagline" style={{ marginTop: '0.15rem' }}>Where streetwear meets luxury. Designed for those who move different</span>
+              <span className="logo-tagline" style={{ marginTop: '0.15rem' }}>Where streetwear meets luxury</span>
             </div>
           </div>
 
@@ -1151,7 +1151,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="footer-description">
-                Where streetwear meets luxury. Designed for those who move different.
+                Where streetwear meets luxury.
               </p>
             </div>
 

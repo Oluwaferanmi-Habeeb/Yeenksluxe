@@ -140,6 +140,7 @@ img { max-width: 100%; height: auto; display: block; }
   opacity: 0.85;
 }
 .logo-img {
+  border-radius: 50%;
   filter: var(--logo-filter);
   transition: filter 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
