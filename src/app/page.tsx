@@ -957,15 +957,15 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="bento-grid">
-            <div className="bento-item item-large">
-              <div className="bento-img-wrapper" style={{ position: 'relative' }}>
-                <Image src="/images/client_fit_1.jpg" alt="Client Fit 1" fill className="bento-img object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
-                <div className="bento-overlay">
-                  <div className="bento-tag">
-                    <span className="bento-tag-eyebrow">SPOTTED WEARING</span>
-                    <span className="bento-tag-title">YĒĒNKSLUXÉ x STEEZY ‘26 Edition Graphic Tee</span>
-                    <button className="bento-shop-btn" onClick={() => {
+          <div className="showcase-grid-container">
+            <div className="showcase-card">
+              <div className="showcase-img-wrapper" style={{ position: 'relative' }}>
+                <Image src="/images/client_fit_1.jpg" alt="Client Fit 1" fill className="showcase-img object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
+                <div className="showcase-overlay">
+                  <div className="showcase-tag">
+                    <span className="showcase-tag-eyebrow">SPOTTED WEARING</span>
+                    <span className="showcase-tag-title">YĒĒNKSLUXÉ x STEEZY ‘26 Edition Graphic Tee</span>
+                    <button className="showcase-shop-btn" onClick={() => {
                       const p = products.find(prod => prod.id === 'shirt-1') || products[0];
                       openQuickView(p);
                     }}>SHOP LOOK</button>
@@ -974,14 +974,14 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="bento-item item-square">
-              <div className="bento-img-wrapper" style={{ position: 'relative' }}>
-                <Image src="/images/client_fit_2.jpg" alt="Client Fit 2" fill className="bento-img object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
-                <div className="bento-overlay">
-                  <div className="bento-tag">
-                    <span className="bento-tag-eyebrow">SPOTTED WEARING</span>
-                    <span className="bento-tag-title">YĒĒNKSLUXÉ x STEEZY ‘26 Edition Hoodie</span>
-                    <button className="bento-shop-btn" onClick={() => {
+            <div className="showcase-card">
+              <div className="showcase-img-wrapper" style={{ position: 'relative' }}>
+                <Image src="/images/client_fit_2.jpg" alt="Client Fit 2" fill className="showcase-img object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
+                <div className="showcase-overlay">
+                  <div className="showcase-tag">
+                    <span className="showcase-tag-eyebrow">SPOTTED WEARING</span>
+                    <span className="showcase-tag-title">YĒĒNKSLUXÉ x STEEZY ‘26 Edition Hoodie</span>
+                    <button className="showcase-shop-btn" onClick={() => {
                       const p = products.find(prod => prod.id === 'hoodie-1') || products[0];
                       openQuickView(p);
                     }}>SHOP LOOK</button>
@@ -990,14 +990,14 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="bento-item item-square">
-              <div className="bento-img-wrapper" style={{ position: 'relative' }}>
-                <Image src="/images/client_fit_3.jpg" alt="Client Fit 3" fill className="bento-img object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
-                <div className="bento-overlay">
-                  <div className="bento-tag">
-                    <span className="bento-tag-eyebrow">SPOTTED WEARING</span>
-                    <span className="bento-tag-title">YĒĒNKSLUXÉ x STEEZY ‘26 Edition Rhinestone Tee</span>
-                    <button className="bento-shop-btn" onClick={() => {
+            <div className="showcase-card">
+              <div className="showcase-img-wrapper" style={{ position: 'relative' }}>
+                <Image src="/images/client_fit_3.jpg" alt="Client Fit 3" fill className="showcase-img object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
+                <div className="showcase-overlay">
+                  <div className="showcase-tag">
+                    <span className="showcase-tag-eyebrow">SPOTTED WEARING</span>
+                    <span className="showcase-tag-title">YĒĒNKSLUXÉ x STEEZY ‘26 Edition Rhinestone Tee</span>
+                    <button className="showcase-shop-btn" onClick={() => {
                       const p = products.find(prod => prod.id === 'shirt-5') || products[0];
                       openQuickView(p);
                     }}>SHOP LOOK</button>
@@ -1006,14 +1006,14 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="bento-item item-tall">
-              <div className="bento-img-wrapper" style={{ position: 'relative' }}>
-                <Image src="/images/client_fit_4.jpeg" alt="Client Fit 4" fill className="bento-img object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
-                <div className="bento-overlay">
-                  <div className="bento-tag">
-                    <span className="bento-tag-eyebrow">SPOTTED WEARING</span>
-                    <span className="bento-tag-title">Urban Knit Beanie</span>
-                    <button className="bento-shop-btn" onClick={() => {
+            <div className="showcase-card">
+              <div className="showcase-img-wrapper" style={{ position: 'relative' }}>
+                <Image src="/images/client_fit_4.jpeg" alt="Client Fit 4" fill className="showcase-img object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
+                <div className="showcase-overlay">
+                  <div className="showcase-tag">
+                    <span className="showcase-tag-eyebrow">SPOTTED WEARING</span>
+                    <span className="showcase-tag-title">Urban Knit Beanie</span>
+                    <button className="showcase-shop-btn" onClick={() => {
                       const p = products.find(prod => prod.id === 'acc-2') || products[0];
                       openQuickView(p);
                     }}>SHOP LOOK</button>
