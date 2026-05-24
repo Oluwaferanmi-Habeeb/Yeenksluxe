@@ -957,24 +957,18 @@ export default function Home() {
         {/* Track 1: SS26 Editorials (Scrolls Left) */}
         <div className="filmstrip-container" style={{ marginBottom: '4rem' }}>
           <div className="filmstrip-track">
-            {[
-              "/images/snaptik_7621552137285192981_0_v2.jpeg",
-              "/images/7683c590-dc42-47ec-b0e4-28d748076d05.jpg",
-              "/images/snaptik_7621552137285192981_1_v2.jpeg",
-              "/images/snaptik_7621552137285192981_2_v2.jpeg",
-              "/images/654912a1-3e02-4f9d-9e64-c51e6ddb720b.jpg",
-              "/images/snaptik_7621552137285192981_3_v2.jpeg",
-              "/images/snaptik_7621552137285192981_4_v2.jpeg",
-              "/images/b4fb32c7-6ce4-4dff-9ef8-a606e5684c73.jpg",
-              "/images/snaptik_7625367276497292565_0_v2.jpeg",
-              "/images/snaptik_7625367276497292565_1_v2.jpeg",
-              "/images/snaptik_7625367276497292565_2_v2.jpeg",
-              "/images/snaptik_7625367276497292565_3_v2.jpeg"
-            ].reduce<string[]>((acc, val) => [...acc, val, val], []).map((imgUrl, idx) => (
+            {((arr) => [...arr, ...arr])(
+              products.reduce<{ image: string; name: string }[]>((acc, p) => {
+                if (!acc.some((item) => item.image === p.image)) {
+                  acc.push({ image: p.image, name: p.name });
+                }
+                return acc;
+              }, [])
+            ).map((item, idx) => (
               <div className="filmstrip-item" key={idx}>
-                <Image src={imgUrl} alt={`SS26 Editorial ${idx + 1}`} fill className="filmstrip-image" sizes="260px" />
+                <Image src={item.image} alt={item.name} fill className="filmstrip-image" sizes="260px" />
                 <div className="filmstrip-caption">
-                  <span className="filmstrip-caption-title">STEEZY &apos;26 EDITORIAL #{idx + 1}</span>
+                  <span className="filmstrip-caption-title">{item.name}</span>
                 </div>
               </div>
             ))}

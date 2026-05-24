@@ -63,18 +63,6 @@ export const products: Product[] = [
     colors: ["#ffffff", "#000000"]
   },
   {
-    id: "shirt-10",
-    shopifyVariantId: "45000000000022",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Luxe Tee",
-    description: "High-density knit luxury tee featuring soft pre-shrunk cotton and front logo branding panel.",
-    price: 35000,
-    category: "Tops",
-    image: "/images/2636b850-f5d5-40db-a383-bfa29001cdde.jpg",
-    badge: "New Drop",
-    sizes: ["M", "L", "XL"],
-    colors: ["#000000"]
-  },
-  {
     id: "shirt-11",
     shopifyVariantId: "45000000000023",
     name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Editorial Tee",
@@ -96,66 +84,6 @@ export const products: Product[] = [
     badge: "New Season",
     sizes: ["S", "M", "L", "XL"],
     colors: ["#000000", "#ffffff"]
-  },
-
-  // ── TOPS / ARMLESS TOPS (Price: ₦30,000) ──
-  {
-    id: "armless-1",
-    shopifyVariantId: "45000000000024",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Armless Top",
-    description: "Premium armless tank top styled with raw edge detailing, signature luxury stitching, and a comfortable relaxed cut.",
-    price: 30000,
-    category: "Tops",
-    image: "/images/c540c115-2167-4cce-a411-6acfcc765a57.jpg",
-    badge: "Hot Drop",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000", "#ffffff"]
-  },
-  {
-    id: "armless-2",
-    shopifyVariantId: "45000000000025",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Armless Tee",
-    description: "Sleek, lightweight armless top featuring high-density typography print and distressed hem borders.",
-    price: 30000,
-    category: "Tops",
-    image: "/images/48f48c19-513c-41ce-9e20-4a7ddc9539da.jpg",
-    sizes: ["M", "L", "XL"],
-    colors: ["#111111"]
-  },
-  {
-    id: "armless-3",
-    shopifyVariantId: "45000000000026",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Tank Top",
-    description: "High-grade rib-knit luxury tank top with low scoop neckline and gold thread logo embroidery on the back.",
-    price: 30000,
-    category: "Tops",
-    image: "/images/2636b850-f5d5-40db-a383-bfa29001cdde.jpg",
-    badge: "SS26 Hero",
-    sizes: ["S", "M", "L"],
-    colors: ["#ffffff", "#000000"]
-  },
-  {
-    id: "armless-4",
-    shopifyVariantId: "45000000000027",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Armless Vest",
-    description: "Designed for modern styling, this heavy cotton armless vest features structured shoulder lines and minimal screenprinting.",
-    price: 30000,
-    category: "Tops",
-    image: "/images/8b853438-c364-464e-aefc-8eb8368060b9.jpg",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000"]
-  },
-  {
-    id: "armless-5",
-    shopifyVariantId: "45000000000028",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Raw Cut Top",
-    description: "Raw-edge sleeveless streetwear top in luxury pre-shrunk organic cotton fleece.",
-    price: 30000,
-    category: "Tops",
-    image: "/images/494e40da-2c31-4f83-b377-2a1c917a900d.jpg",
-    badge: "Exclusive",
-    sizes: ["M", "L", "XL"],
-    colors: ["#2d2d2d", "#ffffff"]
   },
 
   // ── TOPS / HOODIES (Price: ₦45,000) ──
