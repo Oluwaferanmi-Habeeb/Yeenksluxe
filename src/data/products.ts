@@ -174,51 +174,6 @@ export const products: Product[] = [
 
   // ── CAPS & HATS ──
   {
-    id: "hat-1",
-    shopifyVariantId: "45000000000007",
-    name: "MXUNDASTOOD Bucket Hat",
-    description: "A vintage-inspired streetwear bucket hat in technical nylon canvas with all-over woven monogram detailing.",
-    price: 22250,
-    category: "Caps",
-    image: "/images/7683c590-dc42-47ec-b0e4-28d748076d05.jpg",
-    sizes: ["One Size"],
-    colors: ["#000000", "#d4af37"]
-  },
-  {
-    id: "hat-2",
-    shopifyVariantId: "45000000000008",
-    name: "STEEZY By Yeenks - Inscription Snapback Cap",
-    description: "Adjustable 6-panel snapback cap made from premium twill cotton, embroidered with the signature logo in gold thread.",
-    price: 22000,
-    category: "Caps",
-    image: "/images/7683c590-dc42-47ec-b0e4-28d748076d05.jpg",
-    badge: "Best Seller",
-    sizes: ["One Size"],
-    colors: ["#000000", "#ffffff"]
-  },
-  {
-    id: "hat-3",
-    shopifyVariantId: "45000000000016",
-    name: "MXUNDASTOOD Classic Snapback - Black",
-    description: "Distressed raw-edge cotton cap with embroidered collection branding and adjustable metal slide back closure.",
-    price: 22500,
-    category: "Caps",
-    image: "/images/7683c590-dc42-47ec-b0e4-28d748076d05.jpg",
-    sizes: ["One Size"],
-    colors: ["#111111", "#ffffff"]
-  },
-  {
-    id: "hat-4",
-    shopifyVariantId: "45000000000032",
-    name: "MXUNDASTOOD Logo Classic Snapback- Black",
-    description: "Premium unstructured snapback cap with signature white/gold 3D logo embroidery across the front panel.",
-    price: 22500,
-    category: "Caps",
-    image: "/images/7683c590-dc42-47ec-b0e4-28d748076d05.jpg",
-    sizes: ["One Size"],
-    colors: ["#111111"]
-  },
-  {
     id: "acc-2",
     shopifyVariantId: "45000000000010",
     name: "Urban Knit Beanie",
@@ -241,18 +196,6 @@ export const products: Product[] = [
     image: "/images/d7d9b8dd-971a-4010-900d-8403c2e44666.jpg",
     sizes: ["One Size"],
     colors: ["#ffffff", "#000000"]
-  },
-  {
-    id: "acc-3",
-    shopifyVariantId: "45000000000017",
-    name: "Luxe Leather Belt",
-    description: "Top-grain calfskin leather belt detailed with signature gold chrome metal buckle and engraved branding.",
-    price: 50000,
-    category: "Accessories",
-    image: "/images/654912a1-3e02-4f9d-9e64-c51e6ddb720b.jpg",
-    badge: "Exclusive",
-    sizes: ["85", "90", "95", "100"],
-    colors: ["#000000", "#8b4513"]
   },
   {
     id: "acc-4",

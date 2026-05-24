@@ -981,26 +981,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Track 2: Spotted in Yeenksluxe / Community & Client Showcase (Scrolls Right) */}
-        <div className="filmstrip-header" style={{ marginTop: '4rem', marginBottom: '2.5rem' }}>
-          <span className="section-eyebrow">SPOTTED IN YĒĒNKSLUXÉ</span>
-          <h2 className="section-title">COMMUNITY FIT CHECK</h2>
-        </div>
-        <div className="filmstrip-container">
-          <div className="filmstrip-track reverse">
-            {[
-              { url: '/images/WhatsApp Image 2026-05-23 at 9.44.46 AM.jpeg', label: 'CLIENT HOODIE FIT' },
-              { url: '/images/WhatsApp Image 2026-05-23 at 9.44.46 AM (1).jpeg', label: 'COMMUNITY FIT' }
-            ].reduce<{url: string, label: string}[]>((acc, val) => [...acc, val, val, val, val, val, val, val, val], []).map((item, idx) => (
-              <div className="filmstrip-item" key={idx}>
-                <Image src={item.url} alt={item.label} fill className="filmstrip-image" sizes="260px" />
-                <div className="filmstrip-caption">
-                  <span className="filmstrip-caption-title">{item.label}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
 
       {/* FOOTER */}
