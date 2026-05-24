@@ -947,6 +947,84 @@ export default function Home() {
         )}
       </div>
 
+      {/* SPOTTED IN YĒĒNKSLUXÉ / COMMUNITY SHOWCASE */}
+      <section className="community-showcase reveal-on-scroll" style={{ padding: '6rem 0', borderTop: '1px solid var(--border-color)' }}>
+        <div className="container">
+          <div className="shop-header" style={{ marginBottom: '3.5rem' }}>
+            <div className="shop-title-area">
+              <span className="section-eyebrow">AS WORN BY THE BOLD</span>
+              <h2 className="section-title">SPOTTED IN YĒĒNKSLUXÉ</h2>
+            </div>
+          </div>
+          
+          <div className="bento-grid">
+            <div className="bento-item item-large">
+              <div className="bento-img-wrapper" style={{ position: 'relative' }}>
+                <Image src="/images/client_fit_1.jpg" alt="Client Fit 1" fill className="bento-img object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+                <div className="bento-overlay">
+                  <div className="bento-tag">
+                    <span className="bento-tag-eyebrow">SPOTTED WEARING</span>
+                    <span className="bento-tag-title">YĒĒNKSLUXÉ x STEEZY ‘26 Edition Graphic Tee</span>
+                    <button className="bento-shop-btn" onClick={() => {
+                      const p = products.find(prod => prod.id === 'shirt-1') || products[0];
+                      openQuickView(p);
+                    }}>SHOP LOOK</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bento-item item-square">
+              <div className="bento-img-wrapper" style={{ position: 'relative' }}>
+                <Image src="/images/client_fit_2.jpg" alt="Client Fit 2" fill className="bento-img object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
+                <div className="bento-overlay">
+                  <div className="bento-tag">
+                    <span className="bento-tag-eyebrow">SPOTTED WEARING</span>
+                    <span className="bento-tag-title">YĒĒNKSLUXÉ x STEEZY ‘26 Edition Hoodie</span>
+                    <button className="bento-shop-btn" onClick={() => {
+                      const p = products.find(prod => prod.id === 'hoodie-1') || products[0];
+                      openQuickView(p);
+                    }}>SHOP LOOK</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bento-item item-square">
+              <div className="bento-img-wrapper" style={{ position: 'relative' }}>
+                <Image src="/images/client_fit_3.jpg" alt="Client Fit 3" fill className="bento-img object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
+                <div className="bento-overlay">
+                  <div className="bento-tag">
+                    <span className="bento-tag-eyebrow">SPOTTED WEARING</span>
+                    <span className="bento-tag-title">YĒĒNKSLUXÉ x STEEZY ‘26 Edition Rhinestone Tee</span>
+                    <button className="bento-shop-btn" onClick={() => {
+                      const p = products.find(prod => prod.id === 'shirt-5') || products[0];
+                      openQuickView(p);
+                    }}>SHOP LOOK</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bento-item item-tall">
+              <div className="bento-img-wrapper" style={{ position: 'relative' }}>
+                <Image src="/images/client_fit_4.jpeg" alt="Client Fit 4" fill className="bento-img object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
+                <div className="bento-overlay">
+                  <div className="bento-tag">
+                    <span className="bento-tag-eyebrow">SPOTTED WEARING</span>
+                    <span className="bento-tag-title">Urban Knit Beanie</span>
+                    <button className="bento-shop-btn" onClick={() => {
+                      const p = products.find(prod => prod.id === 'acc-2') || products[0];
+                      openQuickView(p);
+                    }}>SHOP LOOK</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* LOOKBOOK FILMSTRIP */}
       <section className="lookbook-filmstrip reveal-on-scroll" style={{ padding: '6rem 0' }}>
         <div className="filmstrip-header">
