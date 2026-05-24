@@ -40,23 +40,23 @@ const upperDisplaySlides = [
     heading: "MADE FOR THE ONES WHO RUN THE CITY",
     sub: "untouchable. built to take over",
     btnText: "SECURE THE drip",
-    category: "Tops",
+    category: "Hoodies",
     trans: "zoom"
   },
   {
     image: "/images/snaptik_7621552137285192981_2_v2.jpeg",
     heading: "DISTINCTIVE SILHOUETTES & SHAPES",
     sub: "designed for movement. crafted for luxury",
-    btnText: "SHOP TOPS",
-    category: "Tops",
+    btnText: "SHOP SHIRTS",
+    category: "Shirts",
     trans: "slideLeft"
   },
   {
     image: "/images/snaptik_7625367276497292565_3_v2.jpeg",
     heading: "SS26 CAMPAIGN CAPS & ACCS",
     sub: "limited rotation. wear the difference",
-    btnText: "SHOP CAPS",
-    category: "Caps",
+    btnText: "SHOP HATS",
+    category: "Hats",
     trans: "slideUp"
   }
 ];
@@ -633,7 +633,7 @@ export default function Home() {
             {/* EDITORIAL LIFESTYLE PANELS */}
             <section className="editorial-section reveal-on-scroll">
               <div className="editorial-grid">
-                <div className="editorial-panel" style={{ position: 'relative' }} onClick={() => { setSelectedCategory('Tops'); scrollToShop(); }}>
+                <div className="editorial-panel" style={{ position: 'relative' }} onClick={() => { setSelectedCategory('Shirts'); scrollToShop(); }}>
                   <Image src="/images/snaptik_7625367276497292565_2_v2.jpeg" alt="New Arrivals Apparel" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
                   <div className="editorial-panel-overlay"></div>
                   <div className="editorial-caption">
@@ -1082,8 +1082,9 @@ export default function Home() {
             <div className="footer-links-col">
               <h4 className="footer-col-title">COLLECTIONS</h4>
               <div className="footer-links">
-                <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Tops'); setCheckoutStep('shop'); scrollToShop(); }}>TOPS</a>
-                <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Caps'); setCheckoutStep('shop'); scrollToShop(); }}>CAPS</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Shirts'); setCheckoutStep('shop'); scrollToShop(); }}>SHIRTS</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Hoodies'); setCheckoutStep('shop'); scrollToShop(); }}>HOODIES</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Hats'); setCheckoutStep('shop'); scrollToShop(); }}>HATS</a>
                 <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('Accessories'); setCheckoutStep('shop'); scrollToShop(); }}>ACCESSORIES</a>
               </div>
             </div>
@@ -1358,7 +1359,7 @@ export default function Home() {
                         if (!h || !w) return <span className="result-prompt">Enter measurements to calculate custom recommendation.</span>;
                         
 
-                        if (selectedProduct.category === 'Tops') {
+                        if (selectedProduct.category === 'Shirts' || selectedProduct.category === 'Hoodies') {
                           let rec = 'M';
                           if (h < 170 && w < 65) rec = 'S';
                           else if (h < 178 && w < 78) rec = 'M';
@@ -1398,7 +1399,7 @@ export default function Home() {
                         </thead>
                         <tbody>
                           {(() => {
-                            if (selectedProduct.category === 'Tops') {
+                            if (selectedProduct.category === 'Shirts' || selectedProduct.category === 'Hoodies') {
                               const name = selectedProduct.name.toLowerCase();
                               const isSleeveless = name.includes('armless') || name.includes('tank') || name.includes('raw cut');
                               const isOuterwear = name.includes('hoodie') || name.includes('sweater') || name.includes('jacket') || name.includes('windbreaker') || name.includes('tracksuit');
@@ -1453,7 +1454,7 @@ export default function Home() {
                     <div className="specs-section">
                       <h4 className="specs-title-sub">FABRIC PROFILE</h4>
                       <ul className="specs-list">
-                        <li><strong>Fabric:</strong> {selectedProduct.category === 'Tops' ? '100% Organic Heavyweight Cotton (280GSM)' : 'Heavy-Duty Technical Canvas'}</li>
+                         <li><strong>Fabric:</strong> {(selectedProduct.category === 'Shirts' || selectedProduct.category === 'Hoodies') ? '100% Organic Heavyweight Cotton (280GSM)' : 'Heavy-Duty Technical Canvas'}</li>
                         <li><strong>Weave:</strong> Loopback pre-shrunk luxury weave</li>
                         <li><strong>Origin:</strong> Crafted in Lagos</li>
                         <li><strong>Graphics:</strong> Custom eco-friendly high-density screenprint</li>
@@ -1465,7 +1466,7 @@ export default function Home() {
                       <div className="fit-ratings">
                         <div className="rating-row">
                           <span>Fit Style:</span>
-                          <span style={{ color: 'white', fontWeight: 600 }}>{selectedProduct.category === 'Tops' ? 'Boxy / Oversized' : 'True to Size'}</span>
+                           <span style={{ color: 'white', fontWeight: 600 }}>{(selectedProduct.category === 'Shirts' || selectedProduct.category === 'Hoodies') ? 'Boxy / Oversized' : 'True to Size'}</span>
                         </div>
                         <div className="rating-row">
                           <span>Stitch Work:</span>
