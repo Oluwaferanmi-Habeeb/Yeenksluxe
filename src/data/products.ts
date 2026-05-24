@@ -30,14 +30,13 @@ export const products: Product[] = [
   },
   {
     id: "shirt-3",
-    shopifyVariantId: "45000000000006",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Campaign Tee",
-    description: "Signature campaign piece featured in the brand's main editorial shoot. Oversized fit, heavyweight cotton with premium luxury screenprint.",
-    price: 35000,
+    shopifyVariantId: "45000000000038",
+    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Armless Tank",
+    description: "Sleeveless raw-cut tank top made with heavyweight loopback cotton, engineered for modern layering styles.",
+    price: 30000,
     category: "Shirts",
-    image: "/images/a631dacb-ea54-41fe-8b23-7f77fb919746.jpg",
-    gallery: ["/images/client_fit_2.jpg"],
-    badge: "Campaign",
+    image: "/images/new_prod_6.jpg",
+    gallery: ["/images/snaptik_7625367276497292565_3_v2.jpeg"],
     sizes: ["S", "M", "L", "XL"],
     colors: ["#000000", "#ffffff"]
   },
@@ -208,18 +207,6 @@ export const products: Product[] = [
     gallery: ["/images/snaptik_7625367276497292565_2_v2.jpeg"],
     sizes: ["S", "M", "L", "XL", "XXL"],
     colors: ["#333333", "#000000"]
-  },
-  {
-    id: "shirt-17",
-    shopifyVariantId: "45000000000038",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Armless Tank",
-    description: "Sleeveless raw-cut tank top made with heavyweight loopback cotton, engineered for modern layering styles.",
-    price: 30000,
-    category: "Shirts",
-    image: "/images/new_prod_6.jpg",
-    gallery: ["/images/snaptik_7625367276497292565_3_v2.jpeg"],
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000", "#ffffff"]
   }
 ];
 

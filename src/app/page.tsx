@@ -1038,68 +1038,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MINIMALIST FAQ / DROP INFO */}
-      <section className="faq-section reveal-on-scroll" style={{ padding: '9rem 0', borderTop: '1px solid var(--border-color)' }}>
-        <div className="container" style={{ maxWidth: '800px' }}>
-          <div className="shop-header" style={{ marginBottom: '3.5rem', justifyContent: 'center', textAlign: 'center' }}>
-            <div className="shop-title-area">
-              <span className="section-eyebrow">DROP INFORMATION</span>
-              <h2 className="section-title">RELEASE FREQUENTLY ASKED QUESTIONS</h2>
-            </div>
-          </div>
-          
-          <div className="faq-accordion">
-            {[
-              {
-                q: "HOW DO I PLACE AN ORDER AND COMPLETE PAYMENT?",
-                a: "Add items to your cart and proceed to secure checkout. For domestic orders in Naira, select 'Naira Checkout' to pay via card or bank transfer securely powered by Flutterwave. For international orders, choose 'Shopify Checkout'. Alternatively, select 'WhatsApp Order' to connect directly with a personal shopping assistant."
-              },
-              {
-                q: "WHEN DO PRODUCTS RELEASE AND RESTOCK?",
-                a: "YEENKSLUXE operates on a limited drop model. Releases occur in curated rotations and quantities. Restocks are rare, as each release features distinct campaign garments. Join the VIP Club or WhatsApp Broadcast list for priority access to launch keys."
-              },
-              {
-                q: "HOW LONG DOES SHIPPING AND DELIVERY TAKE?",
-                a: "We offer Free Domestic Delivery across Nigeria. Processing takes 1-2 business days. Deliveries within Lagos arrive within 2-3 business days, while deliveries outside Lagos take 3-5 business days. International shipping timelines vary by zone and will be displayed during checkout."
-              },
-              {
-                q: "CAN I CUSTOMIZE OR CHOOSE A SPECIFIC FIT?",
-                a: "Our tops and hoodies feature a signature boxy, heavyweight, drop-shoulder silhouette. To find your ideal fit, use the 'Fit Finder' calculator inside the product's Quick View modal. For additional styling questions or custom sizing requests, reach out directly via WhatsApp."
-              }
-            ].map((faq, idx) => (
-              <div 
-                key={idx} 
-                className={`faq-item ${activeFaq === idx ? 'active' : ''}`}
-                style={{ borderBottom: '1px solid var(--border-color)', padding: '1.25rem 0' }}
-              >
-                <button 
-                  onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
-                  style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', cursor: 'pointer', padding: '0.5rem 0' }}
-                >
-                  <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.08em', color: activeFaq === idx ? 'var(--accent)' : 'var(--text-primary)', transition: 'color 0.3s ease' }}>
-                    {faq.q}
-                  </span>
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', transition: 'transform 0.3s ease', transform: activeFaq === idx ? 'rotate(45deg)' : 'rotate(0deg)' }}>
-                    +
-                  </span>
-                </button>
-                <div 
-                  style={{ 
-                    maxHeight: activeFaq === idx ? '240px' : '0', 
-                    overflow: 'hidden', 
-                    transition: 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)', 
-                    opacity: activeFaq === idx ? 1 : 0 
-                  }}
-                >
-                  <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.7, padding: '0.75rem 0 0.5rem 0', letterSpacing: '0.02em' }}>
-                    {faq.a}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* LOOKBOOK FILMSTRIP */}
       <section className="lookbook-filmstrip reveal-on-scroll" style={{ padding: '8rem 0' }}>
