@@ -599,18 +599,9 @@ export default function Home() {
                               src={product.image} 
                               alt={product.name} 
                               fill
-                              className="card-img card-img-primary object-cover" 
+                              className="card-img object-cover" 
                               sizes="(max-width: 480px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             />
-                            {product.gallery && product.gallery.length > 0 && (
-                              <Image 
-                                src={product.gallery[0]} 
-                                alt={product.name} 
-                                fill
-                                className="card-img card-img-secondary object-cover" 
-                                sizes="(max-width: 480px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                              />
-                            )}
                             <div className="card-overlay">
                               <button className="quick-view-btn" onClick={(e) => { e.stopPropagation(); openQuickView(product); }}>
                                 QUICK VIEW
