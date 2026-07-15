@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useMemo, useEffect, ReactNode } from 'react';
 import { Product } from '../data/products';
 import { CartItem, CheckoutFormData, CheckoutStep, ThemeMode, PaymentMethod, DossierTab } from '../types';
-import { products, Product } from '../data/products';
+import { products } from '../data/products';
 import { getShopifyCheckoutUrl } from '../utils/shopify';
 
 interface StoreContextType {
