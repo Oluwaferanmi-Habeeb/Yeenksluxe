@@ -188,17 +188,17 @@ export default function Home() {
     return cart.reduce((acc, item) => acc + item.quantity, 0);
   }, [cart, mounted]);
 
+  // Cart subtotal — currently 0 until prices are re-added
   const cartSubtotal = useMemo(() => {
     if (!mounted) return 0;
-    return cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
+    return 0;
   }, [cart, mounted]);
 
   // Filter products based on search and category
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
-      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            product.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
   }, [selectedCategory, searchQuery]);
@@ -295,7 +295,7 @@ export default function Home() {
       FlutterwaveCheckout({
         public_key: 'a8c75c71b8e2a69f5e6a877fce04b48b',
         tx_ref: 'YNKS-' + Math.floor(Math.random() * 1000000000 + 1),
-        amount: cartSubtotal,
+        amount: 100, // placeholder minimum until prices are re-added
         currency: 'NGN',
         payment_options: 'card, banktransfer, ussd',
         customer: {
@@ -305,7 +305,7 @@ export default function Home() {
         },
         customizations: {
           title: 'YEENKSLUXE APPAREL',
-          description: 'Payment for luxury streetwear garments',
+          description: 'YEENKSLUXE Apparel — Order Payment',
           logo: window.location.origin + '/images/logoo.jpg',
         },
         callback: function(data: any){
@@ -324,7 +324,7 @@ export default function Home() {
     }
   };
 
-  // Format currency
+  // Format currency (TODO: re-enable when prices are added back)
   const formatCurrency = (amount: number) => {
     return '₦' + amount.toLocaleString('en-NG');
   };
@@ -336,7 +336,7 @@ export default function Home() {
       (item) => `- ${item.product.name} (Qty: ${item.quantity}, Size: ${item.selectedSize}${item.selectedColor ? `, Color: ${item.selectedColor}` : ''})`
     ).join('\n');
 
-    const message = `Hello YEENKSLUXE,\n\nI would like to place an order:\n\n*Order Details:*\n${orderLines}\n\n*Total:* ${formatCurrency(cartSubtotal)}\n\n*Customer Info:*\n- Name: ${checkoutForm.name}\n- Phone: ${checkoutForm.phone}\n- Delivery Address: ${checkoutForm.address}, ${checkoutForm.city}\n- Notes: ${checkoutForm.notes || 'None'}\n\nPlease confirm availability and payment details. Thank you!`;
+    const message = `Hello YEENKSLUXE,\n\nI would like to place an order:\n\n*Order Details:*\n${orderLines}\n\n*Customer Info:*\n- Name: ${checkoutForm.name}\n- Phone: ${checkoutForm.phone}\n- Delivery Address: ${checkoutForm.address}, ${checkoutForm.city}\n- Notes: ${checkoutForm.notes || 'None'}\n\nPlease confirm pricing and availability. Thank you!`;
     
     return `https://wa.me/${phoneNum}?text=${encodeURIComponent(message)}`;
   };
@@ -631,9 +631,6 @@ export default function Home() {
                               <h3 className="product-name">{product.name}</h3>
                             </div>
                             
-                            <div className="card-footer">
-                              <span className="product-price">{formatCurrency(product.price)}</span>
-                            </div>
                           </div>
                         </div>
                       </React.Fragment>
@@ -882,7 +879,6 @@ export default function Home() {
                     <div key={index} className="summary-item-row" style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
                         <span style={{ color: 'white' }}>{item.product.name}</span>
-                        <span>{formatCurrency(item.product.price * item.quantity)}</span>
                       </div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                         Qty: {item.quantity} | Size: {item.selectedSize} {item.selectedColor && `| Color: ${item.selectedColor}`}
@@ -894,19 +890,8 @@ export default function Home() {
                 <div className="summary-divider" style={{ margin: '1rem 0' }}></div>
                 
                 <div className="summary-item-row">
-                  <span>Subtotal</span>
-                  <span>{formatCurrency(cartSubtotal)}</span>
-                </div>
-                <div className="summary-item-row">
                   <span>Shipping</span>
                   <span style={{ color: 'var(--accent)', fontWeight: 600 }}>FREE DELIVERY</span>
-                </div>
-                
-                <div className="summary-divider" style={{ margin: '1rem 0' }}></div>
-                
-                <div className="summary-total-row">
-                  <span>Total</span>
-                  <span>{formatCurrency(cartSubtotal)}</span>
                 </div>
               </div>
             </div>
@@ -929,9 +914,7 @@ export default function Home() {
                 Thank you for shopping with <strong>YEENKSLUXE</strong>. Your order summary has been generated. To complete your delivery payment and finalize the order, click the button below to connect with us on WhatsApp.
               </p>
 
-              <div className="success-meta">
-                TOTAL AMOUNT: {formatCurrency(cartSubtotal)}
-              </div>
+
 
               <a 
                 href={getWhatsAppLink()} 
@@ -1210,8 +1193,6 @@ export default function Home() {
                       <span className="cart-item-meta">
                         Size: {item.selectedSize} {item.selectedColor && `| Color: ${item.selectedColor}`}
                       </span>
-                      <span className="cart-item-price">{formatCurrency(item.product.price)}</span>
-                      
                       <div className="cart-item-controls">
                         <div className="quantity-selector">
                           <button className="qty-btn" onClick={() => updateCartQty(index, -1)}>-</button>
@@ -1231,10 +1212,6 @@ export default function Home() {
                 <div className="cart-summary-row">
                   <span>Shipping</span>
                   <span style={{ color: 'var(--accent)', fontWeight: 600 }}>FREE DELIVERY</span>
-                </div>
-                <div className="cart-summary-row">
-                  <span>Subtotal</span>
-                  <span className="cart-summary-total">{formatCurrency(cartSubtotal)}</span>
                 </div>
                 <button 
                   className="checkout-btn" 
@@ -1283,8 +1260,6 @@ export default function Home() {
             <div className="modal-details">
               <span className="modal-category">{selectedProduct.category}</span>
               <h2 className="modal-title">{selectedProduct.name}</h2>
-              <span className="modal-price">{formatCurrency(selectedProduct.price)}</span>
-              
               <div className="modal-divider"></div>
 
               {/* Dossier Tabs */}
@@ -1312,8 +1287,6 @@ export default function Home() {
               <div className="dossier-tab-content">
                 {activeDossierTab === 'info' && (
                   <div className="tab-pane-fade">
-                    <p className="modal-description">{selectedProduct.description}</p>
-                    
                     {/* Size Selector */}
                     {selectedProduct.sizes && selectedProduct.sizes.length > 0 && (
                       <div style={{ marginTop: '1.25rem' }}>
