@@ -90,7 +90,7 @@ export default function CheckoutForm() {
             {cart.map((item, index) => (
               <div key={index} className="summary-item-row" style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
-                  <span style={{ color: 'white' }}>{item.product.name}</span>
+                  <span style={{ color: 'var(--text-primary)' }}>{item.product.name}</span>
                 </div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   Qty: {item.quantity} | Size: {item.selectedSize} {item.selectedColor && `| Color: ${item.selectedColor}`}
