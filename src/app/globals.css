@@ -782,7 +782,7 @@ img { max-width: 100%; height: auto; display: block; }
   transition: var(--transition-smooth);
   border: 1px solid var(--text-primary);
 }
-.featured-cta:hover { background: transparent; color: #fff; }
+.featured-cta:hover { background: transparent; color: var(--text-primary); }
 
 /* ══════════════════════════════════════════════════
    SHOP SECTION & PRODUCT LOOKBOOK
@@ -1253,7 +1253,7 @@ img { max-width: 100%; height: auto; display: block; }
   transition: var(--transition-smooth);
   border: 1px solid #fff;
 }
-.add-to-cart-btn:hover { background: transparent; color: #fff; }
+.add-to-cart-btn:hover { background: transparent; color: var(--text-primary); }
 
 /* ══════════════════════════════════════════════════
    CART DRAWER
@@ -1325,7 +1325,7 @@ img { max-width: 100%; height: auto; display: block; }
   transition: var(--transition-smooth);
   border: 1px solid #fff;
 }
-.checkout-btn:hover { background: transparent; color: #fff; }
+.checkout-btn:hover { background: transparent; color: var(--text-primary); }
 
 /* ══════════════════════════════════════════════════
    CHECKOUT & SUCCESS
@@ -1364,7 +1364,7 @@ img { max-width: 100%; height: auto; display: block; }
   transition: var(--transition-smooth);
   border: 1px solid #fff;
 }
-.place-order-btn:hover { background: transparent; color: #fff; }
+.place-order-btn:hover { background: transparent; color: var(--text-primary); }
 .home-btn {
   background: transparent; color: var(--text-secondary);
   border: 1px solid var(--border-color);
