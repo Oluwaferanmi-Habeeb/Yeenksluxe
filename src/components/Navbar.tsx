@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
 import { categories } from '../data/products';
@@ -8,17 +9,31 @@ export default function Navbar() {
   const {
     scrolled, checkoutStep, setCheckoutStep, setSelectedCategory,
     selectedCategory, scrollToShop, searchQuery, setSearchQuery,
-    theme, setTheme, cartAnimated, cartOpen, setCartOpen, cartItemCount
+    theme, setTheme, cartAnimated, setCartOpen, cartItemCount
   } = useStore();
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleNavClick = (cat: string) => {
+    setSelectedCategory(cat);
+    scrollToShop();
+    setMobileMenuOpen(false);
+  };
+
+  const handleLogoClick = () => {
+    setCheckoutStep('shop');
+    setSelectedCategory('All');
+    setMobileMenuOpen(false);
+  };
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container navbar-inner">
-        <div className="logo-container" onClick={() => { setCheckoutStep('shop'); setSelectedCategory('All'); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div className="logo-container" onClick={handleLogoClick} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <div className="logo" style={{ position: 'relative', width: '54px', height: '54px', flexShrink: 0 }}>
             <Image src="/images/logoo.jpg" alt="YEENKSLUXE" fill priority className="logo-img object-contain" sizes="54px" />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <div className="logo-text-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <span style={{ fontSize: '1.1rem', fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: 'var(--font-display)', lineHeight: '1.1' }}>YEENKSLUXE</span>
             <span className="logo-tagline" style={{ marginTop: '0.15rem' }}>Where streetwear meets luxury</span>
           </div>
@@ -28,7 +43,7 @@ export default function Navbar() {
           <div className="nav-links">
             {['All', ...categories].map((cat) => (
               <div key={cat} className={`nav-link ${selectedCategory === cat ? 'active' : ''}`}
-                onClick={() => { setSelectedCategory(cat); scrollToShop(); }}>
+                onClick={() => handleNavClick(cat)}>
                 {cat}
               </div>
             ))}
@@ -63,6 +78,13 @@ export default function Navbar() {
             )}
           </button>
 
+          {/* Mobile Hamburger Toggle */}
+          <button className="hamburger-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle Menu">
+            <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+          </button>
+
           <button className={`cart-trigger ${cartAnimated ? 'cart-pop-animation' : ''}`}
             onClick={() => setCartOpen(true)} aria-label="Open Cart">
             <svg className="cart-icon-svg" viewBox="0 0 24 24">
@@ -73,6 +95,26 @@ export default function Navbar() {
           </button>
         </div>
       </div>
+
+      {/* Mobile Navigation Drawer */}
+      {checkoutStep === 'shop' && (
+        <div className={`mobile-menu ${mobileMenuOpen ? 'mobile-menu-open' : ''}`}>
+          <div className="mobile-menu-inner">
+            <div className="mobile-menu-search">
+              <input type="text" placeholder="SEARCH..." className="mobile-search-input"
+                value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            </div>
+            <div className="mobile-menu-links">
+              {['All', ...categories].map((cat) => (
+                <div key={cat} className={`mobile-nav-link ${selectedCategory === cat ? 'active' : ''}`}
+                  onClick={() => handleNavClick(cat)}>
+                  {cat}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
