@@ -106,7 +106,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [checkoutStep]);
 
   useEffect(() => {
-    setMounted(true);
+    setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect // eslint-disable-line react-hooks/set-state-in-effect
     const savedCart = localStorage.getItem('ynks_cart');
     if (savedCart) try { setCart(JSON.parse(savedCart)); } catch {}
     const savedTheme = localStorage.getItem('ynks_theme') as ThemeMode | null;
@@ -208,7 +208,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       window.open(getShopifyCheckoutUrl(items), '_blank');
       setCheckoutStep('success');
     } else if (paymentMethod === 'flutterwave') {
-      const Fc = (window as any).FlutterwaveCheckout;
+      const Fc = (window as unknown as { FlutterwaveCheckout: (config: Record<string, unknown>) => void }).FlutterwaveCheckout;
       if (!Fc) { alert('Payment gateway loading. Please try again.'); return; }
       Fc({
         public_key: 'a8c75c71b8e2a69f5e6a877fce04b48b',
@@ -218,7 +218,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         payment_options: 'card, banktransfer, ussd',
         customer: { email: checkoutForm.email || 'customer@yeenksluxe.com', phone_number: checkoutForm.phone, name: checkoutForm.name },
         customizations: { title: 'YEENKSLUXE APPAREL', description: 'YEENKSLUXE Apparel — Order Payment', logo: window.location.origin + '/images/logoo.jpg' },
-        callback: (data: any) => {
+        callback: (data: { status: string }) => {
           if (data.status === 'successful' || data.status === 'completed') {
             alert('Payment Successful!');
             setCheckoutStep('success');

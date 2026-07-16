@@ -3,7 +3,7 @@
 import { useStore } from '../context/StoreContext';
 
 export default function SuccessPage() {
-  const { getWhatsAppLink, setCart, setCheckoutStep, formatCurrency } = useStore();
+  const { getWhatsAppLink, setCart, setCheckoutStep } = useStore();
 
   return (
     <div className="container">

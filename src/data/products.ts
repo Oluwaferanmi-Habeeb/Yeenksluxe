@@ -297,22 +297,6 @@ export const products: Product[] = [
     sizes: ["M", "L", "XL", "XXL"],
     colors: ["#000000"]
   },
-    shopifyVariantId: "45000000000069",
-    name: "SS26 Drop III — Hoodie 02",
-    price: 35000,
-    category: "Hoodies",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM (2).jpeg"),
-    sizes: ["M", "L", "XL", "XXL"],
-    colors: ["#000000"]
-  },
-    shopifyVariantId: "45000000000070",
-    name: "SS26 Drop III — Hoodie 03",
-    price: 35000,
-    category: "Hoodies",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM (3).jpeg"),
-    sizes: ["M", "L", "XL", "XXL"],
-    colors: ["#000000"]
-  },
   {
     id: "drop3-12",
     shopifyVariantId: "45000000000071",
@@ -320,14 +304,6 @@ export const products: Product[] = [
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM (4).jpeg"),
-    sizes: ["M", "L", "XL", "XXL"],
-    colors: ["#000000"]
-  },
-    shopifyVariantId: "45000000000072",
-    name: "SS26 Drop III — Hoodie 05",
-    price: 35000,
-    category: "Hoodies",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM.jpeg"),
     sizes: ["M", "L", "XL", "XXL"],
     colors: ["#000000"]
   },
@@ -343,54 +319,6 @@ export const products: Product[] = [
   },
 
   // Item 15–20: Hats
-    shopifyVariantId: "45000000000074",
-    name: "SS26 Drop III — Cap 01",
-    price: 25000,
-    category: "Hats",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.50 PM (2).jpeg"),
-    sizes: ["One Size"],
-    colors: ["#000000"]
-  },
-    shopifyVariantId: "45000000000075",
-    name: "SS26 Drop III — Cap 02",
-    price: 25000,
-    category: "Hats",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.50 PM.jpeg"),
-    sizes: ["One Size"],
-    colors: ["#000000"]
-  },
-    shopifyVariantId: "45000000000076",
-    name: "SS26 Drop III — Cap 03",
-    price: 25000,
-    category: "Hats",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.51 PM (1).jpeg"),
-    sizes: ["One Size"],
-    colors: ["#000000"]
-  },
-    shopifyVariantId: "45000000000077",
-    name: "SS26 Drop III — Cap 04",
-    price: 25000,
-    category: "Hats",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.51 PM (2).jpeg"),
-    sizes: ["One Size"],
-    colors: ["#000000"]
-  },
-    shopifyVariantId: "45000000000078",
-    name: "SS26 Drop III — Cap 05",
-    price: 25000,
-    category: "Hats",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.51 PM.jpeg"),
-    sizes: ["One Size"],
-    colors: ["#000000"]
-  },
-    shopifyVariantId: "45000000000079",
-    name: "SS26 Drop III — Cap 06",
-    price: 25000,
-    category: "Hats",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.52 PM (1).jpeg"),
-    sizes: ["One Size"],
-    colors: ["#000000"]
-  },
 
   // Item 21–28: Caps (rest of Signature Cap variants)
   {

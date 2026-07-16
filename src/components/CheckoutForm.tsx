@@ -1,11 +1,12 @@
 'use client';
 
 import { useStore } from '../context/StoreContext';
+import { PaymentMethod } from '../types';
 
 export default function CheckoutForm() {
   const {
     checkoutForm, setCheckoutForm, paymentMethod, setPaymentMethod,
-    handlePlaceOrder, setCheckoutStep, cart, formatCurrency
+    handlePlaceOrder, setCheckoutStep, cart
   } = useStore();
 
   return (
@@ -51,7 +52,7 @@ export default function CheckoutForm() {
                 <label className="form-label" style={{ display: 'block', marginBottom: '0.75rem' }}>Payment Gateway / Method *</label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
                   {['flutterwave', 'shopify', 'whatsapp'].map((method) => (
-                    <div key={method} onClick={() => setPaymentMethod(method as any)}
+                    <div key={method} onClick={() => setPaymentMethod(method as PaymentMethod)}
                       style={{
                         border: `1px solid ${paymentMethod === method ? 'var(--accent)' : 'var(--border-color)'}`,
                         padding: '1rem', cursor: 'pointer',

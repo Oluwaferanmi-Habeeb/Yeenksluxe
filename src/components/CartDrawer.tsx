@@ -6,7 +6,7 @@ import { useStore } from '../context/StoreContext';
 export default function CartDrawer() {
   const {
     cartOpen, setCartOpen, cart, updateCartQty, removeCartItem,
-    cartItemCount, setCheckoutStep, formatCurrency
+    setCheckoutStep
   } = useStore();
 
   if (!cartOpen) return null;
