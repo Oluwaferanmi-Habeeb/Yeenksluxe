@@ -106,7 +106,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [checkoutStep]);
 
   useEffect(() => {
-    setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect // eslint-disable-line react-hooks/set-state-in-effect
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
     const savedCart = localStorage.getItem('ynks_cart');
     if (savedCart) try { setCart(JSON.parse(savedCart)); } catch {}
     const savedTheme = localStorage.getItem('ynks_theme') as ThemeMode | null;
