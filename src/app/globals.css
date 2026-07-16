@@ -1082,11 +1082,41 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .filter-btn:hover { border-color: var(--text-primary); color: var(--text-primary); }
 .filter-btn.active { background: #fff; color: #000; border-color: #fff; }
+.filter-count {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  margin-left: 0.3rem;
+  font-weight: 400;
+}
+.filter-btn.active .filter-count { color: #000; }
+
+/* Shop meta bar */
+.shop-meta-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 0;
+}
+.shop-result-count {
+  font-family: var(--font-mono);
+  font-size: 0.65rem; letter-spacing: 0.08em;
+  color: var(--text-muted); text-transform: uppercase;
+}
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(2rem, 4vw, 3.5rem);
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* Responsive grid */
+@media (max-width: 1024px) {
+  .product-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .product-grid { grid-template-columns: repeat(2, 1fr); gap: clamp(1rem, 3vw, 1.5rem); }
+}
+@media (max-width: 480px) {
+  .product-grid { grid-template-columns: 1fr; gap: 2rem; }
 }
 
 .product-card {
@@ -1173,10 +1203,31 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--text-primary);
 }
 .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+.product-price {
+  font-family: var(--font-body);
+  font-size: 0.82rem; font-weight: 700;
+  color: var(--text-primary); letter-spacing: 0.03em;
+}
+.card-color-dots {
+  display: flex; gap: 0.3rem; align-items: center;
+}
+.card-color-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+.card-color-more {
+  font-size: 0.55rem; color: var(--text-muted);
+  margin-left: 0.15rem;
+}
 .no-results {
   grid-column: 1 / -1;
   text-align: center; padding: 6rem 0;
   color: var(--text-secondary); font-size: 0.85rem; letter-spacing: 0.05em;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+.no-results-icon {
+  font-size: 2rem; color: var(--text-muted);
 }
 
 /* ── LOOKBOOK MANIFESTO CARD ── */
@@ -1506,6 +1557,73 @@ img { max-width: 100%; height: auto; display: block; }
   border: 1px solid #fff;
 }
 .add-to-cart-btn:hover { background: transparent; color: var(--text-primary); }
+
+/* Modal enriched details */
+.modal-price {
+  font-family: var(--font-body);
+  font-size: 1.15rem; font-weight: 700;
+  color: var(--accent); letter-spacing: 0.05em;
+}
+.modal-tagline {
+  font-family: var(--font-display);
+  font-size: 0.95rem; font-style: italic;
+  color: var(--text-secondary); line-height: 1.5;
+}
+.modal-features-list {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.modal-features-list li {
+  font-size: 0.75rem; color: var(--text-secondary);
+  padding-left: 1rem; position: relative;
+  line-height: 1.5;
+}
+.modal-features-list li::before {
+  content: '—'; position: absolute; left: 0;
+  color: var(--accent); font-weight: 600;
+}
+.modal-color-grid {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+}
+.modal-color-option {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--border-color);
+  cursor: pointer; transition: var(--transition-fast);
+  background: transparent;
+}
+.modal-color-option:hover { border-color: var(--border-hover); }
+.modal-color-option.active {
+  border-color: var(--text-primary);
+  background: rgba(255,255,255,0.03);
+}
+.modal-color-swatch {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+.modal-color-name {
+  font-size: 0.65rem; font-weight: 500;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.modal-fit-info {
+  font-size: 0.78rem; color: var(--text-secondary);
+  line-height: 1.6;
+}
+.modal-care-list {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 0.35rem;
+}
+.modal-care-list li {
+  font-size: 0.75rem; color: var(--text-secondary);
+  padding-left: 1rem; position: relative;
+  line-height: 1.5;
+}
+.modal-care-list li::before {
+  content: '•'; position: absolute; left: 0;
+  color: var(--accent);
+}
 
 /* ══════════════════════════════════════════════════
    CART DRAWER

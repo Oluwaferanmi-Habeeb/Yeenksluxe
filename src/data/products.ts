@@ -10,6 +10,11 @@ export interface Product {
   badge?: string;
   sizes?: string[];
   colors?: string[];
+  description?: string;   // Short tagline for the product
+  features?: string[];    // Key product features
+  care?: string[];        // Care instructions
+  fit?: string;           // Fit description (e.g. 'Regular fit, true to size')
+  colorNames?: Record<string, string>; // Maps hex → color name (e.g. '#ffffff' → 'White')
 }
 
 // Helper - make sure the image file exists
@@ -34,7 +39,7 @@ export const products: Product[] = [
   {
     id: "shirt-3",
     shopifyVariantId: "45000000000038",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Armless Tank",
+    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Signature Tank Top",
     price: 30000,
     category: "Shirts",
     image: img("new_prod_6.jpg"),
@@ -124,9 +129,9 @@ export const products: Product[] = [
   {
     id: "shirt-16",
     shopifyVariantId: "45000000000037",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Vintage Tee",
-    price: 30000,
-    category: "Shirts",
+    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Premium Hoodie",
+    price: 45000,
+    category: "Hoodies",
     image: img("new_prod_5.jpg"),
     gallery: [img("snaptik_7625367276497292565_2_v2.jpeg")],
     sizes: ["S", "M", "L", "XL", "XXL"],
@@ -413,8 +418,26 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.52 PM (2).jpeg"),
+    description: "Top off your look with confidence.",
+    features: [
+      "Premium cotton construction",
+      "High-quality embroidered YĒĒNKSLUXÉ logo",
+      "Signature embroidered front patch",
+      "Unique metal eyelet detail on the brim",
+      "Structured crown for a clean fit",
+      "Adjustable strap — one size fits most",
+      "Unisex design"
+    ],
+    care: [
+      "Spot clean with a damp cloth",
+      "Do not machine wash",
+      "Air dry only",
+      "Store in a cool, dry place to maintain its shape"
+    ],
+    fit: "One size fits most — adjustable strap",
     sizes: ["One Size"],
-    colors: ["#000000"]
+    colors: ["#000000"],
+    colorNames: { "#000000": "Black" }
   },
   {
     id: "drop3-22",
@@ -423,8 +446,26 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.52 PM.jpeg"),
+    description: "Top off your look with confidence.",
+    features: [
+      "Premium cotton construction",
+      "High-quality embroidered YĒĒNKSLUXÉ logo",
+      "Signature embroidered front patch",
+      "Unique metal eyelet detail on the brim",
+      "Structured crown for a clean fit",
+      "Adjustable strap — one size fits most",
+      "Unisex design"
+    ],
+    care: [
+      "Spot clean with a damp cloth",
+      "Do not machine wash",
+      "Air dry only",
+      "Store in a cool, dry place to maintain its shape"
+    ],
+    fit: "One size fits most — adjustable strap",
     sizes: ["One Size"],
-    colors: ["#000000"]
+    colors: ["#000000"],
+    colorNames: { "#000000": "Black" }
   },
   {
     id: "drop3-23",
@@ -433,8 +474,26 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.53 PM (1).jpeg"),
+    description: "Top off your look with confidence.",
+    features: [
+      "Premium cotton construction",
+      "High-quality embroidered YĒĒNKSLUXÉ logo",
+      "Signature embroidered front patch",
+      "Unique metal eyelet detail on the brim",
+      "Structured crown for a clean fit",
+      "Adjustable strap — one size fits most",
+      "Unisex design"
+    ],
+    care: [
+      "Spot clean with a damp cloth",
+      "Do not machine wash",
+      "Air dry only",
+      "Store in a cool, dry place to maintain its shape"
+    ],
+    fit: "One size fits most — adjustable strap",
     sizes: ["One Size"],
-    colors: ["#000000"]
+    colors: ["#000000"],
+    colorNames: { "#000000": "Black" }
   },
   {
     id: "drop3-24",
@@ -443,8 +502,26 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.53 PM.jpeg"),
+    description: "Top off your look with confidence.",
+    features: [
+      "Premium cotton construction",
+      "High-quality embroidered YĒĒNKSLUXÉ logo",
+      "Signature embroidered front patch",
+      "Unique metal eyelet detail on the brim",
+      "Structured crown for a clean fit",
+      "Adjustable strap — one size fits most",
+      "Unisex design"
+    ],
+    care: [
+      "Spot clean with a damp cloth",
+      "Do not machine wash",
+      "Air dry only",
+      "Store in a cool, dry place to maintain its shape"
+    ],
+    fit: "One size fits most — adjustable strap",
     sizes: ["One Size"],
-    colors: ["#000000"]
+    colors: ["#000000"],
+    colorNames: { "#000000": "Black" }
   },
   {
     id: "drop3-25",
@@ -453,8 +530,26 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.54 PM.jpeg"),
+    description: "Top off your look with confidence.",
+    features: [
+      "Premium cotton construction",
+      "High-quality embroidered YĒĒNKSLUXÉ logo",
+      "Signature embroidered front patch",
+      "Unique metal eyelet detail on the brim",
+      "Structured crown for a clean fit",
+      "Adjustable strap — one size fits most",
+      "Unisex design"
+    ],
+    care: [
+      "Spot clean with a damp cloth",
+      "Do not machine wash",
+      "Air dry only",
+      "Store in a cool, dry place to maintain its shape"
+    ],
+    fit: "One size fits most — adjustable strap",
     sizes: ["One Size"],
-    colors: ["#000000"]
+    colors: ["#000000"],
+    colorNames: { "#000000": "Black" }
   },
   {
     id: "drop3-26",
@@ -463,8 +558,26 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.55 PM (1).jpeg"),
+    description: "Top off your look with confidence.",
+    features: [
+      "Premium cotton construction",
+      "High-quality embroidered YĒĒNKSLUXÉ logo",
+      "Signature embroidered front patch",
+      "Unique metal eyelet detail on the brim",
+      "Structured crown for a clean fit",
+      "Adjustable strap — one size fits most",
+      "Unisex design"
+    ],
+    care: [
+      "Spot clean with a damp cloth",
+      "Do not machine wash",
+      "Air dry only",
+      "Store in a cool, dry place to maintain its shape"
+    ],
+    fit: "One size fits most — adjustable strap",
     sizes: ["One Size"],
-    colors: ["#000000"]
+    colors: ["#000000"],
+    colorNames: { "#000000": "Black" }
   },
   {
     id: "drop3-27",
@@ -473,8 +586,26 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.55 PM.jpeg"),
+    description: "Top off your look with confidence.",
+    features: [
+      "Premium cotton construction",
+      "High-quality embroidered YĒĒNKSLUXÉ logo",
+      "Signature embroidered front patch",
+      "Unique metal eyelet detail on the brim",
+      "Structured crown for a clean fit",
+      "Adjustable strap — one size fits most",
+      "Unisex design"
+    ],
+    care: [
+      "Spot clean with a damp cloth",
+      "Do not machine wash",
+      "Air dry only",
+      "Store in a cool, dry place to maintain its shape"
+    ],
+    fit: "One size fits most — adjustable strap",
     sizes: ["One Size"],
-    colors: ["#000000"]
+    colors: ["#000000"],
+    colorNames: { "#000000": "Black" }
   },
   {
     id: "drop3-28",
@@ -483,8 +614,26 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.56 PM.jpeg"),
+    description: "Top off your look with confidence.",
+    features: [
+      "Premium cotton construction",
+      "High-quality embroidered YĒĒNKSLUXÉ logo",
+      "Signature embroidered front patch",
+      "Unique metal eyelet detail on the brim",
+      "Structured crown for a clean fit",
+      "Adjustable strap — one size fits most",
+      "Unisex design"
+    ],
+    care: [
+      "Spot clean with a damp cloth",
+      "Do not machine wash",
+      "Air dry only",
+      "Store in a cool, dry place to maintain its shape"
+    ],
+    fit: "One size fits most — adjustable strap",
     sizes: ["One Size"],
-    colors: ["#000000"]
+    colors: ["#000000"],
+    colorNames: { "#000000": "Black" }
   }
 ];
 

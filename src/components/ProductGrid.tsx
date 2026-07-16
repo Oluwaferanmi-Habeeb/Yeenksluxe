@@ -2,10 +2,15 @@
 
 import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
-import { categories } from '../data/products';
+import { categories, products } from '../data/products';
 
 export default function ProductGrid() {
-  const { filteredProducts, selectedCategory, setSelectedCategory, openQuickView } = useStore();
+  const {
+    filteredProducts, selectedCategory, setSelectedCategory,
+    openQuickView, formatCurrency, searchQuery
+  } = useStore();
+
+
 
   return (
     <section className="shop-section reveal-on-scroll" id="shop-catalog">
@@ -23,15 +28,37 @@ export default function ProductGrid() {
           </div>
         </div>
 
+        {/* Category Filter Tabs — ddstyles-inspired underline style */}
         <div className="category-filters">
-          {['All', ...categories].map((cat) => (
-            <button key={cat} className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`}
-              onClick={() => setSelectedCategory(cat)}>{cat}</button>
-          ))}
+          {['All', ...categories].map((cat) => {
+            const count = cat === 'All'
+              ? products.length
+              : products.filter(p => p.category === cat).length;
+            return (
+              <button key={cat} className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`}
+                onClick={() => setSelectedCategory(cat)}>
+                {cat}
+                <span className="filter-count">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Product count & active filter indicator */}
+        <div className="shop-meta-bar">
+          <span className="shop-result-count">
+            {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
+            {selectedCategory !== 'All' && ` in ${selectedCategory}`}
+            {searchQuery && ` matching "${searchQuery}"`}
+          </span>
         </div>
 
         {filteredProducts.length === 0 ? (
-          <div className="no-results">No products matches your selection. Try browsing another category.</div>
+          <div className="no-results">
+            <span className="no-results-icon">∅</span>
+            <p>No products match your selection.</p>
+            <button className="filter-btn" onClick={() => setSelectedCategory('All')}>View All Products</button>
+          </div>
         ) : (
           <div className="product-grid">
             {filteredProducts.map((product) => (
@@ -41,7 +68,7 @@ export default function ProductGrid() {
                     <span className={`product-badge ${product.badge === 'Sale' ? 'badge-sale' : ''}`}>{product.badge}</span>
                   )}
                   <Image src={product.image} alt={product.name} fill className="card-img object-cover"
-                    sizes="(max-width: 480px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+                    sizes="(max-width: 480px) 50vw, (max-width: 768px) 33vw, 25vw" />
                   <div className="card-overlay">
                     <button className="quick-view-btn" onClick={(e) => { e.stopPropagation(); openQuickView(product); }}>
                       QUICK VIEW
@@ -52,6 +79,20 @@ export default function ProductGrid() {
                   <div>
                     <span className="product-category">{product.category}</span>
                     <h3 className="product-name">{product.name}</h3>
+                  </div>
+                  <div className="card-footer">
+                    <span className="product-price">{formatCurrency(product.price)}</span>
+                    {/* Color swatch dots */}
+                    {product.colors && product.colors.length > 1 && (
+                      <div className="card-color-dots">
+                        {product.colors.slice(0, 3).map((c) => (
+                          <span key={c} className="card-color-dot" style={{ background: c }}></span>
+                        ))}
+                        {product.colors.length > 3 && (
+                          <span className="card-color-more">+{product.colors.length - 3}</span>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
