@@ -129,7 +129,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     mounted ? cart.reduce((acc, item) => acc + item.quantity, 0) : 0,
   [cart, mounted]);
 
-  const cartSubtotal = useMemo(() => 0, []);
+  const cartSubtotal = useMemo(() =>
+    mounted ? cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0) : 0,
+  [cart, mounted]);
 
   const filteredProducts = useMemo(() => {
     return products.filter((p: Product) => {
