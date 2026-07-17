@@ -18,5 +18,5 @@ export interface CheckoutFormData {
 
 export type CheckoutStep = 'shop' | 'checkout' | 'success';
 export type ThemeMode = 'dark' | 'light';
-export type PaymentMethod = 'flutterwave' | 'shopify' | 'whatsapp';
+export type PaymentMethod = 'paystack' | 'shopify' | 'whatsapp';
 export type DossierTab = 'info' | 'fit' | 'specs';

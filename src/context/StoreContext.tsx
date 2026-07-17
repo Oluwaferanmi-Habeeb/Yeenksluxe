@@ -70,7 +70,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>('shop');
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('flutterwave');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('paystack');
   const [mounted, setMounted] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
   const [theme, setTheme] = useState<ThemeMode>('light');
@@ -194,7 +194,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return `https://wa.me/${phoneNum}?text=${encodeURIComponent(message)}`;
   };
 
-  const handlePlaceOrder = (e: React.FormEvent) => {
+  const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!checkoutForm.name || !checkoutForm.phone || !checkoutForm.address) {
       alert('Please fill out all required shipping fields.');
@@ -208,24 +208,37 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const items = cart.map(item => ({ variantId: item.product.shopifyVariantId, quantity: item.quantity }));
       window.open(getShopifyCheckoutUrl(items), '_blank');
       setCheckoutStep('success');
-    } else if (paymentMethod === 'flutterwave') {
-      const Fc = (window as unknown as { FlutterwaveCheckout: (config: Record<string, unknown>) => void }).FlutterwaveCheckout;
-      if (!Fc) { alert('Payment gateway loading. Please try again.'); return; }
-      Fc({
-        public_key: 'a8c75c71b8e2a69f5e6a877fce04b48b',
-        tx_ref: 'YNKS-' + Math.floor(Math.random() * 1000000000 + 1),
-        amount: 100,
+    } else if (paymentMethod === 'paystack') {
+      const paystackKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
+      if (!paystackKey) {
+        alert('Payment gateway not configured. Please contact support.');
+        return;
+      }
+      const PaystackPop = (await import('@paystack/inline-js')).default;
+      const popup = new PaystackPop();
+      popup.newTransaction({
+        key: paystackKey,
+        email: checkoutForm.email || 'customer@yeenksluxe.com',
+        amount: cartSubtotal * 100, // Convert Naira to kobo
         currency: 'NGN',
-        payment_options: 'card, banktransfer, ussd',
-        customer: { email: checkoutForm.email || 'customer@yeenksluxe.com', phone_number: checkoutForm.phone, name: checkoutForm.name },
-        customizations: { title: 'YEENKSLUXE APPAREL', description: 'YEENKSLUXE Apparel — Order Payment', logo: window.location.origin + '/images/logoo.jpg' },
-        callback: (data: { status: string }) => {
-          if (data.status === 'successful' || data.status === 'completed') {
-            alert('Payment Successful!');
-            setCheckoutStep('success');
-          } else alert('Payment was not completed.');
+        ref: 'YNKS-' + Math.floor(Math.random() * 1000000000 + 1),
+        metadata: {
+          custom_fields: [
+            {
+              display_name: "Customer Name",
+              variable_name: "customer_name",
+              value: checkoutForm.name
+            }
+          ]
         },
-        onclose: () => alert('Transaction closed.')
+        onSuccess: (response: { reference: string }) => {
+          alert('Payment Successful!');
+          setCart([]);
+          setCheckoutStep('success');
+        },
+        onCancel: () => {
+          // User closed the payment popup
+        }
       });
     }
   };
