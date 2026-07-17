@@ -7,7 +7,7 @@ export default function ProductModal() {
   const {
     selectedProduct, setSelectedProduct, chosenSize, setChosenSize,
     chosenColor, setChosenColor, activeDossierTab, setActiveDossierTab,
-    fitHeight, setFitHeight, fitWeight, setFitWeight, addToCart, formatCurrency
+    fitHeight, setFitHeight, fitWeight, setFitWeight, addToCart, formatCurrency, formatUSD
   } = useStore();
 
   if (!selectedProduct) return null;
@@ -54,7 +54,7 @@ export default function ProductModal() {
           <h2 className="modal-title">{selectedProduct.name}</h2>
 
           {/* Price */}
-          <div className="modal-price">{formatCurrency(selectedProduct.price)}</div>
+          <div className="modal-price">{formatCurrency(selectedProduct.price)} <span className="product-price-usd">{formatUSD(selectedProduct.price)}</span></div>
 
           {/* Tagline */}
           {selectedProduct.description && (

@@ -57,6 +57,7 @@ interface StoreContextType {
   handlePlaceOrder: (e: React.FormEvent) => void;
   getWhatsAppLink: () => string;
   formatCurrency: (amount: number) => string;
+  formatUSD: (amount: number) => string;
   scrollToShop: () => void;
 }
 
@@ -183,7 +184,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setCart((prev) => { const next = [...prev]; next.splice(index, 1); return next; });
   };
 
+  const NGN_TO_USD = 1500; // Approximate exchange rate
   const formatCurrency = (amount: number) => '₦' + amount.toLocaleString('en-NG');
+  const formatUSD = (amount: number) => '~$' + (amount / NGN_TO_USD).toFixed(0);
 
   const getWhatsAppLink = () => {
     const phoneNum = '2349033364994';
@@ -253,7 +256,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     activeDossierTab, setActiveDossierTab, fitHeight, setFitHeight, fitWeight, setFitWeight,
     checkoutForm, setCheckoutForm, cartItemCount, cartSubtotal, filteredProducts,
     openQuickView, addToCart, updateCartQty, removeCartItem, handlePlaceOrder,
-    getWhatsAppLink, formatCurrency, scrollToShop,
+    getWhatsAppLink, formatCurrency, formatUSD, scrollToShop,
   };
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

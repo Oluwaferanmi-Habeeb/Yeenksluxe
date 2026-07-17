@@ -188,8 +188,12 @@ export const products: Product[] = [
   {
     id: "acc-2",
     shopifyVariantId: "45000000000010",
-    name: "Urban Knit Beanie",
-    price: 20000,
+    name: "YĒĒNKSLUXÉ x STEEZY x MXUNDERSTOOD Edition Cap",
+    description: "Top off your look with confidence.",
+    features: CAP_FEATURES,
+    care: CAP_CARE,
+    fit: CAP_FIT,
+    price: 25000,
     category: "Hats",
     image: img("f12d0220-a9fe-437b-b736-64a573bb8193.jpg"),
     gallery: [img("new_prod_6.jpg")],
@@ -201,9 +205,13 @@ export const products: Product[] = [
   {
     id: "acc-1",
     shopifyVariantId: "45000000000009",
-    name: "Gold-Trim Premium Socks",
-    price: 15000,
-    category: "Accessories",
+    name: "YĒĒNKSLUXÉ x MXUNDERSTOOD Signature Hat",
+    description: "Top off your look with confidence.",
+    features: CAP_FEATURES,
+    care: CAP_CARE,
+    fit: CAP_FIT,
+    price: 25000,
+    category: "Hats",
     image: img("d7d9b8dd-971a-4010-900d-8403c2e44666.jpg"),
     gallery: [img("new_prod_1.jpg")],
     sizes: ["One Size"],
@@ -212,14 +220,13 @@ export const products: Product[] = [
   {
     id: "acc-4",
     shopifyVariantId: "45000000000018",
-    name: "Tactical Utility Bag",
-    price: 25000,
-    category: "Accessories",
+    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Tee",
+    price: 30000,
+    category: "Shirts",
     image: img("d4413ae8-baac-4551-838d-632fd109f35c.jpg"),
     gallery: [img("new_prod_4.jpg")],
-    badge: "New Release",
-    sizes: ["One Size"],
-    colors: ["#000000", "#333333"]
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["#000000", "#ffffff"]
   },
 
   // ── NEW 28 PRODUCTS (July 15 Drop — WhatsApp Images) ──

@@ -7,7 +7,7 @@ import { categories, products } from '../data/products';
 export default function ProductGrid() {
   const {
     filteredProducts, selectedCategory, setSelectedCategory,
-    openQuickView, formatCurrency, searchQuery
+    openQuickView, formatCurrency, formatUSD, searchQuery
   } = useStore();
 
 
@@ -81,7 +81,7 @@ export default function ProductGrid() {
                     <h3 className="product-name">{product.name}</h3>
                   </div>
                   <div className="card-footer">
-                    <span className="product-price">{formatCurrency(product.price)}</span>
+                    <span className="product-price">{formatCurrency(product.price)} <span className="product-price-usd">{formatUSD(product.price)}</span></span>
                     {/* Color swatch dots */}
                     {product.colors && product.colors.length > 1 && (
                       <div className="card-color-dots">
