@@ -60,6 +60,7 @@ export const products: Product[] = [
     id: "shirt-3",
     shopifyVariantId: "45000000000038",
     name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Signature Tank Top",
+    description: "The icon. Reimagined for the culture.",
     price: 30000,
     category: "Shirts",
     image: img("new_prod_6.jpg"),
@@ -239,6 +240,7 @@ export const products: Product[] = [
     id: "drop3-02",
     shopifyVariantId: "45000000000061",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Graphic Tank",
+    description: "Bold graphics. Clean silhouette. Unfiltered.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.47 PM (2).jpeg"),
@@ -259,6 +261,7 @@ export const products: Product[] = [
     id: "drop3-04",
     shopifyVariantId: "45000000000063",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Crew Tank",
+    description: "Classic crew neck. Unmatched comfort.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (1).jpeg"),
@@ -269,6 +272,7 @@ export const products: Product[] = [
     id: "drop3-05",
     shopifyVariantId: "45000000000064",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Printed Tank",
+    description: "Statement prints for the culture.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (2).jpeg"),
@@ -279,6 +283,7 @@ export const products: Product[] = [
     id: "drop3-06",
     shopifyVariantId: "45000000000065",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Classic Tank",
+    description: "Timeless. Essential. Effortless.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (3).jpeg"),
@@ -289,6 +294,7 @@ export const products: Product[] = [
     id: "drop3-07",
     shopifyVariantId: "45000000000066",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Slim Tank",
+    description: "Streamlined fit. Maximum impact.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (4).jpeg"),
@@ -298,7 +304,8 @@ export const products: Product[] = [
   {
     id: "drop3-08",
     shopifyVariantId: "45000000000067",
-    name: "SS26 Drop III — Tee 08",
+    name: "YĒĒNKSLUXÉ x STEEZY Graphic Tank",
+    description: "Clean lines. Stronger presence.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM.jpeg"),
@@ -306,11 +313,12 @@ export const products: Product[] = [
     colors: ["#000000"]
   },
 
-  // Item 9–14: Hoodies
+  // Item 9–12: Tanks
   {
     id: "drop3-09",
     shopifyVariantId: "45000000000068",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Sleeveless Tank",
+    description: "Cut for movement. Built for the streets.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM (1).jpeg"),
@@ -318,42 +326,13 @@ export const products: Product[] = [
     colors: ["#000000"]
   },
   {
-    id: "drop3-10",
-    shopifyVariantId: "45000000000069",
-    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Racer Tank",
-    price: 30000,
-    category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM (2).jpeg"),
-    sizes: ["M", "L", "XL", "XXL"],
-    colors: ["#000000"]
-  },
-  {
-    id: "drop3-11",
-    shopifyVariantId: "45000000000070",
-    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Drop Tank",
-    price: 30000,
-    category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM (3).jpeg"),
-    sizes: ["M", "L", "XL", "XXL"],
-    colors: ["#000000"]
-  },
-  {
     id: "drop3-12",
     shopifyVariantId: "45000000000071",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Armless Tank",
+    description: "Raw edges. Unfiltered style.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM (4).jpeg"),
-    sizes: ["M", "L", "XL", "XXL"],
-    colors: ["#000000"]
-  },
-  {
-    id: "drop3-13",
-    shopifyVariantId: "45000000000072",
-    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Cropped Tank",
-    price: 30000,
-    category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM.jpeg"),
     sizes: ["M", "L", "XL", "XXL"],
     colors: ["#000000"]
   },
