@@ -1,100 +1,148 @@
-# YEENKSLUXE — Session Handoff (July 16, 2026)
+# YEENKSLUXE — Session Handoff (July 20, 2026)
 
 ## ✅ COMPLETED THIS SESSION
 
-### 1. Product Data Fixes
-- **Renamed tank**: "YĒĒNKSLUXÉ x STEEZY '26 Edition Armless Tank" → "YĒĒNKSLUXÉ Signature Tank Top"
-- **Fixed miscategorized product**: shirt-16 (image showed a hoodie, was labeled "Vintage Tee") → renamed to "YĒĒNKSLUXÉ x STEEZY '26 Edition Premium Hoodie", recategorized to Hoodies, price updated from ₦30,000 → ₦45,000. **ID kept as "shirt-16" to avoid breaking localStorage saved carts.**
+### 1. Payment Gateway: Flutterwave → Paystack
+- **Switched from Flutterwave to Paystack** for NGN online payments
+- Removed hardcoded Flutterwave public key + ₦100 bug (was charging ₦100 regardless of cart total)
+- Now uses `cartSubtotal * 100` (kobo) with Paystack `newTransaction()` API
+- **Dynamic import**: `await import('@paystack/inline-js')` — SSR-safe, no `window` reference at build time
+- Cart is now cleared (`setCart([])`) on successful payment
+- Updated `PaymentMethod` type from `'flutterwave'` → `'paystack'`
+- Updated `CheckoutForm` labels: NAIRA CHECKOUT → Paystack
+- **Requires user action**: Set `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` in `.env.local`
+  - Sign up at [paystack.com](https://paystack.com) → Settings → API Keys & Webhooks
+- Created `.env.example` with required env vars
+- Created TypeScript declaration file: `src/types/paystack__inline-js.d.ts`
 
-### 2. Product Interface Extended (`src/data/products.ts`)
-Added optional fields to the `Product` interface:
-```ts
-description?: string;   // Short tagline (e.g. "Clean. Bold. Effortless.")
-features?: string[];    // Key product features
-care?: string[];        // Care instructions
-fit?: string;           // Fit description
-colorNames?: Record<string, string>; // Maps hex → color name (e.g. '#ffffff' → 'White')
-```
+### 2. Product Data Corrections
 
-### 3. CEO Product Data Added
-- **Signature Tank Top**: Full description, 6 features, 5 care instructions, fit info, color names
-- **8× Signature Caps (drop3-21 to drop3-28)**: All enriched with CEO's product descriptions, 7 features each, 4 care instructions, fit info, color names
+#### Reclassifications & Renames
+| Product | Old | New |
+|---------|-----|-----|
+| `drop3-02` | "SS26 Drop III — Graphic Tee 02" (Shirts, ₦30k) | **"YĒĒNKSLUXÉ x STEEZY '26 Edition Graphic Tank"** (Shirts, ₦30k) |
+| `drop3-03` | "SS26 Drop III — Graphic Tee 03" (Shirts, ₦30k) | **"YĒĒNKSLUXÉ x STEEZY '26 Edition Graphic Hoodie"** (Hoodies, ₦45k) |
+| `shirt-13` | "YĒĒNKSLUXÉ x STEEZY '26 Edition Fila Tee" (Shirts, ₦30k) | **"YĒĒNKSLUXÉ x STEEZY '26 Edition Signature Cap"** (Hats, ₦25k) |
+| `drop3-08` | "SS26 Drop III — Tee 08" (Shirts, ₦30k) | **"YĒĒNKSLUXÉ x STEEZY Graphic Tank"** (Shirts, ₦30k) |
+| `acc-2` | "Urban Knit Beanie" (Hats, ₦20k) | **"YĒĒNKSLUXÉ x STEEZY x MXUNDERSTOOD Edition Cap"** (Hats, ₦25k, with cap features/care/fit) |
+| `acc-1` | "Gold-Trim Premium Socks" (Accessories, ₦15k) | **"YĒĒNKSLUXÉ x MXUNDERSTOOD Signature Hat"** (Hats, ₦25k, with cap description/features/care/fit) |
+| `acc-4` | "Tactical Utility Bag" (Accessories, ₦25k) | **"YĒĒNKSLUXÉ x STEEZY '26 Edition Tee"** (Shirts, ₦30k, sizes S-XL) |
 
-### 4. ProductModal Enriched (`src/components/ProductModal.tsx`)
-- **Price now displayed** prominently in accent color
-- **Tagline/description** shown below title
-- **DETAILS tab** (was "INFO"): Shows features list with em-dash bullets, color swatches with names, size selector, full-width CTA with price
-- **FIT FINDER tab**: Height/weight inputs + personalized size recommendation + fit description
-- **CARE & SPECS tab** (was "FABRIC & SIZE"): Care instructions list, fabric specs, quality ratings
+#### Products Removed
+- `drop3-14` — "SS26 Drop III — Hoodie 06" (removed on user request)
+- `drop3-10` — "YĒĒNKSLUXÉ x STEEZY '26 Edition Racer Tank" (removed on user request)
+- `drop3-11` — "YĒĒNKSLUXÉ x STEEZY '26 Edition Drop Tank" (removed on user request)
+- `drop3-13` — "YĒĒNKSLUXÉ x STEEZY '26 Edition Cropped Tank" (removed on user request)
 
-### 5. ProductGrid Upgraded (`src/components/ProductGrid.tsx`)
-- **Prices shown on cards** (formatCurrency)
-- **Color swatch dots** on cards (up to 3 + overflow count)
-- **Product count indicator** below filters ("X products in Category")
-- **Category counts** on filter buttons
-- **Empty state** improved with icon + "View All Products" button
+#### Products Added (3 tanks)
+- `drop3-10` — "YĒĒNKSLUXÉ x STEEZY '26 Edition Racer Tank" (Shirts, ₦30k, image: WhatsApp 1.56.49 PM (2))
+- `drop3-11` — "YĒĒNKSLUXÉ x STEEZY '26 Edition Drop Tank" (Shirts, ₦30k, image: WhatsApp 1.56.49 PM (3))
+- `drop3-13` — "YĒĒNKSLUXÉ x STEEZY '26 Edition Cropped Tank" (Shirts, ₦30k, image: WhatsApp 1.56.49 PM)
 
-### 6. CSS Updates (`src/app/globals.css`)
-- **4-column responsive grid** (4 desktop → 3 tablet → 2 mobile → 1 small mobile)
-- New modal styles: `.modal-price`, `.modal-tagline`, `.modal-features-list`, `.modal-color-grid`, `.modal-color-option`, `.modal-fit-info`, `.modal-care-list`
-- New card styles: `.product-price`, `.card-color-dots`, `.card-color-dot`, `.card-color-more`
-- New shop styles: `.shop-meta-bar`, `.shop-result-count`, `.filter-count`, `.no-results-icon`
+*(Note: These were added then later removed on user request. Data file still has them removed.)*
 
-### 7. Build Status
-✅ `next build` passes cleanly — no TypeScript errors, all pages generated.
+#### Descriptions Added to All 9 Tanks
+| Product | Description |
+|---------|-------------|
+| Signature Tank Top (`shirt-3`) | "The icon. Reimagined for the culture." |
+| Graphic Tank (`drop3-02`) | "Bold graphics. Clean silhouette. Unfiltered." |
+| Crew Tank (`drop3-04`) | "Classic crew neck. Unmatched comfort." |
+| Printed Hoodie (`drop3-05`) | "Statement prints for the culture." (now Hoodies, ₦45k) |
+| Classic Tank (`drop3-06`) | "Timeless. Essential. Effortless." |
+| Slim Tank (`drop3-07`) | "Streamlined fit. Maximum impact." |
+| Graphic Tank (`drop3-08`) | "Clean lines. Stronger presence." |
+| Sleeveless Tank (`drop3-09`) | "Cut for movement. Built for the streets." |
+| Armless Tank (`drop3-12`) | "Raw edges. Unfiltered style." |
+
+#### Data Deduplication
+- **8× Signature Caps** (`drop3-21` to `drop3-28`) — Inline features/care/fit replaced with shared constants:
+  ```ts
+  const CAP_FEATURES: string[] = [...];
+  const CAP_CARE: string[] = [...];
+  const CAP_FIT = "One size fits most — adjustable strap";
+  ```
+  Constants declared **before** the `products` array to avoid TS block-scoping errors.
+
+### 3. Image Framing (ddstyles Refinement)
+- Changed `.card-img` from `object-fit: contain` → **`object-fit: cover`**
+- Product card images now fill the 3:4 aspect-ratio frame perfectly without whitespace gaps
+- Modal gallery keeps `object-fit: contain` (detail view should show full product)
+
+### 4. USD Pricing Display
+- Added `formatUSD` function to StoreContext (exchange rate: ₦1,500 = $1)
+- USD price shown alongside NGN: **"₦30,000 (~$20)"**
+- Displayed on product cards (`product-price-usd` class) and in the modal
+- Added CSS class `.product-price-usd` styled as muted text
+
+### 5. CSS Cleanup
+- **Removed duplicate hero selectors** (`.hero-overlay-content`, `.hero-eyebrow`, `.hero-title`, etc. were defined twice)
+- **Added mobile hamburger menu CSS** (`.hamburger-btn`, `.hamburger-line`, `.mobile-menu`, `.mobile-menu-open`, `.mobile-menu-inner`, `.mobile-menu-search`, `.mobile-search-input`, `.mobile-menu-links`, `.mobile-nav-link`)
+- Updated stale comment: `// Item 9–14: Hoodies` → `// Item 9–12: Tanks`
+
+### 6. Build Status
+✅ `next build` passes cleanly — no TypeScript errors, all pages generated as static content.
+
+### 7. Hoodie Section Fixes (July 20)
+- **hoodie-1** recategorized `Hoodies` → `Shirts`, renamed to "YĒĒNKSLUXÉ x STEEZY '26 Edition Tee", price ₦30k
+- **hoodie-2** recategorized `Hoodies` → `Shirts`, renamed to "YĒĒNKSLUXÉ x STEEZY '26 Edition Steeezy Tee", price ₦30k
+- **drop3-05** recategorized `Shirts` → `Hoodies`, renamed to "YĒĒNKSLUXÉ x STEEZY '26 Edition Printed Hoodie", price ₦45k, sizes M-XXL
+- Reason: browser inspection confirmed hoodie product images showed t-shirts; no actual hoodie images exist in project
+
+---
+
+## 📁 FILES MODIFIED THIS SESSION
+
+| File | Changes |
+|------|---------|
+| `src/types/index.ts` | `PaymentMethod`: `'flutterwave'` → `'paystack'` |
+| `src/types/paystack__inline-js.d.ts` | **NEW** — TypeScript declaration for Paystack |
+| `src/context/StoreContext.tsx` | Flutterwave → Paystack, `formatUSD`, `handlePlaceOrder` async, cart clear |
+| `src/components/CheckoutForm.tsx` | Labels: `flutterwave` → `paystack` |
+| `src/components/ProductGrid.tsx` | Added `formatUSD`, USD display |
+| `src/components/ProductModal.tsx` | Added `formatUSD`, USD display, `object-contain` → inline `objectFit: 'contain'` |
+| `src/data/products.ts` | Major: renames, recategorizations, descriptions, CAP constants, 3 tanks added/removed, hoodie fixes |
+| `src/app/globals.css` | `.card-img` `cover`, mobile menu CSS, duplicate cleanup |
+| `HANDOFF.md` | Updated session date (July 20), added hoodie fixes section |
+| `.env.example` | Updated with Paystack env vars |
+| `package.json` | Added `@paystack/inline-js` dependency |
 
 ---
 
 ## ⏳ PENDING TASKS
 
-### Drop III Product Names (WAITING ON USER)
-28 products still have placeholder names that need the CEO's real product names:
-- **drop3-01 to drop3-08**: Currently "SS26 Drop III — Graphic Tee 01" through "Tee 08" (Shirts, ₦30k)
-- **drop3-09 to drop3-14**: Currently "SS26 Drop III — Hoodie 01" through "Hoodie 06" (Hoodies, ₦35k)
-- **drop3-15 to drop3-20**: Currently "SS26 Drop III — Cap 01" through "Cap 06" (Hats, ₦25k)
-- **drop3-21 to drop3-28**: Already named "YĒĒNKSLUXÉ Signature Cap" ✅ — these have CEO data
+### Critical: Paystack Setup
+- **User must create Paystack account** and set `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` in `.env.local`
+- Go to [paystack.com](https://paystack.com) → Settings → API Keys & Webhooks
 
-**User said they'd send the real names.** When they do, update `src/data/products.ts` and use the Node.js approach (str_replace fails on Unicode smart quotes).
+### Remaining Placeholder Name
+- **`drop3-01`** — Still "SS26 Drop III — Graphic Tee 01" (the last unnamed product)
 
-### CEO Product Data for Remaining Products
-- Only the Tank Top and Signature Caps have full description/features/care/fit data
-- The original collection products (shirts, hoodies, accessories) and Drop III products (except caps) still lack this data
-- When CEO sends more product instructions, add them using the same pattern
+### Missing Product Data
+- Most products (shirts, hoodies, original collection) still lack `description`, `features`, `care`, `fit`, `colorNames` fields
+- Only tanks and caps have full data; add when CEO provides product details
 
-### Code Reviewer Flagged (Low Priority)
-- **Duplicate data across 8 caps**: All have identical description/features/care blocks. Could extract to a shared constant but works fine as-is
-- **CSS file is large**: Could split into component-specific files for maintainability
+### Hoodie Images Needed
+- **No actual hoodie photos exist in the project.** All images show t-shirts, tank tops, or caps
+- Hoodie products needing real hoodie images: `shirt-16` (Premium Hoodie), `drop3-03` (Graphic Hoodie), `drop3-05` (Printed Hoodie)
 
----
+### Still Needed (from ddstyles comparison)
+- ❌ Sort by price option
+- ❌ Size filter chips
+- ❌ Product zoom on hover
+- ❌ Sizing guide popup
+- ❌ "You May Also Like" cross-sells
 
-## 🎯 DESIGN DIRECTION: ddstyles.com Comparison
-
-User wants to model after ddstyles.com but do it better:
-
-**Borrowed from ddstyles:**
-- Category filter tabs (but ours use product types not gender — correct for unisex brand)
-- Clean product card layout with category labels
-- 4-column grid density
-
-**Improving over ddstyles:**
-- ✅ Prices visible on cards (ddstyles has them too)
-- ✅ Color swatch dots on cards (ddstyles doesn't)
-- ✅ Product count indicator
-- ✅ Enriched product modal with features/care/fit (ddstyles has basic product pages)
-- ✅ Fit finder tool (ddstyles doesn't have)
-- ❌ Still need: Sort by price option (ddstyles doesn't have this either)
-- ❌ Still need: Size filter chips
+### Stale localStorage (Low Priority)
+- Cart saved as `ynks_cart` in localStorage still references old product IDs if they were renamed
+- Minor: only affects dev carts, not production customers
 
 ---
-
-## 📁 KEY FILES MODIFIED
-- `src/data/products.ts` — Product interface + all product data
-- `src/components/ProductModal.tsx` — Enriched product detail modal
-- `src/components/ProductGrid.tsx` — Product grid with prices, filters, counts
-- `src/app/globals.css` — 4-column grid + all new styles
 
 ## 🔧 TECHNICAL NOTES
-- **Unicode handling**: `str_replace` tool fails on smart quotes (') in product names. Use `node -e` with `fs.readFileSync`/`writeFileSync` instead.
-- **Python not available** on this Windows machine. Use Node.js for string operations.
+
+- **Unicode handling**: `str_replace` works for most cases. For smart quotes (`'`, `'`) in product names, use the Node.js `fs.readFileSync`/`writeFileSync` approach with exact CRLF-aware patterns. Use `\u2019` for smart quotes in Node.js template literals.
+- **CRLF vs LF**: This Windows project uses `\r\n` line endings. Node.js template literals use `\n`, which causes formatting issues. Always use `.join('\r\n')` on arrays, or use `str_replace` instead.
+- **Paystack dynamic import**: `await import('@paystack/inline-js')` is required inside the `async handlePlaceOrder` to avoid SSR window-reference crashes.
 - **Build command**: `cd /c/Users/SOLA/Desktop/YEENKSLUXE && npx next build`
 - **Dev server**: `npm run dev` (runs on 0.0.0.0:3000)
+- **Current git**: `0295f40d` on `main` — pushed to `origin/main`

@@ -163,28 +163,27 @@ export const products: Product[] = [
   {
     id: "hoodie-1",
     shopifyVariantId: "45000000000030",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Hoodie",
-    price: 35000,
-    category: "Hoodies",
+    name: "YĒĒNKSLUXÉ x STEEZY ’26 Edition Tee",
+    price: 30000,
+    category: "Shirts",
     image: img("a3548e8a-a0bd-4271-ae46-c588155d8144.jpg"),
     gallery: [img("new_prod_2.jpg")],
     badge: "Campaign",
-    sizes: ["M", "L", "XL", "XXL"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
     colors: ["#111111", "#ffffff"]
   },
   {
     id: "hoodie-2",
     shopifyVariantId: "45000000000034",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Steeezy Hoodie",
-    price: 35000,
-    category: "Hoodies",
+    name: "YĒĒNKSLUXÉ x STEEZY ’26 Edition Steeezy Tee",
+    price: 30000,
+    category: "Shirts",
     image: img("new_prod_2.jpg"),
     gallery: [img("snaptik_7621552137285192981_3_v2.jpeg")],
-    sizes: ["M", "L", "XL", "XXL"],
+    sizes: ["S", "M", "L", "XL", "XXL"],
     colors: ["#000000"]
   },
-
-  // HATS
+// HATS
   {
     id: "acc-2",
     shopifyVariantId: "45000000000010",
@@ -278,12 +277,12 @@ export const products: Product[] = [
   {
     id: "drop3-05",
     shopifyVariantId: "45000000000064",
-    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Printed Tank",
+    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Printed Hoodie",
     description: "Statement prints for the culture.",
-    price: 30000,
-    category: "Shirts",
+    price: 45000,
+    category: "Hoodies",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (2).jpeg"),
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["#000000"]
   },
   {
