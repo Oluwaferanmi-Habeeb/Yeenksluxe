@@ -28,7 +28,7 @@ export default function ProductGrid() {
           </div>
         </div>
 
-        {/* Category Filter Tabs — ddstyles-inspired underline style */}
+        {/* Category Filter Tabs with underline style */}
         <div className="category-filters">
           {['All', ...categories].map((cat) => {
             const count = cat === 'All'

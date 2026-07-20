@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useMemo, useEffect, ReactNode } from 'react';
 import { Product } from '../data/products';
-import { CartItem, CheckoutFormData, CheckoutStep, ThemeMode, PaymentMethod, DossierTab } from '../types';
+import { CartItem, CheckoutFormData, CheckoutStep, ThemeMode, PaymentMethod, DossierTab, CurrencyType } from '../types';
 import { products } from '../data/products';
 import { getShopifyCheckoutUrl } from '../utils/shopify';
 
@@ -10,6 +10,8 @@ interface StoreContextType {
   // State
   cart: CartItem[];
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
+  currency: CurrencyType;
+  setCurrency: React.Dispatch<React.SetStateAction<CurrencyType>>;
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   selectedCategory: string;
@@ -66,6 +68,7 @@ const StoreContext = createContext<StoreContextType | undefined>(undefined);
 export function StoreProvider({ children }: { children: ReactNode }) {
   // ── Core State ──
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [currency, setCurrency] = useState<CurrencyType>('NGN');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -113,6 +116,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (savedCart) try { setCart(JSON.parse(savedCart)); } catch {}
     const savedTheme = localStorage.getItem('ynks_theme') as ThemeMode | null;
     if (savedTheme) setTheme(savedTheme);
+    const savedCurrency = localStorage.getItem('ynks_currency') as CurrencyType | null;
+    if (savedCurrency) setCurrency(savedCurrency);
   }, []);
 
   useEffect(() => {
@@ -125,6 +130,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (mounted) localStorage.setItem('ynks_cart', JSON.stringify(cart));
   }, [cart, mounted]);
+
+  useEffect(() => {
+    if (mounted) localStorage.setItem('ynks_currency', currency);
+  }, [currency, mounted]);
 
   // ── Computed ──
   const cartItemCount = useMemo(() =>
@@ -185,8 +194,21 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   };
 
   const NGN_TO_USD = 1500; // Approximate exchange rate
-  const formatCurrency = (amount: number) => '₦' + amount.toLocaleString('en-NG');
-  const formatUSD = (amount: number) => '~$' + (amount / NGN_TO_USD).toFixed(0);
+  
+  // Currency-aware formatting: primary shows active currency, secondary shows the other
+  const formatCurrency = (amount: number) => {
+    if (currency === 'USD') {
+      return '$' + (amount / NGN_TO_USD).toFixed(0);
+    }
+    return '₦' + amount.toLocaleString('en-NG');
+  };
+  
+  const formatUSD = (amount: number) => {
+    if (currency === 'USD') {
+      return '~₦' + amount.toLocaleString('en-NG');
+    }
+    return '~$' + (amount / NGN_TO_USD).toFixed(0);
+  };
 
   const getWhatsAppLink = () => {
     const phoneNum = '2349033364994';
@@ -249,7 +271,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const scrollToShop = () => document.getElementById('shop-catalog')?.scrollIntoView({ behavior: 'smooth' });
 
   const value: StoreContextType = {
-    cart, setCart, searchQuery, setSearchQuery, selectedCategory, setSelectedCategory,
+    cart, setCart, currency, setCurrency, searchQuery, setSearchQuery, selectedCategory, setSelectedCategory,
     selectedProduct, setSelectedProduct, cartOpen, setCartOpen, checkoutStep, setCheckoutStep,
     paymentMethod, setPaymentMethod, mounted, heroIndex, setHeroIndex, theme, setTheme,
     udIndex, setUdIndex, cartAnimated, scrolled, chosenSize, setChosenSize, chosenColor, setChosenColor,

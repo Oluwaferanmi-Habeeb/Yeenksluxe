@@ -4,9 +4,9 @@ import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
 
 const slides = [
-  { image: "/images/a3548e8a-a0bd-4271-ae46-c588155d8144.jpg", heading: "MADE FOR THE ONES WHO RUN THE CITY", sub: "untouchable. built to take over", btnText: "SECURE THE drip", category: "Hoodies", trans: "zoom" },
-  { image: "/images/snaptik_7621552137285192981_2_v2.jpeg", heading: "DISTINCTIVE SILHOUETTES & SHAPES", sub: "designed for movement. crafted for luxury", btnText: "SHOP SHIRTS", category: "Shirts", trans: "slideLeft" },
-  { image: "/images/snaptik_7625367276497292565_3_v2.jpeg", heading: "SS26 CAMPAIGN CAPS & ACCS", sub: "limited rotation. wear the difference", btnText: "SHOP HATS", category: "Hats", trans: "slideUp" }
+  { image: "/images/a3548e8a-a0bd-4271-ae46-c588155d8144.jpg", heading: "MADE FOR THE ONES WHO RUN THE CITY", sub: "born in Lagos. built for the world.", btnText: "SHOP ALL", category: "Hoodies", trans: "zoom" },
+  { image: "/images/snaptik_7621552137285192981_2_v2.jpeg", heading: "DISTINCTIVE SILHOUETTES & SHAPES", sub: "designed for movement. crafted for luxury.", btnText: "SHOP SHIRTS", category: "Shirts", trans: "slideLeft" },
+  { image: "/images/snaptik_7625367276497292565_3_v2.jpeg", heading: "SS26 CAMPAIGN CAPS & ACCS", sub: "limited rotation. wear the difference.", btnText: "SHOP HATS", category: "Hats", trans: "slideUp" }
 ];
 
 export default function UpperDisplay() {

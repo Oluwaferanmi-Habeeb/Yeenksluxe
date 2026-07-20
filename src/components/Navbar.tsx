@@ -9,7 +9,8 @@ export default function Navbar() {
   const {
     scrolled, checkoutStep, setCheckoutStep, setSelectedCategory,
     selectedCategory, scrollToShop, searchQuery, setSearchQuery,
-    theme, setTheme, cartAnimated, setCartOpen, cartItemCount
+    theme, setTheme, cartAnimated, setCartOpen, cartItemCount,
+    currency, setCurrency
   } = useStore();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -60,6 +61,14 @@ export default function Navbar() {
               </svg>
             </div>
           )}
+
+          {/* Currency Toggle */}
+          <button className="theme-toggle-btn" onClick={() => setCurrency(currency === 'NGN' ? 'USD' : 'NGN')}
+            aria-label="Toggle Currency"
+            title={currency === 'NGN' ? 'Switch to USD' : 'Switch to NGN'}
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '32px', border: '1px solid var(--border-color)', color: 'var(--accent)', background: 'transparent', transition: 'var(--transition-fast)', fontFamily: 'var(--font-mono)', fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.05em' }}>
+            {currency === 'NGN' ? '₦' : '$'}
+          </button>
 
           <button className="theme-toggle-btn" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             aria-label="Toggle Theme"

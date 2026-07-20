@@ -6,7 +6,7 @@ import { useStore } from '../context/StoreContext';
 export default function CartDrawer() {
   const {
     cartOpen, setCartOpen, cart, updateCartQty, removeCartItem,
-    setCheckoutStep
+    setCheckoutStep, formatCurrency, formatUSD, cartSubtotal
   } = useStore();
 
   if (!cartOpen) return null;
@@ -52,6 +52,14 @@ export default function CartDrawer() {
                 </div>
                 <div className="cart-item-details">
                   <h4 className="cart-item-name">{item.product.name}</h4>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+                    <span className="cart-item-price" style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--accent)' }}>
+                      {formatCurrency(item.product.price)}
+                    </span>
+                    <span style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>
+                      {formatUSD(item.product.price)}
+                    </span>
+                  </div>
                   <span className="cart-item-meta">
                     Size: {item.selectedSize} {item.selectedColor && `| Color: ${item.selectedColor}`}
                   </span>
@@ -71,6 +79,10 @@ export default function CartDrawer() {
 
         {cart.length > 0 && (
           <div className="cart-footer">
+            <div className="cart-summary-row" style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem 0', borderTop: '1px solid var(--border-color)' }}>
+              <span style={{ fontWeight: 600 }}>Subtotal</span>
+              <span style={{ fontWeight: 700, fontSize: '0.9rem' }}>{formatCurrency(cartSubtotal)}</span>
+            </div>
             <div className="cart-summary-row">
               <span>Shipping</span>
               <span style={{ color: 'var(--accent)', fontWeight: 600 }}>FREE DELIVERY</span>
