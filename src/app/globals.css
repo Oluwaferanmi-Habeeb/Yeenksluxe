@@ -1251,6 +1251,52 @@ img { max-width: 100%; height: auto; display: block; }
   font-size: 0.82rem; font-weight: 700;
   color: var(--text-primary); letter-spacing: 0.03em;
 }
+
+/* ── Dual Currency Price Block ── */
+.price-block {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.price-ngn, .price-usd {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+  transition: var(--transition-fast);
+}
+.price-ngn.active, .price-usd.active {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.price-ngn.active { color: var(--accent); }
+.price-divider {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  opacity: 0.3;
+}
+
+/* Modal dual currency */
+.modal-price-block {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.modal-price-ngn, .modal-price-usd {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+  transition: var(--transition-fast);
+}
+.modal-price-ngn.active, .modal-price-usd.active {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent);
+}
 .card-color-dots {
   display: flex; gap: 0.3rem; align-items: center;
 }

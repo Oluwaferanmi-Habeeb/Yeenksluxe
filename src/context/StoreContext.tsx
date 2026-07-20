@@ -60,6 +60,7 @@ interface StoreContextType {
   getWhatsAppLink: () => string;
   formatCurrency: (amount: number) => string;
   formatUSD: (amount: number) => string;
+  formatNGN: (amount: number) => string;
   scrollToShop: () => void;
 }
 
@@ -195,19 +196,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const NGN_TO_USD = 1500; // Approximate exchange rate
   
-  // Currency-aware formatting: primary shows active currency, secondary shows the other
-  const formatCurrency = (amount: number) => {
-    if (currency === 'USD') {
-      return '$' + (amount / NGN_TO_USD).toFixed(0);
-    }
-    return '₦' + amount.toLocaleString('en-NG');
-  };
+  // Always returns clean NGN format: "NGN ₦30,000"
+  const formatNGN = (amount: number) => 'NGN ₦' + amount.toLocaleString('en-NG');
   
-  const formatUSD = (amount: number) => {
-    if (currency === 'USD') {
-      return '~₦' + amount.toLocaleString('en-NG');
-    }
-    return '~$' + (amount / NGN_TO_USD).toFixed(0);
+  // Always returns clean USD format: "USD $20"
+  const formatUSD = (amount: number) => 'USD $' + (amount / NGN_TO_USD).toFixed(0);
+  
+  // Backward-compatible aliases (used by some components)
+  const formatCurrency = (amount: number) => {
+    if (currency === 'USD') return formatUSD(amount);
+    return formatNGN(amount);
   };
 
   const getWhatsAppLink = () => {
@@ -278,7 +276,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     activeDossierTab, setActiveDossierTab, fitHeight, setFitHeight, fitWeight, setFitWeight,
     checkoutForm, setCheckoutForm, cartItemCount, cartSubtotal, filteredProducts,
     openQuickView, addToCart, updateCartQty, removeCartItem, handlePlaceOrder,
-    getWhatsAppLink, formatCurrency, formatUSD, scrollToShop,
+    getWhatsAppLink, formatCurrency, formatUSD, formatNGN, scrollToShop,
   };
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

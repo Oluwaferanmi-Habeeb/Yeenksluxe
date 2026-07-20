@@ -62,13 +62,18 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* Currency Toggle */}
-          <button className="theme-toggle-btn" onClick={() => setCurrency(currency === 'NGN' ? 'USD' : 'NGN')}
-            aria-label="Toggle Currency"
-            title={currency === 'NGN' ? 'Switch to USD' : 'Switch to NGN'}
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '32px', border: '1px solid var(--border-color)', color: 'var(--accent)', background: 'transparent', transition: 'var(--transition-fast)', fontFamily: 'var(--font-mono)', fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.05em' }}>
-            {currency === 'NGN' ? '₦' : '$'}
-          </button>
+          {/* Currency Toggle — Clean NGN | USD pill */}
+          <div className="currency-toggle" onClick={() => setCurrency(currency === 'NGN' ? 'USD' : 'NGN')}
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', border: '1px solid var(--border-color)', height: '28px', borderRadius: '4px', overflow: 'hidden', transition: 'var(--transition-fast)' }}>
+            <span className={`currency-opt ${currency === 'NGN' ? 'active' : ''}`}
+              style={{ padding: '0 0.6rem', fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', transition: 'var(--transition-fast)', color: currency === 'NGN' ? '#000' : 'var(--text-muted)', background: currency === 'NGN' ? 'var(--accent)' : 'transparent', height: '100%', display: 'flex', alignItems: 'center' }}>
+              NGN
+            </span>
+            <span className={`currency-opt ${currency === 'USD' ? 'active' : ''}`}
+              style={{ padding: '0 0.6rem', fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.05em', fontFamily: 'var(--font-mono)', transition: 'var(--transition-fast)', color: currency === 'USD' ? '#000' : 'var(--text-muted)', background: currency === 'USD' ? 'var(--accent)' : 'transparent', height: '100%', display: 'flex', alignItems: 'center' }}>
+              USD
+            </span>
+          </div>
 
           <button className="theme-toggle-btn" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             aria-label="Toggle Theme"

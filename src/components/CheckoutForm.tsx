@@ -6,7 +6,7 @@ import { PaymentMethod } from '../types';
 export default function CheckoutForm() {
   const {
     checkoutForm, setCheckoutForm, paymentMethod, setPaymentMethod,
-    handlePlaceOrder, setCheckoutStep, cart, formatCurrency, formatUSD, cartSubtotal
+    handlePlaceOrder, setCheckoutStep, cart, formatUSD, formatNGN, cartSubtotal, currency
   } = useStore();
 
   return (
@@ -92,11 +92,14 @@ export default function CheckoutForm() {
               <div key={index} className="summary-item-row" style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
                   <span style={{ color: 'var(--text-primary)' }}>{item.product.name}</span>
-                  <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{formatCurrency(item.product.price)}</span>
+                  <div className="price-block" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <span className={`price-ngn ${currency === 'NGN' ? 'active' : ''}`}>{formatNGN(item.product.price)}</span>
+                    <span className="price-divider" style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>|</span>
+                    <span className={`price-usd ${currency === 'USD' ? 'active' : ''}`}>{formatUSD(item.product.price)}</span>
+                  </div>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   <span>Qty: {item.quantity} | Size: {item.selectedSize} {item.selectedColor && `| Color: ${item.selectedColor}`}</span>
-                  <span>{formatUSD(item.product.price)}</span>
                 </div>
               </div>
             ))}
@@ -104,7 +107,11 @@ export default function CheckoutForm() {
           <div className="summary-divider" style={{ margin: '1rem 0' }}></div>
           <div className="summary-item-row" style={{ fontWeight: 700, fontSize: '0.95rem' }}>
             <span>Total</span>
-            <span style={{ color: 'var(--accent)' }}>{formatCurrency(cartSubtotal)}</span>
+            <div className="price-block" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <span className={`price-ngn ${currency === 'NGN' ? 'active' : ''}`} style={{ color: 'var(--accent)' }}>{formatNGN(cartSubtotal)}</span>
+              <span className="price-divider" style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>|</span>
+              <span className={`price-usd ${currency === 'USD' ? 'active' : ''}`} style={{ color: 'var(--accent)' }}>{formatUSD(cartSubtotal)}</span>
+            </div>
           </div>
           <div className="summary-divider" style={{ margin: '1rem 0' }}></div>
           <div className="summary-item-row">

@@ -7,7 +7,7 @@ export default function ProductModal() {
   const {
     selectedProduct, setSelectedProduct, chosenSize, setChosenSize,
     chosenColor, setChosenColor, activeDossierTab, setActiveDossierTab,
-    fitHeight, setFitHeight, fitWeight, setFitWeight, addToCart, formatCurrency, formatUSD
+    fitHeight, setFitHeight, fitWeight, setFitWeight, addToCart, formatCurrency, formatUSD, formatNGN, currency
   } = useStore();
 
   if (!selectedProduct) return null;
@@ -53,8 +53,12 @@ export default function ProductModal() {
           <span className="modal-category">{selectedProduct.category}</span>
           <h2 className="modal-title">{selectedProduct.name}</h2>
 
-          {/* Price */}
-          <div className="modal-price">{formatCurrency(selectedProduct.price)} <span className="product-price-usd">{formatUSD(selectedProduct.price)}</span></div>
+          {/* Price - Dual Currency */}
+          <div className="modal-price-block">
+            <span className={`modal-price-ngn ${currency === 'NGN' ? 'active' : ''}`}>{formatNGN(selectedProduct.price)}</span>
+            <span className="price-divider">|</span>
+            <span className={`modal-price-usd ${currency === 'USD' ? 'active' : ''}`}>{formatUSD(selectedProduct.price)}</span>
+          </div>
 
           {/* Tagline */}
           {selectedProduct.description && (
