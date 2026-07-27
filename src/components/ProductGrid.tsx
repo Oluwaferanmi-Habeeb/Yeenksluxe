@@ -7,10 +7,32 @@ import { categories, products } from '../data/products';
 export default function ProductGrid() {
   const {
     filteredProducts, selectedCategory, setSelectedCategory,
-    openQuickView, formatNGN, formatUSD, currency, searchQuery
+    openQuickView, formatNGN, formatUSD, currency, searchQuery, mounted
   } = useStore();
 
-
+  if (!mounted) {
+    return (
+      <section className="shop-section reveal-on-scroll" id="shop-catalog">
+        <div className="container">
+          <div className="shop-header">
+            <div className="shop-title-area">
+              <span className="section-eyebrow">OUR SELECTIONS</span>
+              <h2 className="section-title">THE LOOKBOOK</h2>
+            </div>
+          </div>
+          <div className="product-grid">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="skeleton-card">
+                <div className="skeleton skeleton-img" />
+                <div className="skeleton skeleton-line" />
+                <div className="skeleton skeleton-line short" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="shop-section reveal-on-scroll" id="shop-catalog">

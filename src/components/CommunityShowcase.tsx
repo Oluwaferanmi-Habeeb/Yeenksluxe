@@ -11,7 +11,7 @@ export default function CommunityShowcase() {
     { img: "/images/client_fit_1.jpg", label: "YĒĒNKSLUXÉ x STEEZY '26 Edition Graphic Tee", productId: 'shirt-1' },
     { img: "/images/client_fit_2.jpg", label: "YĒĒNKSLUXÉ x STEEZY '26 Edition Hoodie", productId: 'hoodie-1' },
     { img: "/images/client_fit_3.jpg", label: "YĒĒNKSLUXÉ x STEEZY '26 Edition Rhinestone Tee", productId: 'shirt-5' },
-    { img: "/images/client_fit_4.jpeg", label: "Urban Knit Beanie", productId: 'acc-2' },
+    { img: "/images/client_fit_4.jpeg", label: "YĒĒNKSLUXÉ x MXUNDERSTOOD Signature Hat", productId: 'acc-1' },
   ];
 
   return (

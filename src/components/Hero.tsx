@@ -5,9 +5,18 @@ import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
 
 const heroSlides = [
-  { image: "/images/snaptik_7625367276497292565_0_v2.jpeg", eyebrow: "SS26 PRE-RELEASE COLLECTION", title: "YEENKSLUXE", subtitle: "Where streetwear meets luxury. Engineered in Lagos. Worn by the bold." },
-  { image: "/images/snaptik_7621552137285192981_0_v2.jpeg", eyebrow: "EXHIBIT 02 / CAMPAIGN", title: "RAW SILHOUETTES", subtitle: "Heavyweight garments structured for modern daily movement. Premium craftsmanship." },
-  { image: "/images/snaptik_7625367276497292565_2_v2.jpeg", eyebrow: "EXHIBIT 03 / EDITORIAL", title: "STREET TAILORING", subtitle: "High-density embroidery, luxury hardware, and drop-shoulder forms that command attention." }
+  {
+    image: "/images/new_prod_5.jpg",
+    eyebrow: "SS26 PRE-RELEASE COLLECTION",
+    title: "YEENKSLUXE",
+    subtitle: "Where streetwear meets luxury. Engineered in Lagos. Worn by the bold."
+  },
+  {
+    image: "/images/new_prod_3.jpg",
+    eyebrow: "SS26 CAMPAIGN / EXHIBIT II",
+    title: "OVERSIZED ELEGANCE",
+    subtitle: "Bold silhouettes, premium craftsmanship. Designed for those who command attention."
+  }
 ];
 
 export default function Hero() {
@@ -39,15 +48,20 @@ export default function Hero() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const slide = heroSlides[heroIndex];
+  const titleWords = slide.title.split(' ');
+  const titleFirst = titleWords[0];
+  const titleRest = titleWords.slice(1).join(' ');
+
   return (
     <header className="hero">
       {/* Parallax background layer */}
       <div className="hero-parallax-layer" ref={parallaxRef}>
         <div className="hero-bg-media">
           <div className="hero-slideshow">
-            {heroSlides.map((slide, idx) => (
+            {heroSlides.map((s, idx) => (
               <div key={idx} className={`hero-slide ${heroIndex === idx ? 'active' : ''}`}>
-                <Image src={slide.image} alt={slide.title} fill priority={idx === 0}
+                <Image src={s.image} alt={s.title} fill priority={idx === 0}
                   className="hero-bg-image" sizes="100vw" />
               </div>
             ))}
@@ -63,14 +77,14 @@ export default function Hero() {
       <div className="hero-overlay-content">
         <div className="hero-content-inner container">
           <div key={heroIndex} className="hero-brand-card animate-fade-in-up">
-            <span className="hero-eyebrow">{heroSlides[heroIndex].eyebrow}</span>
+            <span className="hero-eyebrow">{slide.eyebrow}</span>
             <h1 className="hero-title">
-              <span className="hero-title-line">{heroSlides[heroIndex].title.split(' ')[0]}</span>
-              {heroSlides[heroIndex].title.split(' ').slice(1).join(' ') && (
-                <span className="hero-title-sub">{heroSlides[heroIndex].title.split(' ').slice(1).join(' ')}</span>
+              <span className="hero-title-line">{titleFirst}</span>
+              {titleRest && (
+                <span className="hero-title-sub">{titleRest}</span>
               )}
             </h1>
-            <p className="hero-subtitle">{heroSlides[heroIndex].subtitle}</p>
+            <p className="hero-subtitle">{slide.subtitle}</p>
             <div className="hero-cta-group">
               <button className="hero-cta-btn" onClick={scrollToShop}>
                 <span className="hero-cta-text">SHOP THE COLLECTION</span>

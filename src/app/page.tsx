@@ -17,6 +17,9 @@ import LookbookFilmstrip from '../components/LookbookFilmstrip';
 import Footer from '../components/Footer';
 import CartDrawer from '../components/CartDrawer';
 import ProductModal from '../components/ProductModal';
+import ToastNotification from '../components/ToastNotification';
+import NewsletterPopup from '../components/NewsletterPopup';
+import CountdownTimer from '../components/CountdownTimer';
 import WhatsAppFloat from '../components/WhatsAppFloat';
 
 function Storefront() {
@@ -25,8 +28,9 @@ function Storefront() {
   // Intersection Observer for scroll-driven reveals
   useEffect(() => {
     if (checkoutStep !== 'shop') return;
+    let observer: IntersectionObserver | null = null;
     const timer = setTimeout(() => {
-      const observer = new IntersectionObserver(
+      observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) entry.target.classList.add('revealed');
@@ -34,10 +38,12 @@ function Storefront() {
         },
         { threshold: 0.05, rootMargin: '0px 0px -40px 0px' }
       );
-      document.querySelectorAll('.reveal-on-scroll').forEach((el) => observer.observe(el));
-      return () => observer.disconnect();
+      document.querySelectorAll('.reveal-on-scroll').forEach((el) => observer?.observe(el));
     }, 100);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (observer) observer.disconnect();
+    };
   }, [checkoutStep, selectedCategory, searchQuery]);
 
   return (
@@ -60,12 +66,22 @@ function Storefront() {
         {checkoutStep === 'success' && <SuccessPage />}
       </div>
 
+      <CountdownTimer />
+
       <CommunityShowcase />
       <LookbookFilmstrip />
       <Footer />
+
+      <NewsletterPopup />
       <WhatsAppFloat />
       <CartDrawer />
       <ProductModal />
+
+      {/* Toast notification container */}
+      <ToastNotification />
+
+      {/* A11y live region for dynamic updates */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only" id="a11y-announcer"></div>
     </div>
   );
 }

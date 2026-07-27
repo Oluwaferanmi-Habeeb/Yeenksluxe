@@ -51,6 +51,11 @@ interface StoreContextType {
   cartSubtotal: number;
   filteredProducts: Product[];
 
+  // Toast
+  toast: string | null;
+  setToast: React.Dispatch<React.SetStateAction<string | null>>;
+  showToast: (msg: string) => void;
+
   // Actions
   openQuickView: (product: Product) => void;
   addToCart: (product: Product, size: string, color: string, qty?: number) => void;
@@ -90,6 +95,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [checkoutForm, setCheckoutForm] = useState<CheckoutFormData>({
     name: '', email: '', phone: '', address: '', city: '', notes: ''
   });
+  const [toast, setToast] = useState<string | null>(null);
 
   // ── Effects ──
   useEffect(() => {
@@ -100,7 +106,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (checkoutStep !== 'shop') return;
-    const interval = setInterval(() => setHeroIndex((p) => (p + 1) % 3), 5000);
+    const interval = setInterval(() => setHeroIndex((p) => (p + 1) % 2), 5000);
     return () => clearInterval(interval);
   }, [checkoutStep]);
 
@@ -163,6 +169,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setFitWeight('');
   };
 
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2500);
+  };
+
   const addToCart = (product: Product, size: string, color: string, qty = 1) => {
     setCart((prev) => {
       const idx = prev.findIndex(
@@ -177,7 +188,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     });
     setCartAnimated(true);
     setTimeout(() => setCartAnimated(false), 800);
-    setCartOpen(true);
+    showToast(`Added to cart — ${product.name}`);
+    setTimeout(() => setCartOpen(true), 600);
   };
 
   const updateCartQty = (index: number, delta: number) => {
@@ -254,7 +266,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             }
           ]
         },
-        onSuccess: (response: { reference: string }) => {
+        onSuccess: () => {
           alert('Payment Successful!');
           setCart([]);
           setCheckoutStep('success');
@@ -275,6 +287,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     udIndex, setUdIndex, cartAnimated, scrolled, chosenSize, setChosenSize, chosenColor, setChosenColor,
     activeDossierTab, setActiveDossierTab, fitHeight, setFitHeight, fitWeight, setFitWeight,
     checkoutForm, setCheckoutForm, cartItemCount, cartSubtotal, filteredProducts,
+    toast, setToast, showToast,
     openQuickView, addToCart, updateCartQty, removeCartItem, handlePlaceOrder,
     getWhatsAppLink, formatCurrency, formatUSD, formatNGN, scrollToShop,
   };
