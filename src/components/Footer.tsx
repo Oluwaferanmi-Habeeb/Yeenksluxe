@@ -19,7 +19,7 @@ export default function Footer() {
           <div className="footer-brand">
             <div className="footer-logo-container">
               <div className="logo-img-wrapper">
-                <Image src="/images/logoo.jpg" alt="YEENKSLUXE" fill className="logo-img object-contain" sizes="54px" />
+                <Image src="/images/logoo.jpg" alt="YEENKSLUXE" fill className="logo-img object-contain" sizes="60px" quality={100} />
               </div>
               <div className="logo-text-group">
                 <span className="logo-brand-name">YEENKSLUXE</span>
