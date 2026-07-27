@@ -30,13 +30,13 @@ export default function Navbar() {
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container navbar-inner">
-        <div className="logo-container" onClick={handleLogoClick} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div className="logo" style={{ position: 'relative', width: '54px', height: '54px', flexShrink: 0 }}>
+        <div className="logo-container" onClick={handleLogoClick}>
+          <div className="logo-img-wrapper">
             <Image src="/images/logoo.jpg" alt="YEENKSLUXE" fill priority className="logo-img object-contain" sizes="54px" />
           </div>
-          <div className="logo-text-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            <span style={{ fontSize: '1.1rem', fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: 'var(--font-display)', lineHeight: '1.1' }}>YEENKSLUXE</span>
-            <span className="logo-tagline" style={{ marginTop: '0.15rem' }}>Where streetwear meets luxury</span>
+          <div className="logo-text-group">
+            <span className="logo-brand-name">YEENKSLUXE</span>
+            <span className="logo-tagline">Where streetwear meets luxury</span>
           </div>
         </div>
 

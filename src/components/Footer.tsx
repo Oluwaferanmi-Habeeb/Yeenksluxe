@@ -17,12 +17,12 @@ export default function Footer() {
       <div className="container">
         <div className="footer-inner">
           <div className="footer-brand">
-            <div className="footer-logo-container" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-              <div className="footer-logo" style={{ position: 'relative', width: '54px', height: '54px', flexShrink: 0 }}>
+            <div className="footer-logo-container">
+              <div className="logo-img-wrapper">
                 <Image src="/images/logoo.jpg" alt="YEENKSLUXE" fill className="logo-img object-contain" sizes="54px" />
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <span style={{ fontSize: '1.1rem', fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-primary)', fontFamily: 'var(--font-display)', lineHeight: '1.1' }}>YEENKSLUXE</span>
+              <div className="logo-text-group">
+                <span className="logo-brand-name">YEENKSLUXE</span>
               </div>
             </div>
             <p className="footer-description">Where streetwear meets luxury.</p>
