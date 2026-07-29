@@ -433,12 +433,22 @@ img.object-contain { object-fit: contain; }
   width: 60px;
   height: 60px;
   flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(200, 169, 110, 0.25);
+  overflow: hidden;
+  transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .logo-img {
   transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  border-radius: 50%;
+}
+.logo-container:hover .logo-img-wrapper, .footer-logo-container:hover .logo-img-wrapper {
+  border-color: var(--accent);
+  box-shadow: 0 0 24px rgba(200, 169, 110, 0.15), 0 0 8px rgba(200, 169, 110, 0.08);
 }
 .logo-container:hover .logo-img, .footer-logo-container:hover .logo-img {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 .logo-text-group {
   display: flex;

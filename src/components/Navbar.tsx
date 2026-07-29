@@ -31,7 +31,7 @@ export default function Navbar() {
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container navbar-inner">
         <div className="logo-container" onClick={handleLogoClick}>
-          <div className="logo-img-wrapper">              <Image src="/images/logoo.jpg" alt="YEENKSLUXE" fill priority className="logo-img object-contain" sizes="60px" quality={100} />
+          <div className="logo-img-wrapper">              <Image src="/images/logoo.jpg" alt="YEENKSLUXE" fill priority className="logo-img object-cover" sizes="60px" quality={100} />
           </div>
           <div className="logo-text-group">
             <span className="logo-brand-name">YEENKSLUXE</span>
