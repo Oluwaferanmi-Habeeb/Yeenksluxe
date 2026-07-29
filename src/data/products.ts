@@ -320,17 +320,6 @@ export const products: Product[] = [
     sizes: ["M", "L", "XL", "XXL"],
     colors: ["#000000"]
   },
-  {
-    id: "drop3-12",
-    shopifyVariantId: "45000000000071",
-    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Armless Tank",
-    description: "Raw edges. Unfiltered style.",
-    price: 30000,
-    category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM (4).jpeg"),
-    sizes: ["M", "L", "XL", "XXL"],
-    colors: ["#000000"]
-  },
   // Item 15–20: Hats
 
   // Item 21–28: Caps (rest of Signature Cap variants)
