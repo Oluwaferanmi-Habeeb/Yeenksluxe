@@ -243,17 +243,6 @@ export const products: Product[] = [
     colors: ["#000000"]
   },
   {
-    id: "drop3-02",
-    shopifyVariantId: "45000000000061",
-    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Graphic Tank",
-    description: "Bold graphics. Clean silhouette. Unfiltered.",
-    price: 30000,
-    category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.47 PM (2).jpeg"),
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000"]
-  },
-  {
     id: "drop3-03",
     shopifyVariantId: "45000000000062",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Graphic Hoodie",
