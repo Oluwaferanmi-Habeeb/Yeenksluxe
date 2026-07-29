@@ -6,7 +6,7 @@ import { useStore } from '../context/StoreContext';
 export default function CartDrawer() {
   const {
     cartOpen, setCartOpen, cart, updateCartQty, removeCartItem,
-    setCheckoutStep, formatNGN, formatUSD, cartSubtotal, currency
+    setCheckoutStep, formatNGN, formatUSD, cartSubtotal, currency, scrollToShop
   } = useStore();
 
   if (!cartOpen) return null;
@@ -39,10 +39,16 @@ export default function CartDrawer() {
         <div className="cart-items-container">
           {cart.length === 0 ? (
             <div className="empty-cart-message">
-              <svg fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+              <svg fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24">
                 <path d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
               </svg>
-              <span>YOUR SHOPPING CART IS EMPTY</span>
+              <span>YOUR CART IS EMPTY</span>
+              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', letterSpacing: '0.05em', textTransform: 'none', fontWeight: 400 }}>
+                Add some premium pieces to get started.
+              </span>
+              <button className="empty-cart-cta" onClick={() => { setCartOpen(false); scrollToShop(); }}>
+                BROWSE COLLECTION
+              </button>
             </div>
           ) : (
             cart.map((item, index) => (

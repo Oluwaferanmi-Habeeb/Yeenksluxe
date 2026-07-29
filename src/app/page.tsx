@@ -21,6 +21,7 @@ import ToastNotification from '../components/ToastNotification';
 import NewsletterPopup from '../components/NewsletterPopup';
 import CountdownTimer from '../components/CountdownTimer';
 import WhatsAppFloat from '../components/WhatsAppFloat';
+import ScrollToTop from '../components/ScrollToTop';
 
 function Storefront() {
   const { checkoutStep, selectedCategory, searchQuery } = useStore();
@@ -74,6 +75,7 @@ function Storefront() {
 
       <NewsletterPopup />
       <WhatsAppFloat />
+      <ScrollToTop />
       <CartDrawer />
       <ProductModal />
 

@@ -24,7 +24,7 @@
 | `drop3-03` | "SS26 Drop III — Graphic Tee 03" (Shirts, ₦30k) | **"YĒĒNKSLUXÉ x STEEZY '26 Edition Graphic Hoodie"** (Hoodies, ₦45k) |
 | `shirt-13` | "YĒĒNKSLUXÉ x STEEZY '26 Edition Fila Tee" (Shirts, ₦30k) | **"YĒĒNKSLUXÉ x STEEZY '26 Edition Signature Cap"** (Hats, ₦25k) |
 | `drop3-08` | "SS26 Drop III — Tee 08" (Shirts, ₦30k) | **"YĒĒNKSLUXÉ x STEEZY Graphic Tank"** (Shirts, ₦30k) |
-| `acc-2` | "Urban Knit Beanie" (Hats, ₦20k) | **"YĒĒNKSLUXÉ x STEEZY x MXUNDERSTOOD Edition Cap"** (Hats, ₦25k, with cap features/care/fit) |
+| `acc-2` | "Urban Knit Beanie" (Hats, ₦20k) | **"YĒĒNKSLUXÉ x STEEZY x MXUNDERSTOOD Edition Cap"** (Hats, ₦25k, with cap features/care/fit) → **"YĒĒNKSLUXÉ x STEEZY x MXUNDERSTOOD Edition Tee"** (Shirts, ₦30k, S-XL) |
 | `acc-1` | "Gold-Trim Premium Socks" (Accessories, ₦15k) | **"YĒĒNKSLUXÉ x MXUNDERSTOOD Signature Hat"** (Hats, ₦25k, with cap description/features/care/fit) |
 | `acc-4` | "Tactical Utility Bag" (Accessories, ₦25k) | **"YĒĒNKSLUXÉ x STEEZY '26 Edition Tee"** (Shirts, ₦30k, sizes S-XL) |
 

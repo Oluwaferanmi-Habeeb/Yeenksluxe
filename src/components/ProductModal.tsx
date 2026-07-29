@@ -42,7 +42,7 @@ export default function ProductModal() {
             <video src={selectedProduct.video} autoPlay loop muted controls playsInline
               style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           ) : (
-            <div style={{ position: 'relative', width: '100%', height: '440px' }}>
+            <div className="modal-zoom-container">
               <Image src={selectedProduct.image} alt={selectedProduct.name} fill className="object-contain"
                 sizes="(max-width: 768px) 100vw, 50vw" />
             </div>

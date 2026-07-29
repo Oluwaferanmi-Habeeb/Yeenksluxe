@@ -187,16 +187,12 @@ export const products: Product[] = [
   {
     id: "acc-2",
     shopifyVariantId: "45000000000010",
-    name: "YĒĒNKSLUXÉ x STEEZY x MXUNDERSTOOD Edition Cap",
-    description: "Top off your look with confidence.",
-    features: CAP_FEATURES,
-    care: CAP_CARE,
-    fit: CAP_FIT,
-    price: 25000,
-    category: "Hats",
+    name: "YĒĒNKSLUXÉ x STEEZY x MXUNDERSTOOD Edition Tee",
+    price: 30000,
+    category: "Shirts",
     image: img("f12d0220-a9fe-437b-b736-64a573bb8193.jpg"),
     gallery: [img("new_prod_6.jpg")],
-    sizes: ["One Size"],
+    sizes: ["S", "M", "L", "XL"],
     colors: ["#000000", "#ffffff"]
   },
 

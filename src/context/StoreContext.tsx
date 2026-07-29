@@ -83,7 +83,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('paystack');
   const [mounted, setMounted] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
-  const [theme, setTheme] = useState<ThemeMode>('light');
+  const [theme, setTheme] = useState<ThemeMode>('dark'); // streetwear brand defaults to dark
   const [udIndex, setUdIndex] = useState(0);
   const [cartAnimated, setCartAnimated] = useState(false);
   const [scrolled, setScrolled] = useState(false);

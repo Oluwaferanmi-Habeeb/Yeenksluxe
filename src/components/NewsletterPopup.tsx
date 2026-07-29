@@ -12,9 +12,22 @@ export default function NewsletterPopup() {
   useEffect(() => {
     const alreadyShown = localStorage.getItem(POPUP_STORAGE_KEY);
     if (!alreadyShown) {
-      // Show popup after 3 seconds
-      const timer = setTimeout(() => setVisible(true), 3000);
-      return () => clearTimeout(timer);
+      // Show popup after 10 seconds or when user scrolls past 50% of page
+      const timer = setTimeout(() => setVisible(true), 10000);
+      
+      const handleScroll = () => {
+        const scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+        if (scrollPercent > 0.5) {
+          setVisible(true);
+          window.removeEventListener('scroll', handleScroll);
+        }
+      };
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener('scroll', handleScroll);
+      };
     }
   }, []);
 
