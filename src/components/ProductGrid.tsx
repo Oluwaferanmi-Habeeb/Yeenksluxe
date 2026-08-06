@@ -17,7 +17,7 @@ export default function ProductGrid() {
           <div className="shop-header">
             <div className="shop-title-area">
               <span className="section-eyebrow">OUR SELECTIONS</span>
-              <h2 className="section-title">THE LOOKBOOK</h2>
+              <h2 className="section-title">CURATED DROP</h2>
             </div>
           </div>
           <div className="product-grid">
@@ -43,7 +43,7 @@ export default function ProductGrid() {
             <h2 className="section-title">THE LOOKBOOK</h2>
           </div>
           <div className="shop-all-link" onClick={() => { setSelectedCategory('All'); }}>
-            <span>View All</span>
+            <span>See All</span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>

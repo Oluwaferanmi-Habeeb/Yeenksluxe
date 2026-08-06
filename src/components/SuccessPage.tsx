@@ -14,10 +14,10 @@ export default function SuccessPage() {
           </svg>
         </div>
 
-        <h2 className="success-title">ORDER INITIALIZED</h2>
+        <h2 className="success-title">ORDER READY</h2>
 
         <p className="success-message">
-          Thank you for shopping with <strong>YEENKSLUXE</strong>. Your order summary has been generated. To complete your delivery payment and finalize the order, click the button below to connect with us on WhatsApp.
+          Thank you for shopping with <strong>YEENKSLUXE</strong>. Your order summary is ready. To finalize your delivery request and confirm your details, continue with the WhatsApp button below.
         </p>
 
         <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" className="whatsapp-btn">

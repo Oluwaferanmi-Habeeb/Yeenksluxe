@@ -27,8 +27,8 @@ export default function CartDrawer() {
         {cart.length > 0 && (
           <div className="cart-progress-bar-container" style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-color)', background: 'rgba(200, 169, 110, 0.03)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em' }}>
-              <span style={{ color: 'var(--accent)' }}>FREE DOMESTIC DELIVERY EN ROUTE</span>
-              <span>100%</span>
+              <span style={{ color: 'var(--accent)' }}>FREE DOMESTIC DELIVERY</span>
+              <span>READY</span>
             </div>
             <div style={{ width: '100%', height: '3px', background: 'var(--border-color)', position: 'relative' }}>
               <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: '100%', background: 'var(--accent)' }}></div>
@@ -92,10 +92,10 @@ export default function CartDrawer() {
             </div>
             <div className="cart-summary-row">
               <span>Shipping</span>
-              <span style={{ color: 'var(--accent)', fontWeight: 600 }}>FREE DELIVERY</span>
+              <span style={{ color: 'var(--accent)', fontWeight: 600 }}>FREE NATIONWIDE DELIVERY</span>
             </div>
             <button className="checkout-btn" onClick={() => { setCartOpen(false); setCheckoutStep('checkout'); }}>
-              SECURE CHECKOUT
+              PROCEED TO CHECKOUT
             </button>
           </div>
         )}

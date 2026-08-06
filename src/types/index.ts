@@ -18,6 +18,6 @@ export interface CheckoutFormData {
 
 export type CheckoutStep = 'shop' | 'checkout' | 'success';
 export type ThemeMode = 'dark' | 'light';
-export type PaymentMethod = 'paystack' | 'shopify' | 'whatsapp';
+export type PaymentMethod = 'paystack' | 'whatsapp';
 export type DossierTab = 'info' | 'fit' | 'specs';
 export type CurrencyType = 'NGN' | 'USD';

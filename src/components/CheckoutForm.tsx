@@ -50,8 +50,8 @@ export default function CheckoutForm() {
 
               <div className="form-field form-group-full" style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
                 <label className="form-label" style={{ display: 'block', marginBottom: '0.75rem' }}>Payment Gateway / Method *</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
-                  {['paystack', 'shopify', 'whatsapp'].map((method) => (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.75rem' }}>
+                  {['paystack', 'whatsapp'].map((method) => (
                     <div key={method} onClick={() => setPaymentMethod(method as PaymentMethod)}
                       style={{
                         border: `1px solid ${paymentMethod === method ? 'var(--accent)' : 'var(--border-color)'}`,
@@ -61,10 +61,10 @@ export default function CheckoutForm() {
                       }}>
                       <div style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em',
                         color: paymentMethod === method ? 'white' : 'var(--text-secondary)' }}>
-                        {method === 'paystack' ? 'NAIRA CHECKOUT' : method === 'shopify' ? 'INTL CHECKOUT' : 'VIP MANUAL'}
+                        {method === 'paystack' ? 'SECURE CHECKOUT' : 'MANUAL ORDER'}
                       </div>
                       <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--accent)', marginTop: '0.25rem' }}>
-                        {method === 'paystack' ? 'Paystack' : method === 'shopify' ? 'Shopify Checkout' : 'WhatsApp Order'}
+                        {method === 'paystack' ? 'Paystack' : 'WhatsApp Order'}
                       </div>
                     </div>
                   ))}
@@ -73,9 +73,7 @@ export default function CheckoutForm() {
 
               <div className="form-group-full">
                 <button type="submit" className="place-order-btn">
-                  {paymentMethod === 'paystack' && 'PAY SECURELY WITH PAYSTACK'}
-                  {paymentMethod === 'shopify' && 'PROCEED TO SHOPIFY CHECKOUT'}
-                  {paymentMethod === 'whatsapp' && 'PLACE ORDER ON WHATSAPP'}
+                  {paymentMethod === 'paystack' ? 'PAY SECURELY WITH PAYSTACK' : 'PLACE ORDER ON WHATSAPP'}
                 </button>
                 <button type="button" className="home-btn" onClick={() => setCheckoutStep('shop')}
                   style={{ width: '100%', marginTop: '0.75rem' }}>BACK TO STORE</button>

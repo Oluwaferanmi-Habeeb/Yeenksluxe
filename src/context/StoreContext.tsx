@@ -4,7 +4,6 @@ import React, { createContext, useContext, useState, useMemo, useEffect, ReactNo
 import { Product } from '../data/products';
 import { CartItem, CheckoutFormData, CheckoutStep, ThemeMode, PaymentMethod, DossierTab, CurrencyType } from '../types';
 import { products } from '../data/products';
-import { getShopifyCheckoutUrl } from '../utils/shopify';
 
 interface StoreContextType {
   // State
@@ -231,48 +230,63 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!checkoutForm.name || !checkoutForm.phone || !checkoutForm.address) {
-      alert('Please fill out all required shipping fields.');
+
+    if (!cart.length) {
+      alert('Your cart is empty.');
+      return;
+    }
+
+    const requiredFields = [checkoutForm.name, checkoutForm.email, checkoutForm.phone, checkoutForm.address, checkoutForm.city];
+    if (requiredFields.some((field) => !field.trim())) {
+      alert('Please fill out all required shipping details before continuing.');
       return;
     }
 
     if (paymentMethod === 'whatsapp') {
       setCheckoutStep('success');
+      setCart([]);
       window.open(getWhatsAppLink(), '_blank');
-    } else if (paymentMethod === 'shopify') {
-      const items = cart.map(item => ({ variantId: item.product.shopifyVariantId, quantity: item.quantity }));
-      window.open(getShopifyCheckoutUrl(items), '_blank');
-      setCheckoutStep('success');
-    } else if (paymentMethod === 'paystack') {
+      showToast('Order request opened in WhatsApp. We will confirm your order shortly.');
+      return;
+    }
+
+    if (paymentMethod === 'paystack') {
       const paystackKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
       if (!paystackKey) {
-        alert('Payment gateway not configured. Please contact support.');
+        alert('Payment gateway is not configured yet. Please contact support.');
         return;
       }
+
       const PaystackPop = (await import('@paystack/inline-js')).default;
       const popup = new PaystackPop();
       popup.newTransaction({
         key: paystackKey,
         email: checkoutForm.email || 'customer@yeenksluxe.com',
-        amount: cartSubtotal * 100, // Convert Naira to kobo
+        amount: Math.round(cartSubtotal * 100),
         currency: 'NGN',
-        ref: 'YNKS-' + Math.floor(Math.random() * 1000000000 + 1),
+        channels: ['card', 'bank', 'ussd', 'qr', 'bank_transfer'],
+        ref: `YNKS-${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
         metadata: {
           custom_fields: [
             {
-              display_name: "Customer Name",
-              variable_name: "customer_name",
+              display_name: 'Customer Name',
+              variable_name: 'customer_name',
               value: checkoutForm.name
+            },
+            {
+              display_name: 'Delivery Address',
+              variable_name: 'delivery_address',
+              value: `${checkoutForm.address}, ${checkoutForm.city}`
             }
           ]
         },
         onSuccess: () => {
-          alert('Payment Successful!');
           setCart([]);
           setCheckoutStep('success');
+          showToast('Payment received — your order is confirmed.');
         },
         onCancel: () => {
-          // User closed the payment popup
+          showToast('Payment cancelled. You can try again anytime.');
         }
       });
     }

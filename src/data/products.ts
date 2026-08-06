@@ -228,16 +228,7 @@ export const products: Product[] = [
   // Distributed across all categories. Rename and re-categorize as needed.
 
   // Item 1–8: Shirts
-  {
-    id: "drop3-01",
-    shopifyVariantId: "45000000000060",
-    name: "SS26 Drop III — Graphic Tee 01",
-    price: 30000,
-    category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.47 PM (1).jpeg"),
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000"]
-  },
+
   {
     id: "drop3-03",
     shopifyVariantId: "45000000000062",

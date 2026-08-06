@@ -9,13 +9,13 @@ const heroSlides = [
     image: "/images/new_prod_5.jpg",
     eyebrow: "SS26 PRE-RELEASE COLLECTION",
     title: "YEENKSLUXE",
-    subtitle: "Where streetwear meets luxury. Engineered in Lagos. Worn by the bold."
+    subtitle: "Elevated streetwear crafted for bold everyday dressing."
   },
   {
     image: "/images/new_prod_3.jpg",
     eyebrow: "SS26 CAMPAIGN / EXHIBIT II",
     title: "OVERSIZED ELEGANCE",
-    subtitle: "Bold silhouettes, premium craftsmanship. Designed for those who command attention."
+    subtitle: "Distinct silhouettes, premium finishes, and effortless presence."
   }
 ];
 
