@@ -264,7 +264,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         email: checkoutForm.email || 'customer@yeenksluxe.com',
         amount: Math.round(cartSubtotal * 100),
         currency: 'NGN',
-        channels: ['card', 'bank', 'ussd', 'qr', 'bank_transfer'],
         ref: `YNKS-${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
         metadata: {
           custom_fields: [
