@@ -3,8 +3,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
 import { PaymentMethod } from '../types';
-// @ts-ignore next-line: optional dependency; install `next-auth` to enable auth flow
-import { useSession, signIn, signOut } from 'next-auth/react';
+import React, { useState } from 'react';
 
 export default function CheckoutForm() {
   const {
@@ -13,9 +12,7 @@ export default function CheckoutForm() {
   } = useStore();
 
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const paystackEnabled = false; // Paystack currently under review by CEO
-  const { data: session } = useSession();
-  const canUsePaystack = paystackEnabled && !!session;
+  // Only WhatsApp checkout is enabled per CEO direction
 
   const sanitize = (s: string) => s.replace(/[\u0000-\u001F\u007F<>]/g, '').trim().slice(0, 200);
 
@@ -33,17 +30,7 @@ export default function CheckoutForm() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    if (paymentMethod === 'paystack') {
-      if (!paystackEnabled) {
-        showToast('Paystack is currently under review. Please use WhatsApp checkout for now.');
-        return;
-      }
-      if (!session) {
-        showToast('Please sign in to continue with Paystack checkout.');
-        signIn();
-        return;
-      }
-    }
+    // WhatsApp checkout: handled in StoreContext.handlePlaceOrder
     handlePlaceOrder(e);
   };
 
@@ -98,38 +85,24 @@ export default function CheckoutForm() {
 
               <div className="form-field form-group-full" style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
                 <label className="form-label" style={{ display: 'block', marginBottom: '0.75rem' }}>Payment Gateway / Method *</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.75rem' }}>
-                  {['paystack', 'whatsapp'].map((method) => {
-                    const isPaystack = method === 'paystack';
-                    const disabled = isPaystack && !paystackEnabled;
-                    return (
-                      <div key={method}
-                        onClick={() => {
-                          if (disabled) return showToast('Paystack is currently under review.');
-                          setPaymentMethod(method as PaymentMethod);
-                        }}
-                        style={{
-                          border: `1px solid ${paymentMethod === method ? 'var(--accent)' : 'var(--border-color)'}`,
-                          padding: '1rem', cursor: disabled ? 'not-allowed' : 'pointer',
-                          background: paymentMethod === method ? 'rgba(200, 169, 110, 0.05)' : 'var(--bg-tertiary)',
-                          opacity: disabled ? 0.6 : 1, transition: 'all 0.3s ease', textAlign: 'center'
-                        }}>
-                        <div style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em',
-                          color: paymentMethod === method ? 'white' : 'var(--text-secondary)' }}>
-                          {isPaystack ? 'SECURE CHECKOUT' : 'MANUAL ORDER'}
-                        </div>
-                        <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--accent)', marginTop: '0.25rem' }}>
-                          {isPaystack ? `Paystack${disabled ? ' (Under review)' : ''}` : 'WhatsApp Order'}
-                        </div>
-                      </div>
-                    );
-                  })}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem' }}>
+                  <div style={{
+                    border: `1px solid var(--accent)`, padding: '1rem', background: 'rgba(200, 169, 110, 0.05)',
+                    textAlign: 'center'
+                  }}>
+                    <div style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em', color: 'white' }}>
+                      MANUAL ORDER
+                    </div>
+                    <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--accent)', marginTop: '0.25rem' }}>
+                      WhatsApp Order (primary)
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <div className="form-group-full">
                 <button type="submit" className="place-order-btn">
-                  {paymentMethod === 'paystack' ? (paystackEnabled ? 'PAY SECURELY WITH PAYSTACK' : 'PAYSTACK (UNDER REVIEW)') : 'PLACE ORDER ON WHATSAPP'}
+                  PLACE ORDER ON WHATSAPP
                 </button>
                 <button type="button" className="home-btn" onClick={() => setCheckoutStep('shop')}
                   style={{ width: '100%', marginTop: '0.75rem' }}>BACK TO STORE</button>
