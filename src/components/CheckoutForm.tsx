@@ -1,13 +1,51 @@
-'use client';
+"use client";
 
+import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
 import { PaymentMethod } from '../types';
+// @ts-ignore next-line: optional dependency; install `next-auth` to enable auth flow
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 export default function CheckoutForm() {
   const {
     checkoutForm, setCheckoutForm, paymentMethod, setPaymentMethod,
-    handlePlaceOrder, setCheckoutStep, cart, formatUSD, formatNGN, cartSubtotal, currency
+    handlePlaceOrder, setCheckoutStep, cart, formatUSD, formatNGN, cartSubtotal, currency, showToast
   } = useStore();
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const paystackEnabled = false; // Paystack currently under review by CEO
+  const { data: session } = useSession();
+  const canUsePaystack = paystackEnabled && !!session;
+
+  const sanitize = (s: string) => s.replace(/[\u0000-\u001F\u007F<>]/g, '').trim().slice(0, 200);
+
+  const validate = () => {
+    const errs: Record<string, string> = {};
+    if (!checkoutForm.name || !checkoutForm.name.trim()) errs.name = 'Full name is required';
+    if (!checkoutForm.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(checkoutForm.email)) errs.email = 'Enter a valid email address';
+    if (!checkoutForm.phone || !/^\+?[0-9\s\-]{7,15}$/.test(checkoutForm.phone)) errs.phone = 'Enter a valid phone number';
+    if (!checkoutForm.address || !checkoutForm.address.trim()) errs.address = 'Delivery address is required';
+    if (!checkoutForm.city || !checkoutForm.city.trim()) errs.city = 'City / State is required';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+    if (paymentMethod === 'paystack') {
+      if (!paystackEnabled) {
+        showToast('Paystack is currently under review. Please use WhatsApp checkout for now.');
+        return;
+      }
+      if (!session) {
+        showToast('Please sign in to continue with Paystack checkout.');
+        signIn();
+        return;
+      }
+    }
+    handlePlaceOrder(e);
+  };
 
   return (
     <div className="container">
@@ -15,31 +53,41 @@ export default function CheckoutForm() {
         <div className="checkout-form-panel">
           <div>
             <h2 className="checkout-step-title">DELIVERY DETAILS</h2>
-            <form onSubmit={handlePlaceOrder} className="form-grid">
+            <form onSubmit={onSubmit} className="form-grid" noValidate>
               <div className="form-field form-group-full">
                 <label className="form-label">Full Name *</label>
                 <input type="text" required placeholder="John Doe" className="form-input"
-                  value={checkoutForm.name} onChange={(e) => setCheckoutForm({...checkoutForm, name: e.target.value})} />
+                  value={checkoutForm.name} onChange={(e) => setCheckoutForm({...checkoutForm, name: sanitize(e.target.value)})}
+                  aria-invalid={!!errors.name} />
+                {errors.name && <div style={{ color: '#ff6b6b', fontSize: '0.85rem', marginTop: '0.35rem' }}>{errors.name}</div>}
               </div>
               <div className="form-field">
                 <label className="form-label">Email Address *</label>
                 <input type="email" required placeholder="john@example.com" className="form-input"
-                  value={checkoutForm.email} onChange={(e) => setCheckoutForm({...checkoutForm, email: e.target.value})} />
+                  value={checkoutForm.email} onChange={(e) => setCheckoutForm({...checkoutForm, email: sanitize(e.target.value)})}
+                  aria-invalid={!!errors.email} />
+                {errors.email && <div style={{ color: '#ff6b6b', fontSize: '0.85rem', marginTop: '0.35rem' }}>{errors.email}</div>}
               </div>
               <div className="form-field">
                 <label className="form-label">Phone Number *</label>
                 <input type="tel" required placeholder="e.g. +234 903 336 4994" className="form-input"
-                  value={checkoutForm.phone} onChange={(e) => setCheckoutForm({...checkoutForm, phone: e.target.value})} />
+                  value={checkoutForm.phone} onChange={(e) => setCheckoutForm({...checkoutForm, phone: sanitize(e.target.value)})}
+                  aria-invalid={!!errors.phone} />
+                {errors.phone && <div style={{ color: '#ff6b6b', fontSize: '0.85rem', marginTop: '0.35rem' }}>{errors.phone}</div>}
               </div>
               <div className="form-field form-group-full">
                 <label className="form-label">Delivery Address *</label>
                 <input type="text" required placeholder="Apartment, Street Name, Area" className="form-input"
-                  value={checkoutForm.address} onChange={(e) => setCheckoutForm({...checkoutForm, address: e.target.value})} />
+                  value={checkoutForm.address} onChange={(e) => setCheckoutForm({...checkoutForm, address: sanitize(e.target.value)})}
+                  aria-invalid={!!errors.address} />
+                {errors.address && <div style={{ color: '#ff6b6b', fontSize: '0.85rem', marginTop: '0.35rem' }}>{errors.address}</div>}
               </div>
               <div className="form-field form-group-full">
                 <label className="form-label">City / State *</label>
                 <input type="text" required placeholder="Lagos, Ikeja" className="form-input"
-                  value={checkoutForm.city} onChange={(e) => setCheckoutForm({...checkoutForm, city: e.target.value})} />
+                  value={checkoutForm.city} onChange={(e) => setCheckoutForm({...checkoutForm, city: sanitize(e.target.value)})}
+                  aria-invalid={!!errors.city} />
+                {errors.city && <div style={{ color: '#ff6b6b', fontSize: '0.85rem', marginTop: '0.35rem' }}>{errors.city}</div>}
               </div>
               <div className="form-field form-group-full">
                 <label className="form-label">Order Notes (Optional)</label>
@@ -51,29 +99,37 @@ export default function CheckoutForm() {
               <div className="form-field form-group-full" style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
                 <label className="form-label" style={{ display: 'block', marginBottom: '0.75rem' }}>Payment Gateway / Method *</label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.75rem' }}>
-                  {['paystack', 'whatsapp'].map((method) => (
-                    <div key={method} onClick={() => setPaymentMethod(method as PaymentMethod)}
-                      style={{
-                        border: `1px solid ${paymentMethod === method ? 'var(--accent)' : 'var(--border-color)'}`,
-                        padding: '1rem', cursor: 'pointer',
-                        background: paymentMethod === method ? 'rgba(200, 169, 110, 0.05)' : 'var(--bg-tertiary)',
-                        transition: 'all 0.3s ease', textAlign: 'center'
-                      }}>
-                      <div style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em',
-                        color: paymentMethod === method ? 'white' : 'var(--text-secondary)' }}>
-                        {method === 'paystack' ? 'SECURE CHECKOUT' : 'MANUAL ORDER'}
+                  {['paystack', 'whatsapp'].map((method) => {
+                    const isPaystack = method === 'paystack';
+                    const disabled = isPaystack && !paystackEnabled;
+                    return (
+                      <div key={method}
+                        onClick={() => {
+                          if (disabled) return showToast('Paystack is currently under review.');
+                          setPaymentMethod(method as PaymentMethod);
+                        }}
+                        style={{
+                          border: `1px solid ${paymentMethod === method ? 'var(--accent)' : 'var(--border-color)'}`,
+                          padding: '1rem', cursor: disabled ? 'not-allowed' : 'pointer',
+                          background: paymentMethod === method ? 'rgba(200, 169, 110, 0.05)' : 'var(--bg-tertiary)',
+                          opacity: disabled ? 0.6 : 1, transition: 'all 0.3s ease', textAlign: 'center'
+                        }}>
+                        <div style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em',
+                          color: paymentMethod === method ? 'white' : 'var(--text-secondary)' }}>
+                          {isPaystack ? 'SECURE CHECKOUT' : 'MANUAL ORDER'}
+                        </div>
+                        <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--accent)', marginTop: '0.25rem' }}>
+                          {isPaystack ? `Paystack${disabled ? ' (Under review)' : ''}` : 'WhatsApp Order'}
+                        </div>
                       </div>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--accent)', marginTop: '0.25rem' }}>
-                        {method === 'paystack' ? 'Paystack' : 'WhatsApp Order'}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
               <div className="form-group-full">
                 <button type="submit" className="place-order-btn">
-                  {paymentMethod === 'paystack' ? 'PAY SECURELY WITH PAYSTACK' : 'PLACE ORDER ON WHATSAPP'}
+                  {paymentMethod === 'paystack' ? (paystackEnabled ? 'PAY SECURELY WITH PAYSTACK' : 'PAYSTACK (UNDER REVIEW)') : 'PLACE ORDER ON WHATSAPP'}
                 </button>
                 <button type="button" className="home-btn" onClick={() => setCheckoutStep('shop')}
                   style={{ width: '100%', marginTop: '0.75rem' }}>BACK TO STORE</button>

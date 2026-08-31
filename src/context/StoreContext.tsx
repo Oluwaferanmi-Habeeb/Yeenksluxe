@@ -79,7 +79,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>('shop');
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('paystack');
+  // Default to WhatsApp flow while Paystack remains under review
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('whatsapp');
   const [mounted, setMounted] = useState(false);
   const [heroIndex, setHeroIndex] = useState(0);
   const [theme, setTheme] = useState<ThemeMode>('dark'); // streetwear brand defaults to dark
@@ -257,6 +258,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         return;
       }
 
+      // create a pre-payment order on the server to get a stable reference
+      let reference = `YNKS-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
+      try {
+        const createResp = await fetch('/api/paystack/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ checkoutForm, cart, amount: Math.round(cartSubtotal * 100), currency }),
+        });
+        const createData = await createResp.json();
+        if (createData?.reference) reference = createData.reference;
+      } catch (err) {
+        // fall back to generated ref
+      }
+
       const PaystackPop = (await import('@paystack/inline-js')).default;
       const popup = new PaystackPop();
       popup.newTransaction({
@@ -264,25 +279,31 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         email: checkoutForm.email || 'customer@yeenksluxe.com',
         amount: Math.round(cartSubtotal * 100),
         currency: 'NGN',
-        ref: `YNKS-${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
+        ref: reference,
         metadata: {
           custom_fields: [
-            {
-              display_name: 'Customer Name',
-              variable_name: 'customer_name',
-              value: checkoutForm.name
-            },
-            {
-              display_name: 'Delivery Address',
-              variable_name: 'delivery_address',
-              value: `${checkoutForm.address}, ${checkoutForm.city}`
-            }
+            { display_name: 'Customer Name', variable_name: 'customer_name', value: checkoutForm.name },
+            { display_name: 'Delivery Address', variable_name: 'delivery_address', value: `${checkoutForm.address}, ${checkoutForm.city}` }
           ]
         },
-        onSuccess: () => {
-          setCart([]);
-          setCheckoutStep('success');
-          showToast('Payment received — your order is confirmed.');
+        onSuccess: async () => {
+          try {
+            const verifyResp = await fetch('/api/paystack/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ reference }),
+            });
+            const verifyData = await verifyResp.json();
+            if (verifyData?.ok) {
+              setCart([]);
+              setCheckoutStep('success');
+              showToast('Payment received — your order is confirmed.');
+            } else {
+              showToast('Payment received but verification failed. We will reconcile and contact you.');
+            }
+          } catch (err) {
+            showToast('Payment received but verification failed.');
+          }
         },
         onCancel: () => {
           showToast('Payment cancelled. You can try again anytime.');
