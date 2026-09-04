@@ -1,0 +1,3 @@
+import InfoPageShell from '../../components/InfoPageShell';
+export const metadata = { title: 'Returns & Exchanges | YEENKSLUXE' };
+export default function ReturnsPage() { return <InfoPageShell eyebrow="Customer care" title="Returns & exchanges"><h2>Size exchanges</h2><p>Contact us within 7 days of delivery if you need a different size. The item must be unworn, unwashed and returned with its original tags and packaging.</p><h2>Availability</h2><p>Exchanges depend on available stock. If the requested size is unavailable, our team will explain the options available for your order.</p><h2>Start an exchange</h2><p>Message our official WhatsApp line with your name, order details and a clear photo of the item.</p></InfoPageShell>; }

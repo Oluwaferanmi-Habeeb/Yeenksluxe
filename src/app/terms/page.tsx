@@ -1,0 +1,3 @@
+import InfoPageShell from '../../components/InfoPageShell';
+export const metadata = { title: 'Terms | YEENKSLUXE' };
+export default function TermsPage() { return <InfoPageShell eyebrow="Legal" title="Terms"><h2>Product availability</h2><p>Adding a product to your bag does not reserve it. Stock and final order details are confirmed by our team on WhatsApp.</p><h2>Pricing and payment</h2><p>Prices are displayed for guidance. Your order total, payment method and delivery details are confirmed before payment.</p><h2>Product appearance</h2><p>We aim to represent every piece accurately. Colour may vary slightly depending on lighting and screen settings.</p></InfoPageShell>; }

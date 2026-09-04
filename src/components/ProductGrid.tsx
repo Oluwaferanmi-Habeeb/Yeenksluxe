@@ -1,129 +1,91 @@
 'use client';
 
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
-import { categories, products } from '../data/products';
+import { categories, Product } from '../data/products';
+
+const shortName = (product: Product) => product.name
+  .replace(/YĒĒNKSLUXÉ\s*x\s*/gi, '')
+  .replace(/YEENKSLUXE\s*x\s*/gi, '')
+  .replace(/STEEZY\s*x\s*/gi, '')
+  .replace(/[‘’']?26\s+Edition\s*/gi, '')
+  .replace(/\s{2,}/g, ' ')
+  .trim();
+
+type SortOption = 'featured' | 'low' | 'high';
 
 export default function ProductGrid() {
-  const {
-    filteredProducts, selectedCategory, setSelectedCategory,
-    openQuickView, formatNGN, formatUSD, currency, searchQuery, mounted
-  } = useStore();
+  const { filteredProducts, selectedCategory, setSelectedCategory, openQuickView, formatCurrency, searchQuery, mounted } = useStore();
+  const [sort, setSort] = useState<SortOption>('featured');
+  const [limit, setLimit] = useState(12);
 
-  if (!mounted) {
-    return (
-      <section className="shop-section reveal-on-scroll" id="shop-catalog">
-        <div className="container">
-          <div className="shop-header">
-            <div className="shop-title-area">
-              <span className="section-eyebrow">OUR SELECTIONS</span>
-              <h2 className="section-title">CURATED DROP</h2>
-            </div>
-          </div>
-          <div className="product-grid">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="skeleton-card">
-                <div className="skeleton skeleton-img" />
-                <div className="skeleton skeleton-line" />
-                <div className="skeleton skeleton-line short" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
+  const sortedProducts = useMemo(() => {
+    const next = [...filteredProducts];
+    if (sort === 'low') next.sort((a, b) => a.price - b.price);
+    if (sort === 'high') next.sort((a, b) => b.price - a.price);
+    return next;
+  }, [filteredProducts, sort]);
 
   return (
-    <section className="shop-section reveal-on-scroll" id="shop-catalog">
+    <section className="shop-section reveal-on-scroll" id="shop-catalog" aria-labelledby="catalogue-title">
       <div className="container">
-        <div className="shop-header">
-          <div className="shop-title-area">
-            <span className="section-eyebrow">OUR SELECTIONS</span>
-            <h2 className="section-title">THE LOOKBOOK</h2>
+        <div className="shop-heading-row">
+          <div>
+            <p className="eyebrow">The latest release</p>
+            <h2 id="catalogue-title">Shop the drop.</h2>
           </div>
-          <div className="shop-all-link" onClick={() => { setSelectedCategory('All'); }}>
-            <span>See All</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </div>
+          <p className="shop-intro">Limited-run tees, hoodies and headwear designed to hold their own.</p>
         </div>
 
-        {/* Category Filter Tabs with underline style */}
-        <div className="category-filters">
-          {['All', ...categories].map((cat) => {
-            const count = cat === 'All'
-              ? products.length
-              : products.filter(p => p.category === cat).length;
-            return (
-              <button key={cat} className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`}
-                onClick={() => setSelectedCategory(cat)}>
-                {cat}
-                <span className="filter-count">{count}</span>
+        <div className="shop-toolbar">
+          <div className="category-filters" aria-label="Filter by category">
+            {['All', ...categories].map(category => (
+              <button key={category} className={selectedCategory === category ? 'active' : ''} onClick={() => { setSelectedCategory(category); setLimit(12); }}>
+                {category === 'All' ? 'All pieces' : category}
               </button>
-            );
-          })}
-        </div>
-
-        {/* Product count & active filter indicator */}
-        <div className="shop-meta-bar">
-          <span className="shop-result-count">
-            {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
-            {selectedCategory !== 'All' && ` in ${selectedCategory}`}
-            {searchQuery && ` matching "${searchQuery}"`}
-          </span>
-        </div>
-
-        {filteredProducts.length === 0 ? (
-          <div className="no-results">
-            <span className="no-results-icon">∅</span>
-            <p>No products match your selection.</p>
-            <button className="filter-btn" onClick={() => setSelectedCategory('All')}>View All Products</button>
-          </div>
-        ) : (
-          <div className="product-grid">
-            {filteredProducts.map((product) => (
-              <div key={product.id} className="product-card" onClick={() => openQuickView(product)}>
-                <div className="card-img-wrapper" style={{ position: 'relative' }}>
-                  {product.badge && (
-                    <span className={`product-badge ${product.badge === 'Sale' ? 'badge-sale' : ''}`}>{product.badge}</span>
-                  )}
-                  <Image src={product.image} alt={product.name} fill className="card-img object-cover"
-                    sizes="(max-width: 480px) 50vw, (max-width: 768px) 33vw, 25vw" />
-                  <div className="card-overlay">
-                    <button className="quick-view-btn" onClick={(e) => { e.stopPropagation(); openQuickView(product); }}>
-                      QUICK VIEW
-                    </button>
-                  </div>
-                </div>
-                <div className="card-info">
-                  <div>
-                    <span className="product-category">{product.category}</span>
-                    <h3 className="product-name">{product.name}</h3>
-                  </div>
-                  <div className="card-footer">
-                    <div className="price-block">
-                      <span className={`price-ngn ${currency === 'NGN' ? 'active' : ''}`}>{formatNGN(product.price)}</span>
-                      <span className="price-divider">|</span>
-                      <span className={`price-usd ${currency === 'USD' ? 'active' : ''}`}>{formatUSD(product.price)}</span>
-                    </div>
-                    {/* Color swatch dots */}
-                    {product.colors && product.colors.length > 1 && (
-                      <div className="card-color-dots">
-                        {product.colors.slice(0, 3).map((c) => (
-                          <span key={c} className="card-color-dot" style={{ background: c }}></span>
-                        ))}
-                        {product.colors.length > 3 && (
-                          <span className="card-color-more">+{product.colors.length - 3}</span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
             ))}
           </div>
+          <div className="sort-control">
+            <label htmlFor="product-sort">Sort</label>
+            <select id="product-sort" value={sort} onChange={e => { setSort(e.target.value as SortOption); setLimit(12); }}>
+              <option value="featured">Featured</option>
+              <option value="low">Price: low to high</option>
+              <option value="high">Price: high to low</option>
+            </select>
+          </div>
+        </div>
+
+        <p className="result-count">{sortedProducts.length} {sortedProducts.length === 1 ? 'piece' : 'pieces'}{searchQuery ? ` matching “${searchQuery}”` : ''}</p>
+
+        {!mounted ? (
+          <div className="product-grid">{Array.from({ length: 8 }).map((_, i) => <div className="skeleton-card" key={i}><div className="skeleton-image"/><div className="skeleton-line"/></div>)}</div>
+        ) : sortedProducts.length === 0 ? (
+          <div className="empty-state"><span>Nothing here yet.</span><p>Try another category or clear your search.</p><button className="button button-dark" onClick={() => setSelectedCategory('All')}>View all pieces</button></div>
+        ) : (
+          <>
+            <div className="product-grid">
+              {sortedProducts.slice(0, limit).map((product, index) => (
+                <article className="product-card" key={product.id}>
+                  <button className="product-image-button" onClick={() => openQuickView(product)} aria-label={`View ${shortName(product)}`}>
+                    <Image src={product.image} alt={shortName(product)} fill className="product-image" sizes="(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw" />
+                    {product.badge && <span className="product-badge">{product.badge}</span>}
+                    <span className="product-index">{String(index + 1).padStart(2, '0')}</span>
+                    <span className="product-view">View piece <span>↗</span></span>
+                  </button>
+                  <div className="product-info">
+                    <div><p>{product.category} · SS26</p><h3>{shortName(product)}</h3></div>
+                    <strong>{formatCurrency(product.price)}</strong>
+                  </div>
+                  <div className="product-meta">
+                    <span>{product.colors?.length || 1} {(product.colors?.length || 1) === 1 ? 'colour' : 'colours'}</span>
+                    <button onClick={() => openQuickView(product)}>Select options</button>
+                  </div>
+                </article>
+              ))}
+            </div>
+            {limit < sortedProducts.length && <div className="load-more"><button className="button button-outline" onClick={() => setLimit(sortedProducts.length)}>View all {sortedProducts.length} pieces</button></div>}
+          </>
         )}
       </div>
     </section>

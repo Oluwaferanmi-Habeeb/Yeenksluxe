@@ -1,336 +1,158 @@
 'use client';
 
-import React, { createContext, useContext, useState, useMemo, useEffect, ReactNode } from 'react';
-import { Product } from '../data/products';
-import { CartItem, CheckoutFormData, CheckoutStep, ThemeMode, PaymentMethod, DossierTab, CurrencyType } from '../types';
-import { products } from '../data/products';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { products, type Product } from '../data/products';
+import type { CartItem, CheckoutFormData, CheckoutStep, CurrencyType } from '../types';
 
 interface StoreContextType {
-  // State
   cart: CartItem[];
-  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
   currency: CurrencyType;
-  setCurrency: React.Dispatch<React.SetStateAction<CurrencyType>>;
+  setCurrency: (currency: CurrencyType) => void;
   searchQuery: string;
-  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  setSearchQuery: (query: string) => void;
   selectedCategory: string;
-  setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedCategory: (category: string) => void;
   selectedProduct: Product | null;
-  setSelectedProduct: React.Dispatch<React.SetStateAction<Product | null>>;
+  setSelectedProduct: (product: Product | null) => void;
   cartOpen: boolean;
-  setCartOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setCartOpen: (open: boolean) => void;
   checkoutStep: CheckoutStep;
-  setCheckoutStep: React.Dispatch<React.SetStateAction<CheckoutStep>>;
-  paymentMethod: PaymentMethod;
-  setPaymentMethod: React.Dispatch<React.SetStateAction<PaymentMethod>>;
+  setCheckoutStep: (step: CheckoutStep) => void;
   mounted: boolean;
-  heroIndex: number;
-  setHeroIndex: React.Dispatch<React.SetStateAction<number>>;
-  theme: ThemeMode;
-  setTheme: React.Dispatch<React.SetStateAction<ThemeMode>>;
-  udIndex: number;
-  setUdIndex: React.Dispatch<React.SetStateAction<number>>;
   cartAnimated: boolean;
   scrolled: boolean;
   chosenSize: string;
-  setChosenSize: React.Dispatch<React.SetStateAction<string>>;
+  setChosenSize: (size: string) => void;
   chosenColor: string;
-  setChosenColor: React.Dispatch<React.SetStateAction<string>>;
-  activeDossierTab: DossierTab;
-  setActiveDossierTab: React.Dispatch<React.SetStateAction<DossierTab>>;
-  fitHeight: string;
-  setFitHeight: React.Dispatch<React.SetStateAction<string>>;
-  fitWeight: string;
-  setFitWeight: React.Dispatch<React.SetStateAction<string>>;
+  setChosenColor: (colour: string) => void;
   checkoutForm: CheckoutFormData;
-  setCheckoutForm: React.Dispatch<React.SetStateAction<CheckoutFormData>>;
-
-  // Computed
+  setCheckoutForm: (form: CheckoutFormData) => void;
   cartItemCount: number;
   cartSubtotal: number;
   filteredProducts: Product[];
-
-  // Toast
   toast: string | null;
-  setToast: React.Dispatch<React.SetStateAction<string | null>>;
-  showToast: (msg: string) => void;
-
-  // Actions
+  setToast: (message: string | null) => void;
+  showToast: (message: string) => void;
   openQuickView: (product: Product) => void;
-  addToCart: (product: Product, size: string, color: string, qty?: number) => void;
+  addToCart: (product: Product, size: string, colour: string, quantity?: number) => void;
   updateCartQty: (index: number, delta: number) => void;
   removeCartItem: (index: number) => void;
-  handlePlaceOrder: (e: React.FormEvent) => void;
+  handlePlaceOrder: (event: React.FormEvent) => void;
   getWhatsAppLink: () => string;
   formatCurrency: (amount: number) => string;
-  formatUSD: (amount: number) => string;
-  formatNGN: (amount: number) => string;
   scrollToShop: () => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  // ── Core State ──
   const [cart, setCart] = useState<CartItem[]>([]);
   const [currency, setCurrency] = useState<CurrencyType>('NGN');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>('shop');
-  // Default to WhatsApp flow while Paystack remains under review
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('whatsapp');
   const [mounted, setMounted] = useState(false);
-  const [heroIndex, setHeroIndex] = useState(0);
-  const [theme, setTheme] = useState<ThemeMode>('dark'); // streetwear brand defaults to dark
-  const [udIndex, setUdIndex] = useState(0);
   const [cartAnimated, setCartAnimated] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [chosenSize, setChosenSize] = useState('');
   const [chosenColor, setChosenColor] = useState('');
-  const [activeDossierTab, setActiveDossierTab] = useState<DossierTab>('info');
-  const [fitHeight, setFitHeight] = useState('');
-  const [fitWeight, setFitWeight] = useState('');
-  const [checkoutForm, setCheckoutForm] = useState<CheckoutFormData>({
-    name: '', email: '', phone: '', address: '', city: '', notes: ''
-  });
+  const [checkoutForm, setCheckoutForm] = useState<CheckoutFormData>({ name: '', email: '', phone: '', address: '', city: '', notes: '' });
   const [toast, setToast] = useState<string | null>(null);
 
-  // ── Effects ──
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
-    if (checkoutStep !== 'shop') return;
-    const interval = setInterval(() => setHeroIndex((p) => (p + 1) % 2), 5000);
-    return () => clearInterval(interval);
-  }, [checkoutStep]);
-
-  useEffect(() => {
-    if (checkoutStep !== 'shop') return;
-    const interval = setInterval(() => setUdIndex((p) => (p + 1) % 3), 6000);
-    return () => clearInterval(interval);
-  }, [checkoutStep]);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-    const savedCart = localStorage.getItem('ynks_cart');
-    if (savedCart) try { setCart(JSON.parse(savedCart)); } catch {}
-    const savedTheme = localStorage.getItem('ynks_theme') as ThemeMode | null;
-    if (savedTheme) setTheme(savedTheme);
-    const savedCurrency = localStorage.getItem('ynks_currency') as CurrencyType | null;
-    if (savedCurrency) setCurrency(savedCurrency);
+    const timer = window.setTimeout(() => {
+      const savedCart = localStorage.getItem('ynks_cart');
+      const savedCurrency = localStorage.getItem('ynks_currency') as CurrencyType | null;
+      if (savedCart) { try { setCart(JSON.parse(savedCart)); } catch { localStorage.removeItem('ynks_cart'); } }
+      if (savedCurrency === 'NGN' || savedCurrency === 'USD') setCurrency(savedCurrency);
+      setMounted(true);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    if (mounted) {
-      document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('ynks_theme', theme);
-    }
-  }, [theme, mounted]);
+  useEffect(() => { if (mounted) localStorage.setItem('ynks_cart', JSON.stringify(cart)); }, [cart, mounted]);
+  useEffect(() => { if (mounted) localStorage.setItem('ynks_currency', currency); }, [currency, mounted]);
 
-  useEffect(() => {
-    if (mounted) localStorage.setItem('ynks_cart', JSON.stringify(cart));
-  }, [cart, mounted]);
+  const cartItemCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
+  const cartSubtotal = useMemo(() => cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0), [cart]);
+  const filteredProducts = useMemo(() => products.filter(product => {
+    const categoryMatch = selectedCategory === 'All' || product.category === selectedCategory;
+    const searchMatch = product.name.toLowerCase().includes(searchQuery.trim().toLowerCase());
+    return categoryMatch && searchMatch;
+  }), [selectedCategory, searchQuery]);
 
-  useEffect(() => {
-    if (mounted) localStorage.setItem('ynks_currency', currency);
-  }, [currency, mounted]);
+  const showToast = (message: string) => {
+    setToast(message);
+    window.setTimeout(() => setToast(null), 2800);
+  };
 
-  // ── Computed ──
-  const cartItemCount = useMemo(() =>
-    mounted ? cart.reduce((acc, item) => acc + item.quantity, 0) : 0,
-  [cart, mounted]);
-
-  const cartSubtotal = useMemo(() =>
-    mounted ? cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0) : 0,
-  [cart, mounted]);
-
-  const filteredProducts = useMemo(() => {
-    return products.filter((p: Product) => {
-      const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
-      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
-  }, [selectedCategory, searchQuery]);
-
-  // ── Actions ──
   const openQuickView = (product: Product) => {
-    setSelectedProduct(product);
     setChosenSize(product.sizes?.[0] || 'One Size');
     setChosenColor(product.colors?.[0] || '');
-    setActiveDossierTab('info');
-    setFitHeight('');
-    setFitWeight('');
+    setSelectedProduct(product);
   };
 
-  const showToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(null), 2500);
-  };
-
-  const addToCart = (product: Product, size: string, color: string, qty = 1) => {
-    setCart((prev) => {
-      const idx = prev.findIndex(
-        (i) => i.product.id === product.id && i.selectedSize === size && i.selectedColor === color
-      );
-      if (idx > -1) {
-        const next = [...prev];
-        next[idx].quantity += qty;
-        return next;
-      }
-      return [...prev, { product, quantity: qty, selectedSize: size, selectedColor: color }];
+  const addToCart = (product: Product, size: string, colour: string, quantity = 1) => {
+    setCart(current => {
+      const index = current.findIndex(item => item.product.id === product.id && item.selectedSize === size && item.selectedColor === colour);
+      if (index < 0) return [...current, { product, quantity, selectedSize: size, selectedColor: colour }];
+      return current.map((item, itemIndex) => itemIndex === index ? { ...item, quantity: item.quantity + quantity } : item);
     });
+    setSelectedProduct(null);
     setCartAnimated(true);
-    setTimeout(() => setCartAnimated(false), 800);
-    showToast(`Added to cart — ${product.name}`);
-    setTimeout(() => setCartOpen(true), 600);
+    showToast('Added to your shopping bag.');
+    window.setTimeout(() => { setCartAnimated(false); setCartOpen(true); }, 450);
   };
 
-  const updateCartQty = (index: number, delta: number) => {
-    setCart((prev) => {
-      const next = [...prev];
-      const newQty = next[index].quantity + delta;
-      if (newQty <= 0) next.splice(index, 1);
-      else next[index].quantity = newQty;
-      return next;
-    });
-  };
+  const updateCartQty = (index: number, delta: number) => setCart(current => current.flatMap((item, itemIndex) => {
+    if (itemIndex !== index) return item;
+    const quantity = item.quantity + delta;
+    return quantity > 0 ? { ...item, quantity } : [];
+  }));
 
-  const removeCartItem = (index: number) => {
-    setCart((prev) => { const next = [...prev]; next.splice(index, 1); return next; });
-  };
+  const removeCartItem = (index: number) => setCart(current => current.filter((_, itemIndex) => itemIndex !== index));
 
-  const NGN_TO_USD = 1500; // Approximate exchange rate
-  
-  // Always returns clean NGN format: "NGN ₦30,000"
-  const formatNGN = (amount: number) => 'NGN ₦' + amount.toLocaleString('en-NG');
-  
-  // Always returns clean USD format: "USD $20"
-  const formatUSD = (amount: number) => 'USD $' + (amount / NGN_TO_USD).toFixed(0);
-  
-  // Backward-compatible aliases (used by some components)
-  const formatCurrency = (amount: number) => {
-    if (currency === 'USD') return formatUSD(amount);
-    return formatNGN(amount);
-  };
+  const formatCurrency = (amount: number) => currency === 'NGN'
+    ? new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount)
+    : `${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(amount / 1500)} est.`;
 
   const getWhatsAppLink = () => {
-    const phoneNum = '2349033364994';
-    const orderLines = cart.map(
-      (item) => `- ${item.product.name} (Qty: ${item.quantity}, Size: ${item.selectedSize}${item.selectedColor ? `, Color: ${item.selectedColor}` : ''})`
-    ).join('\\n');
-    const message = `Hello YEENKSLUXE,\\n\\nI would like to place an order:\\n\\n*Order Details:*\\n${orderLines}\\n\\n*Customer Info:*\\n- Name: ${checkoutForm.name}\\n- Phone: ${checkoutForm.phone}\\n- Delivery Address: ${checkoutForm.address}, ${checkoutForm.city}\\n- Notes: ${checkoutForm.notes || 'None'}\\n\\nPlease confirm pricing and availability. Thank you!`;
-    return `https://wa.me/${phoneNum}?text=${encodeURIComponent(message)}`;
+    const orderLines = cart.map(item => `• ${item.product.name}\n  Qty ${item.quantity} · Size ${item.selectedSize}${item.selectedColor ? ` · Colour ${item.selectedColor}` : ''}`).join('\n\n');
+    const emailLine = checkoutForm.email ? `\nEmail: ${checkoutForm.email}` : '';
+    const message = `Hello YEENKSLUXE,\n\nI would like to confirm this order:\n\n${orderLines}\n\nName: ${checkoutForm.name}\nPhone: ${checkoutForm.phone}${emailLine}\nDelivery: ${checkoutForm.address}, ${checkoutForm.city}\nNote: ${checkoutForm.notes || 'None'}\n\nPlease confirm stock, final total and payment details.`;
+    return `https://wa.me/2349033364994?text=${encodeURIComponent(message)}`;
   };
 
-  const handlePlaceOrder = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!cart.length) {
-      alert('Your cart is empty.');
-      return;
-    }
-
-    const requiredFields = [checkoutForm.name, checkoutForm.email, checkoutForm.phone, checkoutForm.address, checkoutForm.city];
-    if (requiredFields.some((field) => !field.trim())) {
-      alert('Please fill out all required shipping details before continuing.');
-      return;
-    }
-
-    if (paymentMethod === 'whatsapp') {
-      setCheckoutStep('success');
-      setCart([]);
-      window.open(getWhatsAppLink(), '_blank');
-      showToast('Order request opened in WhatsApp. We will confirm your order shortly.');
-      return;
-    }
-
-    if (paymentMethod === 'paystack') {
-      const paystackKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
-      if (!paystackKey) {
-        alert('Payment gateway is not configured yet. Please contact support.');
-        return;
-      }
-
-      // create a pre-payment order on the server to get a stable reference
-      let reference = `YNKS-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
-      try {
-        const createResp = await fetch('/api/paystack/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ checkoutForm, cart, amount: Math.round(cartSubtotal * 100), currency }),
-        });
-        const createData = await createResp.json();
-        if (createData?.reference) reference = createData.reference;
-      } catch (err) {
-        // fall back to generated ref
-      }
-
-      const PaystackPop = (await import('@paystack/inline-js')).default;
-      const popup = new PaystackPop();
-      popup.newTransaction({
-        key: paystackKey,
-        email: checkoutForm.email || 'customer@yeenksluxe.com',
-        amount: Math.round(cartSubtotal * 100),
-        currency: 'NGN',
-        ref: reference,
-        metadata: {
-          custom_fields: [
-            { display_name: 'Customer Name', variable_name: 'customer_name', value: checkoutForm.name },
-            { display_name: 'Delivery Address', variable_name: 'delivery_address', value: `${checkoutForm.address}, ${checkoutForm.city}` }
-          ]
-        },
-        onSuccess: async () => {
-          try {
-            const verifyResp = await fetch('/api/paystack/verify', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ reference }),
-            });
-            const verifyData = await verifyResp.json();
-            if (verifyData?.ok) {
-              setCart([]);
-              setCheckoutStep('success');
-              showToast('Payment received — your order is confirmed.');
-            } else {
-              showToast('Payment received but verification failed. We will reconcile and contact you.');
-            }
-          } catch (err) {
-            showToast('Payment received but verification failed.');
-          }
-        },
-        onCancel: () => {
-          showToast('Payment cancelled. You can try again anytime.');
-        }
-      });
-    }
+  const handlePlaceOrder = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!cart.length) return;
+    window.open(getWhatsAppLink(), '_blank', 'noopener,noreferrer');
+    setCheckoutStep('success');
+    showToast('Your order message is ready in WhatsApp.');
   };
 
-  const scrollToShop = () => document.getElementById('shop-catalog')?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToShop = () => document.getElementById('shop-catalog')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  const value: StoreContextType = {
-    cart, setCart, currency, setCurrency, searchQuery, setSearchQuery, selectedCategory, setSelectedCategory,
+  return <StoreContext.Provider value={{
+    cart, currency, setCurrency, searchQuery, setSearchQuery, selectedCategory, setSelectedCategory,
     selectedProduct, setSelectedProduct, cartOpen, setCartOpen, checkoutStep, setCheckoutStep,
-    paymentMethod, setPaymentMethod, mounted, heroIndex, setHeroIndex, theme, setTheme,
-    udIndex, setUdIndex, cartAnimated, scrolled, chosenSize, setChosenSize, chosenColor, setChosenColor,
-    activeDossierTab, setActiveDossierTab, fitHeight, setFitHeight, fitWeight, setFitWeight,
-    checkoutForm, setCheckoutForm, cartItemCount, cartSubtotal, filteredProducts,
-    toast, setToast, showToast,
-    openQuickView, addToCart, updateCartQty, removeCartItem, handlePlaceOrder,
-    getWhatsAppLink, formatCurrency, formatUSD, formatNGN, scrollToShop,
-  };
-
-  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
+    mounted, cartAnimated, scrolled, chosenSize, setChosenSize, chosenColor, setChosenColor,
+    checkoutForm, setCheckoutForm, cartItemCount, cartSubtotal, filteredProducts, toast, setToast,
+    showToast, openQuickView, addToCart, updateCartQty, removeCartItem, handlePlaceOrder,
+    getWhatsAppLink, formatCurrency, scrollToShop,
+  }}>{children}</StoreContext.Provider>;
 }
 
 export function useStore() {
-  const ctx = useContext(StoreContext);
-  if (!ctx) throw new Error('useStore must be used within StoreProvider');
-  return ctx;
+  const context = useContext(StoreContext);
+  if (!context) throw new Error('useStore must be used within StoreProvider');
+  return context;
 }

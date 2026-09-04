@@ -1,227 +1,82 @@
 'use client';
 
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
 
+const colourNames: Record<string, string> = {
+  '#000000': 'Black', '#ffffff': 'White', '#111111': 'Washed black', '#1a1a1a': 'Charcoal',
+  '#333333': 'Slate', '#f5f2eb': 'Bone', '#6b705c': 'Olive',
+};
+
 export default function ProductModal() {
-  const {
-    selectedProduct, setSelectedProduct, chosenSize, setChosenSize,
-    chosenColor, setChosenColor, activeDossierTab, setActiveDossierTab,
-    fitHeight, setFitHeight, fitWeight, setFitWeight, addToCart, formatCurrency, formatUSD, formatNGN, currency
-  } = useStore();
+  const { selectedProduct, setSelectedProduct, chosenSize, setChosenSize, chosenColor, setChosenColor, addToCart, formatCurrency } = useStore();
+  const [imageIndex, setImageIndex] = useState(0);
+  const [detailsOpen, setDetailsOpen] = useState<'details' | 'size' | 'delivery'>('details');
+
+  const gallery = useMemo(() => selectedProduct ? [selectedProduct.image, ...(selectedProduct.gallery || [])] : [], [selectedProduct]);
+
+  useEffect(() => {
+    if (!selectedProduct) return;
+    const close = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setImageIndex(0);
+        setDetailsOpen('details');
+        setSelectedProduct(null);
+      }
+    };
+    document.body.classList.add('modal-open');
+    window.addEventListener('keydown', close);
+    return () => { document.body.classList.remove('modal-open'); window.removeEventListener('keydown', close); };
+  }, [selectedProduct, setSelectedProduct]);
 
   if (!selectedProduct) return null;
-
-  const getFitSuggestion = () => {
-    const h = parseInt(fitHeight);
-    const w = parseInt(fitWeight);
-    if (!h || !w) return null;
-    if (h >= 185 && w >= 85) return { size: 'XXL', reason: 'Based on your height and weight, XXL provides the best balance of length and room.' };
-    if (h >= 175 && w >= 75) return { size: 'XL', reason: 'Your measurements suggest XL for a comfortable oversized fit.' };
-    if (h >= 170 && w >= 65) return { size: 'L', reason: 'Large is recommended for your build — roomy without being baggy.' };
-    return { size: 'M', reason: 'Medium should fit you well based on these proportions.' };
-  };
-
-  const fitResult = getFitSuggestion();
-
-  const getColorName = (hex: string) => {
-    return selectedProduct.colorNames?.[hex] || hex;
-  };
+  const label = selectedProduct.name.replace(/YĒĒNKSLUXÉ\s*x\s*/gi, '').replace(/[‘’']?26 Edition\s*/gi, '');
+  const close = () => { setImageIndex(0); setDetailsOpen('details'); setSelectedProduct(null); };
 
   return (
-    <div className="modal-overlay" onClick={() => { setSelectedProduct(null); setActiveDossierTab('info'); }}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="close-modal-btn" onClick={() => { setSelectedProduct(null); setActiveDossierTab('info'); }} aria-label="Close modal">
-          <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-            <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-
+    <div className="modal-overlay" onMouseDown={event => { if (event.target === event.currentTarget) close(); }}>
+      <section className="product-modal" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
+        <button className="modal-close" onClick={close} aria-label="Close product details">Close <span>×</span></button>
         <div className="modal-gallery">
-          {selectedProduct.video ? (
-            <video src={selectedProduct.video} autoPlay loop muted controls playsInline
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-          ) : (
-            <div className="modal-zoom-container">
-              <Image src={selectedProduct.image} alt={selectedProduct.name} fill className="object-contain"
-                sizes="(max-width: 768px) 100vw, 50vw" />
-            </div>
-          )}
+          <div className="modal-main-image">
+            <Image src={gallery[imageIndex]} alt={`${label}, view ${imageIndex + 1}`} fill className="modal-product-image" sizes="(max-width: 850px) 100vw, 55vw" />
+            <span className="modal-image-counter">{String(imageIndex + 1).padStart(2, '0')} / {String(gallery.length).padStart(2, '0')}</span>
+          </div>
+          {gallery.length > 1 && <div className="modal-thumbnails">{gallery.map((image, index) => <button key={image} className={imageIndex === index ? 'active' : ''} onClick={() => setImageIndex(index)} aria-label={`View image ${index + 1}`}><Image src={image} alt="" fill className="modal-thumb-image" sizes="72px" /></button>)}</div>}
         </div>
 
         <div className="modal-details">
-          <span className="modal-category">{selectedProduct.category}</span>
-          <h2 className="modal-title">{selectedProduct.name}</h2>
+          <p className="eyebrow">{selectedProduct.category} · SS26</p>
+          <h2 id="product-modal-title">{label}</h2>
+          <p className="modal-price">{formatCurrency(selectedProduct.price)}</p>
+          <p className="modal-description">{selectedProduct.description || 'A limited YEENKSLUXE piece built for expressive everyday styling.'}</p>
 
-          {/* Price - Dual Currency */}
-          <div className="modal-price-block">
-            <span className={`modal-price-ngn ${currency === 'NGN' ? 'active' : ''}`}>{formatNGN(selectedProduct.price)}</span>
-            <span className="price-divider">|</span>
-            <span className={`modal-price-usd ${currency === 'USD' ? 'active' : ''}`}>{formatUSD(selectedProduct.price)}</span>
-          </div>
+          {!!selectedProduct.colors?.length && <fieldset className="product-options"><legend>Colour <span>{selectedProduct.colorNames?.[chosenColor] || colourNames[chosenColor] || 'Selected'}</span></legend><div className="colour-options">{selectedProduct.colors.map(colour => <button key={colour} className={chosenColor === colour ? 'active' : ''} style={{ '--swatch': colour } as React.CSSProperties} onClick={() => setChosenColor(colour)} aria-label={selectedProduct.colorNames?.[colour] || colourNames[colour] || colour} aria-pressed={chosenColor === colour} />)}</div></fieldset>}
 
-          {/* Tagline */}
-          {selectedProduct.description && (
-            <p className="modal-tagline">{selectedProduct.description}</p>
-          )}
+          {!!selectedProduct.sizes?.length && <fieldset className="product-options"><legend>Choose size</legend><div className="size-options">{selectedProduct.sizes.map(size => <button key={size} className={chosenSize === size ? 'active' : ''} onClick={() => setChosenSize(size)} aria-pressed={chosenSize === size}>{size}</button>)}</div></fieldset>}
 
-          <div className="modal-divider"></div>
+          <button className="add-to-cart" onClick={() => addToCart(selectedProduct, chosenSize, chosenColor)}>Add to bag <span>{formatCurrency(selectedProduct.price)}</span></button>
+          <a className="fit-help" href={`https://wa.me/2349033364994?text=${encodeURIComponent(`Hi YEENKSLUXE! I need sizing help with ${label}.`)}`} target="_blank" rel="noopener noreferrer">Unsure about your size? Ask us on WhatsApp ↗</a>
 
-          {/* Dossier Tabs */}
-          <div className="dossier-tabs">
-            {(['info', 'fit', 'specs'] as const).map((tab) => (
-              <button key={tab}
-                className={`dossier-tab-btn ${activeDossierTab === tab ? 'active' : ''}`}
-                onClick={() => setActiveDossierTab(tab)}>
-                {tab === 'info' ? 'DETAILS' : tab === 'fit' ? 'FIT FINDER' : 'CARE & SPECS'}
-              </button>
-            ))}
-          </div>
-
-          <div className="dossier-tab-content">
-            {activeDossierTab === 'info' && (
-              <div className="tab-pane-fade">
-                {/* Features */}
-                {selectedProduct.features && selectedProduct.features.length > 0 && (
-                  <div style={{ marginBottom: '1.25rem' }}>
-                    <h4 className="selector-title">KEY FEATURES</h4>
-                    <ul className="modal-features-list">
-                      {selectedProduct.features.map((feature, i) => (
-                        <li key={i}>{feature}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Color Selection with Names */}
-                {selectedProduct.colors && selectedProduct.colors.length > 0 && (
-                  <div style={{ marginBottom: '1.25rem' }}>
-                    <h4 className="selector-title">AVAILABLE COLORS</h4>
-                    <div className="modal-color-grid">
-                      {selectedProduct.colors.map((clr) => (
-                        <button key={clr}
-                          className={`modal-color-option ${chosenColor === clr ? 'active' : ''}`}
-                          onClick={() => setChosenColor(clr)}>
-                          <div className="modal-color-swatch" style={{ background: clr }}></div>
-                          <span className="modal-color-name">{getColorName(clr)}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Size Selection */}
-                {selectedProduct.sizes && selectedProduct.sizes.length > 0 && (
-                  <div style={{ marginBottom: '1.25rem' }}>
-                    <h4 className="selector-title">SELECT SIZE</h4>
-                    <div className="size-grid">
-                      {selectedProduct.sizes.map((sz) => (
-                        <button key={sz}
-                          className={`size-btn ${chosenSize === sz ? 'active' : ''}`}
-                          onClick={() => setChosenSize(sz)}>{sz}</button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="modal-actions">
-                  <button className="add-to-cart-btn"
-                    onClick={() => addToCart(selectedProduct, chosenSize, chosenColor)}>
-                    ADD TO CART — {formatCurrency(selectedProduct.price)}
-                  </button>
-                  <button className="notify-btn"
-                    onClick={() => {
-                      const phoneNum = '2349033364994';
-                      const msg = `Hi YEENKSLUXE! Please notify me when the "${selectedProduct.name}" is restocked. Interested in size: ${chosenSize}.`;
-                      window.open(`https://wa.me/${phoneNum}?text=${encodeURIComponent(msg)}`, '_blank');
-                    }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                    NOTIFY ME WHEN RESTOCKED
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {activeDossierTab === 'fit' && (
-              <div className="tab-pane-fade">
-                <div className="fit-finder-container">
-                  <h4 className="fit-finder-title">FIT FINDER</h4>
-                  <p className="fit-finder-desc">Enter your height (cm) and weight (kg) for a personalized size recommendation.</p>
-                  <div className="fit-finder-form">
-                    <div className="fit-input-field">
-                      <label>HEIGHT (CM)</label>
-                      <input type="number" placeholder="e.g. 180" value={fitHeight}
-                        onChange={(e) => setFitHeight(e.target.value)} />
-                    </div>
-                    <div className="fit-input-field">
-                      <label>WEIGHT (KG)</label>
-                      <input type="number" placeholder="e.g. 75" value={fitWeight}
-                        onChange={(e) => setFitWeight(e.target.value)} />
-                    </div>
-                  </div>
-                  {fitResult && (
-                    <div className="fit-finder-result">
-                      <span className="result-size">{fitResult.size}</span>
-                      <span className="result-reason">{fitResult.reason}</span>
-                    </div>
-                  )}
-                  {!fitResult && <p className="result-prompt">Enter your stats above to get a recommendation.</p>}
-                </div>
-
-                {/* Fit Description */}
-                {selectedProduct.fit && (
-                  <div style={{ marginTop: '1.25rem' }}>
-                    <h4 className="specs-title-sub">FIT DETAILS</h4>
-                    <p className="modal-fit-info">{selectedProduct.fit}</p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeDossierTab === 'specs' && (
-              <div className="tab-pane-fade">
-                <div className="specs-container">
-                  {/* Care Instructions */}
-                  {selectedProduct.care && selectedProduct.care.length > 0 && (
-                    <div>
-                      <h4 className="specs-title-sub">CARE INSTRUCTIONS</h4>
-                      <ul className="modal-care-list">
-                        {selectedProduct.care.map((instruction, i) => (
-                          <li key={i}>{instruction}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Fabric & Construction */}
-                  <div>
-                    <h4 className="specs-title-sub">FABRIC & CONSTRUCTION</h4>
-                    <ul className="specs-list">
-                      <li><strong>Material:</strong> Premium heavyweight cotton jersey</li>
-                      <li><strong>Weight:</strong> 280–400 GSM depending on style</li>
-                      <li><strong>Fit:</strong> {selectedProduct.fit || 'Relaxed / Drop-shoulder silhouette'}</li>
-                      <li><strong>Hardware:</strong> Gold-toned custom YKK zippers</li>
-                    </ul>
-                  </div>
-
-                  {/* Care Rating */}
-                  <div>
-                    <h4 className="specs-title-sub">QUALITY RATING</h4>
-                    <div className="fit-ratings">
-                      <div className="rating-row"><span>Durability</span><span>★★★★★</span></div>
-                      <div className="rating-row"><span>Comfort</span><span>★★★★★</span></div>
-                      <div className="rating-row"><span>Shrinkage Resistance</span><span>★★★★☆</span></div>
-                      <div className="rating-row"><span>Color Fastness</span><span>★★★★★</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+          <div className="product-accordions">
+            <ProductAccordion title="Details & care" open={detailsOpen === 'details'} onClick={() => setDetailsOpen('details')}>
+              <ul>{(selectedProduct.features?.length ? selectedProduct.features : ['Limited-run release', 'Designed for everyday statement styling', selectedProduct.fit || 'Relaxed streetwear silhouette']).map(item => <li key={item}>{item}</li>)}</ul>
+              {!!selectedProduct.care?.length && <p>{selectedProduct.care.join(' · ')}</p>}
+            </ProductAccordion>
+            <ProductAccordion title="Size guide" open={detailsOpen === 'size'} onClick={() => setDetailsOpen('size')}>
+              <p>Use your usual size for a relaxed fit. Size down for a closer fit. Exact garment measurements should be confirmed with our team before dispatch.</p>
+            </ProductAccordion>
+            <ProductAccordion title="Delivery & exchanges" open={detailsOpen === 'delivery'} onClick={() => setDetailsOpen('delivery')}>
+              <p>Lagos: 1–3 business days. Other Nigerian locations: 3–7 business days. Unworn pieces with original tags can be exchanged within 7 days, subject to availability.</p>
+            </ProductAccordion>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
+}
+
+function ProductAccordion({ title, open, onClick, children }: { title: string; open: boolean; onClick: () => void; children: React.ReactNode }) {
+  return <div className={`product-accordion ${open ? 'open' : ''}`}><button onClick={onClick} aria-expanded={open}><span>{title}</span><span>{open ? '−' : '+'}</span></button><div>{children}</div></div>;
 }

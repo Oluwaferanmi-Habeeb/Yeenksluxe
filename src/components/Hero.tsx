@@ -1,138 +1,25 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
 
-const heroSlides = [
-  {
-    image: "/images/new_prod_5.jpg",
-    eyebrow: "SS26 PRE-RELEASE COLLECTION",
-    title: "YEENKSLUXE",
-    subtitle: "Elevated streetwear crafted for bold everyday dressing."
-  },
-  {
-    image: "/images/new_prod_3.jpg",
-    eyebrow: "SS26 CAMPAIGN / EXHIBIT II",
-    title: "OVERSIZED ELEGANCE",
-    subtitle: "Distinct silhouettes, premium finishes, and effortless presence."
-  }
-];
-
 export default function Hero() {
-  const { heroIndex, setHeroIndex, scrollToShop } = useStore();
-  const parallaxRef = useRef<HTMLDivElement>(null);
-
-  // Parallax scroll effect with requestAnimationFrame throttling
-  useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          if (parallaxRef.current) {
-            const scrollY = window.scrollY;
-            const heroHeight = window.innerHeight;
-            if (scrollY <= heroHeight) {
-              const progress = scrollY / heroHeight;
-              parallaxRef.current.style.transform = `translateY(${progress * 30}px) scale(${1 + progress * 0.02})`;
-              parallaxRef.current.style.filter = `brightness(${0.9 - progress * 0.15})`;
-            }
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const slide = heroSlides[heroIndex];
-  const titleWords = slide.title.split(' ');
-  const titleFirst = titleWords[0];
-  const titleRest = titleWords.slice(1).join(' ');
-
+  const { scrollToShop } = useStore();
   return (
-    <header className="hero">
-      {/* Parallax background layer */}
-      <div className="hero-parallax-layer" ref={parallaxRef}>
-        <div className="hero-bg-media">
-          <div className="hero-slideshow">
-            {heroSlides.map((s, idx) => (
-              <div key={idx} className={`hero-slide ${heroIndex === idx ? 'active' : ''}`}>
-                <Image src={s.image} alt={s.title} fill priority={idx === 0}
-                  className="hero-bg-image" sizes="100vw" />
-              </div>
-            ))}
-          </div>
+    <header className="hero" aria-labelledby="hero-title">
+      <Image src="/images/hero_campaign.png" alt="YEENKSLUXE campaign model in black streetwear" fill priority className="hero-image" sizes="100vw" />
+      <div className="hero-shade" />
+      <div className="hero-noise" aria-hidden="true" />
+      <div className="container hero-content">
+        <p className="eyebrow hero-eyebrow">SS26 · LIMITED RELEASE · LAGOS</p>
+        <h1 id="hero-title">Built for the ones<br /><em>who move different.</em></h1>
+        <p className="hero-copy">Statement silhouettes and limited pieces created where street culture meets considered design.</p>
+        <div className="hero-actions">
+          <button className="button button-light" onClick={scrollToShop}>Shop the latest drop</button>
+          <a className="text-link text-link-light" href="#campaign">Explore the campaign <span>↘</span></a>
         </div>
       </div>
-
-      {/* Multi-layer vignette for depth */}
-      <div className="hero-vignette"></div>
-      <div className="hero-vignette-secondary"></div>
-
-      {/* Content */}
-      <div className="hero-overlay-content">
-        <div className="hero-content-inner container">
-          <div key={heroIndex} className="hero-brand-card animate-fade-in-up">
-            <span className="hero-eyebrow">{slide.eyebrow}</span>
-            <h1 className="hero-title">
-              <span className="hero-title-line">{titleFirst}</span>
-              {titleRest && (
-                <span className="hero-title-sub">{titleRest}</span>
-              )}
-            </h1>
-            <p className="hero-subtitle">{slide.subtitle}</p>
-            <div className="hero-cta-group">
-              <button className="hero-cta-btn" onClick={scrollToShop}>
-                <span className="hero-cta-text">SHOP THE COLLECTION</span>
-                <svg className="hero-cta-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Slide navigation dots */}
-          <div className="hero-slide-dots">
-            {heroSlides.map((_, idx) => (
-              <button key={idx}
-                className={`hero-dot ${heroIndex === idx ? 'active' : ''}`}
-                onClick={() => setHeroIndex(idx)}
-                aria-label={`Slide ${idx + 1}`} />
-            ))}
-          </div>
-        </div>
-
-        {/* Meta strip at bottom */}
-        <div className="hero-meta-strip">
-          <div className="container hero-meta-strip-inner">
-            <div className="hero-meta-cell">
-              <span className="meta-label">Season</span>
-              <span className="meta-value">SS26 Collection</span>
-            </div>
-            <div className="hero-meta-divider"></div>
-            <div className="hero-meta-cell">
-              <span className="meta-label">Origin</span>
-              <span className="meta-value">Lagos, Nigeria</span>
-            </div>
-            <div className="hero-meta-divider"></div>
-            <div className="hero-meta-cell">
-              <span className="meta-label">Release</span>
-              <span className="meta-value">Limited Drop</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="hero-scroll-indicator" onClick={scrollToShop} style={{ cursor: 'pointer' }}>
-        <span>Scroll</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M12 5v14M19 12l-7 7-7-7" />
-        </svg>
-      </div>
+      <div className="hero-index" aria-hidden="true"><span>YNL / 026</span><span>LAGOS → WORLD</span></div>
     </header>
   );
 }

@@ -4,44 +4,28 @@ import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
 import { products } from '../data/products';
 
+const looks = [
+  { image: '/images/client_fit_1.jpg', productId: 'shirt-1', caption: 'Steezy Graphic Tee' },
+  { image: '/images/client_fit_2.jpg', productId: 'hoodie-1', caption: 'Steezy Sleeveless Tee' },
+  { image: '/images/client_fit_4.jpeg', productId: 'acc-1', caption: 'Signature Headwear' },
+  { image: '/images/snaptik_7625367276497292565_2_v2.jpeg', productId: 'shirt-16', caption: 'SS26 Campaign' },
+];
+
 export default function CommunityShowcase() {
   const { openQuickView } = useStore();
-
-  const showcaseItems = [
-    { img: "/images/client_fit_1.jpg", label: "YĒĒNKSLUXÉ x STEEZY '26 Edition Graphic Tee", productId: 'shirt-1' },
-    { img: "/images/client_fit_2.jpg", label: "YĒĒNKSLUXÉ x STEEZY '26 Edition Hoodie", productId: 'hoodie-1' },
-    { img: "/images/client_fit_3.jpg", label: "YĒĒNKSLUXÉ x STEEZY '26 Edition Rhinestone Tee", productId: 'shirt-5' },
-    { img: "/images/client_fit_4.jpeg", label: "YĒĒNKSLUXÉ x MXUNDERSTOOD Signature Hat", productId: 'acc-1' },
-  ];
-
   return (
-    <section className="community-showcase reveal-on-scroll" style={{ padding: '9rem 0', borderTop: '1px solid var(--border-color)' }}>
+    <section className="community-section reveal-on-scroll" aria-labelledby="community-title">
       <div className="container">
-        <div className="shop-header" style={{ marginBottom: '3.5rem' }}>
-          <div className="shop-title-area">
-            <span className="section-eyebrow">AS WORN BY THE BOLD</span>
-            <h2 className="section-title">SPOTTED IN YĒĒNKSLUXÉ</h2>
-          </div>
+        <div className="community-heading">
+          <div><p className="eyebrow">Seen in the city</p><h2 id="community-title">Worn your way.</h2></div>
+          <p>Real people. Real styling. Tag <a href="https://instagram.com/yeenksluxe" target="_blank" rel="noopener noreferrer">@yeenksluxe</a> to be featured.</p>
         </div>
-
-        <div className="showcase-grid-container">
-          {showcaseItems.map((item, idx) => (
-            <div key={idx} className="showcase-card">
-              <div className="showcase-img-wrapper" style={{ position: 'relative' }}>
-                <Image src={item.img} alt={`Client Fit ${idx + 1}`} fill className="showcase-img object-cover"
-                  sizes="(max-width: 768px) 100vw, 25vw" />
-                <div className="showcase-overlay">
-                  <div className="showcase-tag">
-                    <span className="showcase-tag-eyebrow">SPOTTED WEARING</span>
-                    <span className="showcase-tag-title">{item.label}</span>
-                    <button className="showcase-shop-btn" onClick={() => {
-                      const p = products.find(prod => prod.id === item.productId) || products[0];
-                      openQuickView(p);
-                    }}>SHOP LOOK</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div className="community-grid">
+          {looks.map((look, index) => (
+            <button className={`community-card community-card-${index + 1}`} key={look.image} onClick={() => openQuickView(products.find(product => product.id === look.productId) || products[0])}>
+              <Image src={look.image} alt={`${look.caption} styled by the YEENKSLUXE community`} fill className="community-image" sizes="(max-width: 700px) 50vw, 25vw" />
+              <span><small>Shop the look</small>{look.caption}</span>
+            </button>
           ))}
         </div>
       </div>

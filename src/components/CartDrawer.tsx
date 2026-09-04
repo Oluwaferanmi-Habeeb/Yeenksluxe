@@ -4,102 +4,30 @@ import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
 
 export default function CartDrawer() {
-  const {
-    cartOpen, setCartOpen, cart, updateCartQty, removeCartItem,
-    setCheckoutStep, formatNGN, formatUSD, cartSubtotal, currency, scrollToShop
-  } = useStore();
-
+  const { cartOpen, setCartOpen, cart, updateCartQty, removeCartItem, setCheckoutStep, formatCurrency, cartSubtotal, scrollToShop } = useStore();
   if (!cartOpen) return null;
 
+  const checkout = () => { setCartOpen(false); setCheckoutStep('checkout'); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const continueShopping = () => { setCartOpen(false); setCheckoutStep('shop'); window.setTimeout(scrollToShop, 30); };
+
   return (
-    <>
-      <div className="cart-drawer-backdrop" onClick={() => setCartOpen(false)}></div>
-      <div className="cart-drawer">
-        <div className="cart-header">
-          <h3 className="cart-title">YOUR CART</h3>
-          <button className="close-cart-btn" onClick={() => setCartOpen(false)} aria-label="Close Cart">
-            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
+    <div className="drawer-layer" role="presentation">
+      <button className="drawer-backdrop" onClick={() => setCartOpen(false)} aria-label="Close shopping bag" />
+      <aside className="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="bag-title">
+        <div className="cart-header"><div><p className="eyebrow">Your selection</p><h2 id="bag-title">Shopping bag <span>({cart.reduce((sum, item) => sum + item.quantity, 0)})</span></h2></div><button onClick={() => setCartOpen(false)} aria-label="Close shopping bag">×</button></div>
+        <div className="delivery-note"><span>✓</span><p><strong>Free nationwide delivery</strong><br/>Available on this order</p></div>
+
+        <div className="cart-items">
+          {cart.length === 0 ? <div className="empty-bag"><span>01</span><h3>Your bag is waiting.</h3><p>Explore the latest limited pieces and build your rotation.</p><button className="button button-dark" onClick={continueShopping}>Shop the collection</button></div> : cart.map((item, index) => (
+            <article className="cart-item" key={`${item.product.id}-${item.selectedSize}-${item.selectedColor}`}>
+              <div className="cart-item-image"><Image src={item.product.image} alt={item.product.name} fill className="product-image" sizes="96px" /></div>
+              <div className="cart-item-copy"><div><p>{item.product.category}</p><h3>{item.product.name.replace(/YĒĒNKSLUXÉ\s*x\s*/gi, '').replace(/[‘’']?26 Edition\s*/gi, '')}</h3><span>Size {item.selectedSize}</span></div><strong>{formatCurrency(item.product.price * item.quantity)}</strong><div className="cart-item-controls"><div><button onClick={() => updateCartQty(index, -1)} aria-label="Decrease quantity">−</button><span>{item.quantity}</span><button onClick={() => updateCartQty(index, 1)} aria-label="Increase quantity">+</button></div><button onClick={() => removeCartItem(index)}>Remove</button></div></div>
+            </article>
+          ))}
         </div>
 
-        {cart.length > 0 && (
-          <div className="cart-progress-bar-container" style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-color)', background: 'rgba(200, 169, 110, 0.03)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em' }}>
-              <span style={{ color: 'var(--accent)' }}>FREE DOMESTIC DELIVERY</span>
-              <span>READY</span>
-            </div>
-            <div style={{ width: '100%', height: '3px', background: 'var(--border-color)', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: '100%', background: 'var(--accent)' }}></div>
-            </div>
-          </div>
-        )}
-
-        <div className="cart-items-container">
-          {cart.length === 0 ? (
-            <div className="empty-cart-message">
-              <svg fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24">
-                <path d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-              </svg>
-              <span>YOUR CART IS EMPTY</span>
-              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', letterSpacing: '0.05em', textTransform: 'none', fontWeight: 400 }}>
-                Add some premium pieces to get started.
-              </span>
-              <button className="empty-cart-cta" onClick={() => { setCartOpen(false); scrollToShop(); }}>
-                BROWSE COLLECTION
-              </button>
-            </div>
-          ) : (
-            cart.map((item, index) => (
-              <div key={index} className="cart-item">
-                <div style={{ position: 'relative', width: '70px', height: '90px', flexShrink: 0 }}>
-                  <Image src={item.product.image} alt={item.product.name} fill className="cart-item-img object-cover" sizes="70px" />
-                </div>
-                <div className="cart-item-details">
-                  <h4 className="cart-item-name">{item.product.name}</h4>
-                  <div className="price-block" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.25rem' }}>
-                    <span className={`price-ngn ${currency === 'NGN' ? 'active' : ''}`}>{formatNGN(item.product.price)}</span>
-                    <span className="price-divider" style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>|</span>
-                    <span className={`price-usd ${currency === 'USD' ? 'active' : ''}`}>{formatUSD(item.product.price)}</span>
-                  </div>
-                  <span className="cart-item-meta">
-                    Size: {item.selectedSize} {item.selectedColor && `| Color: ${item.selectedColor}`}
-                  </span>
-                  <div className="cart-item-controls">
-                    <div className="quantity-selector">
-                      <button className="qty-btn" onClick={() => updateCartQty(index, -1)}>-</button>
-                      <span className="qty-val">{item.quantity}</span>
-                      <button className="qty-btn" onClick={() => updateCartQty(index, 1)}>+</button>
-                    </div>
-                    <button className="remove-item-btn" onClick={() => removeCartItem(index)}>REMOVE</button>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-
-        {cart.length > 0 && (
-          <div className="cart-footer">
-            <div className="cart-summary-row" style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem 0', borderTop: '1px solid var(--border-color)' }}>
-              <span style={{ fontWeight: 600 }}>Subtotal</span>
-              <div className="price-block" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                <span className={`price-ngn ${currency === 'NGN' ? 'active' : ''}`} style={{ fontSize: '0.82rem', fontWeight: 700 }}>{formatNGN(cartSubtotal)}</span>
-                <span className="price-divider" style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>|</span>
-                <span className={`price-usd ${currency === 'USD' ? 'active' : ''}`} style={{ fontSize: '0.82rem' }}>{formatUSD(cartSubtotal)}</span>
-              </div>
-            </div>
-            <div className="cart-summary-row">
-              <span>Shipping</span>
-              <span style={{ color: 'var(--accent)', fontWeight: 600 }}>FREE NATIONWIDE DELIVERY</span>
-            </div>
-            <button className="checkout-btn" onClick={() => { setCartOpen(false); setCheckoutStep('checkout'); }}>
-              PROCEED TO CHECKOUT
-            </button>
-          </div>
-        )}
-      </div>
-    </>
+        {cart.length > 0 && <div className="cart-footer"><div><span>Subtotal</span><strong>{formatCurrency(cartSubtotal)}</strong></div><p>Delivery is free. Final availability is confirmed on WhatsApp.</p><button className="button button-light" onClick={checkout}>Continue to checkout <span>→</span></button><button className="cart-continue" onClick={continueShopping}>Continue shopping</button></div>}
+      </aside>
+    </div>
   );
 }

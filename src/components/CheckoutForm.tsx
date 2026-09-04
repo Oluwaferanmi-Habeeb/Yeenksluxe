@@ -1,152 +1,60 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
+import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
-import { PaymentMethod } from '../types';
-import React, { useState } from 'react';
 
 export default function CheckoutForm() {
-  const {
-    checkoutForm, setCheckoutForm, paymentMethod, setPaymentMethod,
-    handlePlaceOrder, setCheckoutStep, cart, formatUSD, formatNGN, cartSubtotal, currency, showToast
-  } = useStore();
-
+  const { checkoutForm, setCheckoutForm, handlePlaceOrder, setCheckoutStep, cart, formatCurrency, cartSubtotal } = useStore();
   const [errors, setErrors] = useState<Record<string, string>>({});
-  // Only WhatsApp checkout is enabled per CEO direction
+  const sanitize = (value: string) => value.replace(/[<>\u0000-\u001F\u007F]/g, '').slice(0, 220);
 
-  const sanitize = (s: string) => s.replace(/[\u0000-\u001F\u007F<>]/g, '').trim().slice(0, 200);
-
-  const validate = () => {
-    const errs: Record<string, string> = {};
-    if (!checkoutForm.name || !checkoutForm.name.trim()) errs.name = 'Full name is required';
-    if (!checkoutForm.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(checkoutForm.email)) errs.email = 'Enter a valid email address';
-    if (!checkoutForm.phone || !/^\+?[0-9\s\-]{7,15}$/.test(checkoutForm.phone)) errs.phone = 'Enter a valid phone number';
-    if (!checkoutForm.address || !checkoutForm.address.trim()) errs.address = 'Delivery address is required';
-    if (!checkoutForm.city || !checkoutForm.city.trim()) errs.city = 'City / State is required';
-    setErrors(errs);
-    return Object.keys(errs).length === 0;
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const next: Record<string, string> = {};
+    if (!checkoutForm.name.trim()) next.name = 'Enter your full name';
+    if (!/^\+?[0-9\s-]{7,15}$/.test(checkoutForm.phone)) next.phone = 'Enter a valid phone number';
+    if (!checkoutForm.address.trim()) next.address = 'Enter your delivery address';
+    if (!checkoutForm.city.trim()) next.city = 'Enter your city and state';
+    if (checkoutForm.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(checkoutForm.email)) next.email = 'Enter a valid email address';
+    setErrors(next);
+    if (!Object.keys(next).length) handlePlaceOrder(event);
   };
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-    // WhatsApp checkout: handled in StoreContext.handlePlaceOrder
-    handlePlaceOrder(e);
-  };
+  if (!cart.length) return <div className="container checkout-empty"><p className="eyebrow">Your bag</p><h1>Nothing to check out yet.</h1><button className="button button-dark" onClick={() => setCheckoutStep('shop')}>Return to the collection</button></div>;
+
+  const field = (key: 'name'|'email'|'phone'|'address'|'city', label: string, placeholder: string, type = 'text') => (
+    <label className={`checkout-field ${key === 'address' ? 'full' : ''}`}><span>{label}</span><input type={type} value={checkoutForm[key]} placeholder={placeholder} onChange={event => setCheckoutForm({ ...checkoutForm, [key]: sanitize(event.target.value) })} aria-invalid={!!errors[key]} />{errors[key] && <small>{errors[key]}</small>}</label>
+  );
 
   return (
-    <div className="container">
-      <div className="checkout-container">
-        <div className="checkout-form-panel">
-          <div>
-            <h2 className="checkout-step-title">DELIVERY DETAILS</h2>
-            <form onSubmit={onSubmit} className="form-grid" noValidate>
-              <div className="form-field form-group-full">
-                <label className="form-label">Full Name *</label>
-                <input type="text" required placeholder="John Doe" className="form-input"
-                  value={checkoutForm.name} onChange={(e) => setCheckoutForm({...checkoutForm, name: sanitize(e.target.value)})}
-                  aria-invalid={!!errors.name} />
-                {errors.name && <div style={{ color: '#ff6b6b', fontSize: '0.85rem', marginTop: '0.35rem' }}>{errors.name}</div>}
-              </div>
-              <div className="form-field">
-                <label className="form-label">Email Address *</label>
-                <input type="email" required placeholder="john@example.com" className="form-input"
-                  value={checkoutForm.email} onChange={(e) => setCheckoutForm({...checkoutForm, email: sanitize(e.target.value)})}
-                  aria-invalid={!!errors.email} />
-                {errors.email && <div style={{ color: '#ff6b6b', fontSize: '0.85rem', marginTop: '0.35rem' }}>{errors.email}</div>}
-              </div>
-              <div className="form-field">
-                <label className="form-label">Phone Number *</label>
-                <input type="tel" required placeholder="e.g. +234 903 336 4994" className="form-input"
-                  value={checkoutForm.phone} onChange={(e) => setCheckoutForm({...checkoutForm, phone: sanitize(e.target.value)})}
-                  aria-invalid={!!errors.phone} />
-                {errors.phone && <div style={{ color: '#ff6b6b', fontSize: '0.85rem', marginTop: '0.35rem' }}>{errors.phone}</div>}
-              </div>
-              <div className="form-field form-group-full">
-                <label className="form-label">Delivery Address *</label>
-                <input type="text" required placeholder="Apartment, Street Name, Area" className="form-input"
-                  value={checkoutForm.address} onChange={(e) => setCheckoutForm({...checkoutForm, address: sanitize(e.target.value)})}
-                  aria-invalid={!!errors.address} />
-                {errors.address && <div style={{ color: '#ff6b6b', fontSize: '0.85rem', marginTop: '0.35rem' }}>{errors.address}</div>}
-              </div>
-              <div className="form-field form-group-full">
-                <label className="form-label">City / State *</label>
-                <input type="text" required placeholder="Lagos, Ikeja" className="form-input"
-                  value={checkoutForm.city} onChange={(e) => setCheckoutForm({...checkoutForm, city: sanitize(e.target.value)})}
-                  aria-invalid={!!errors.city} />
-                {errors.city && <div style={{ color: '#ff6b6b', fontSize: '0.85rem', marginTop: '0.35rem' }}>{errors.city}</div>}
-              </div>
-              <div className="form-field form-group-full">
-                <label className="form-label">Order Notes (Optional)</label>
-                <textarea rows={3} placeholder="Specific delivery times, size preferences, etc." className="form-input"
-                  value={checkoutForm.notes} onChange={(e) => setCheckoutForm({...checkoutForm, notes: e.target.value})}
-                  style={{ resize: 'vertical' }} />
-              </div>
-
-              <div className="form-field form-group-full" style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
-                <label className="form-label" style={{ display: 'block', marginBottom: '0.75rem' }}>Payment Gateway / Method *</label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem' }}>
-                  <div style={{
-                    border: `1px solid var(--accent)`, padding: '1rem', background: 'rgba(200, 169, 110, 0.05)',
-                    textAlign: 'center'
-                  }}>
-                    <div style={{ fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.1em', color: 'white' }}>
-                      MANUAL ORDER
-                    </div>
-                    <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--accent)', marginTop: '0.25rem' }}>
-                      WhatsApp Order (primary)
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="form-group-full">
-                <button type="submit" className="place-order-btn">
-                  PLACE ORDER ON WHATSAPP
-                </button>
-                <button type="button" className="home-btn" onClick={() => setCheckoutStep('shop')}
-                  style={{ width: '100%', marginTop: '0.75rem' }}>BACK TO STORE</button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <div className="checkout-order-summary">
-          <h3 className="summary-title">ORDER SUMMARY</h3>
-          <div className="summary-divider"></div>
-          <div className="summary-items">
-            {cart.map((item, index) => (
-              <div key={index} className="summary-item-row" style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
-                  <span style={{ color: 'var(--text-primary)' }}>{item.product.name}</span>
-                  <div className="price-block" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                    <span className={`price-ngn ${currency === 'NGN' ? 'active' : ''}`}>{formatNGN(item.product.price)}</span>
-                    <span className="price-divider" style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>|</span>
-                    <span className={`price-usd ${currency === 'USD' ? 'active' : ''}`}>{formatUSD(item.product.price)}</span>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                  <span>Qty: {item.quantity} | Size: {item.selectedSize} {item.selectedColor && `| Color: ${item.selectedColor}`}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="summary-divider" style={{ margin: '1rem 0' }}></div>
-          <div className="summary-item-row" style={{ fontWeight: 700, fontSize: '0.95rem' }}>
-            <span>Total</span>
-            <div className="price-block" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <span className={`price-ngn ${currency === 'NGN' ? 'active' : ''}`} style={{ color: 'var(--accent)' }}>{formatNGN(cartSubtotal)}</span>
-              <span className="price-divider" style={{ fontSize: '0.6rem', color: 'var(--text-muted)' }}>|</span>
-              <span className={`price-usd ${currency === 'USD' ? 'active' : ''}`} style={{ color: 'var(--accent)' }}>{formatUSD(cartSubtotal)}</span>
+    <section className="checkout-page">
+      <div className="container">
+        <button className="checkout-back" onClick={() => setCheckoutStep('shop')}>← Continue shopping</button>
+        <div className="checkout-progress"><span className="active">Bag</span><i/><span className="active">Delivery</span><i/><span>Confirmation</span></div>
+        <div className="checkout-layout">
+          <form className="checkout-form" onSubmit={submit} noValidate>
+            <p className="eyebrow">Step 02</p><h1>Where should we send it?</h1><p className="checkout-lead">Enter your delivery details. You will review and confirm availability with our team on WhatsApp before making payment.</p>
+            <div className="checkout-fields">
+              {field('name', 'Full name *', 'Your full name')}
+              {field('phone', 'Phone number *', '+234 800 000 0000', 'tel')}
+              {field('email', 'Email address', 'you@example.com', 'email')}
+              {field('city', 'City / State *', 'Ikeja, Lagos')}
+              {field('address', 'Delivery address *', 'House number, street and area')}
+              <label className="checkout-field full"><span>Order note</span><textarea rows={3} value={checkoutForm.notes} placeholder="Optional delivery or sizing note" onChange={event => setCheckoutForm({ ...checkoutForm, notes: sanitize(event.target.value) })}/></label>
             </div>
-          </div>
-          <div className="summary-divider" style={{ margin: '1rem 0' }}></div>
-          <div className="summary-item-row">
-            <span>Shipping</span>
-            <span style={{ color: 'var(--accent)', fontWeight: 600 }}>FREE DELIVERY</span>
-          </div>
+            <div className="whatsapp-checkout-note"><span>WA</span><div><strong>Order securely through WhatsApp</strong><p>Your order summary and delivery details will open in a chat with our official number. No payment is taken on this website.</p></div></div>
+            <button className="button button-dark checkout-submit" type="submit">Review order on WhatsApp <span>↗</span></button>
+            <p className="checkout-consent">By continuing, you agree that the details above will be included in your WhatsApp order message.</p>
+          </form>
+
+          <aside className="order-summary">
+            <div className="order-summary-heading"><h2>Order summary</h2><span>{cart.reduce((sum, item) => sum + item.quantity, 0)} items</span></div>
+            <div className="summary-products">{cart.map(item => <article key={`${item.product.id}-${item.selectedSize}`}><div className="summary-image"><Image src={item.product.image} alt="" fill className="product-image" sizes="72px"/><span>{item.quantity}</span></div><div><h3>{item.product.name.replace(/YĒĒNKSLUXÉ\s*x\s*/gi, '').replace(/[‘’']?26 Edition\s*/gi, '')}</h3><p>Size {item.selectedSize}</p></div><strong>{formatCurrency(item.product.price * item.quantity)}</strong></article>)}</div>
+            <dl><div><dt>Subtotal</dt><dd>{formatCurrency(cartSubtotal)}</dd></div><div><dt>Delivery</dt><dd>Free</dd></div><div className="summary-total"><dt>Total</dt><dd>{formatCurrency(cartSubtotal)}</dd></div></dl>
+          </aside>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
