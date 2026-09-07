@@ -1,7 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://yeenksluxe-x4ek.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: { default: "YEENKSLUXE | Lagos-Born Streetwear", template: "%s | YEENKSLUXE" },
   description: "Limited streetwear, graphic tees, hoodies and signature headwear designed in Lagos by YEENKSLUXE.",
   keywords: ["YEENKSLUXE", "Nigerian streetwear", "Lagos fashion", "graphic tees", "streetwear Nigeria"],
@@ -16,7 +19,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: "YEENKSLUXE", description: "Lagos-born streetwear for people who move with intent.", images: ["/images/hero_campaign.png"] },
 };
 
-export const viewport: Viewport = { themeColor: "#0b0b0a", colorScheme: "dark light", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#0c0c0b", colorScheme: "dark light", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({
   children,

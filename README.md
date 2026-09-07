@@ -11,6 +11,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+To preview production metadata against a domain, copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SITE_URL` to the complete `https://` URL.
+
 ## Verify a release
 
 ```bash
@@ -42,7 +44,7 @@ Empty categories should not be added to the navigation.
 
 - Confirm the delivery and exchange copy with the business owner.
 - Replace approximate size guidance with exact garment measurements.
-- Set the production domain as `metadataBase` in `src/app/layout.tsx`.
+- Set `NEXT_PUBLIC_SITE_URL` in Vercel to the final production domain.
 - Verify the Instagram, TikTok and WhatsApp links.
 - Review the privacy and terms pages with appropriate local professional guidance.
 

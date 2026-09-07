@@ -2,15 +2,15 @@
 
 ## Direction
 
-Lagos-born editorial streetwear: dark, direct, tactile and restrained. The interface should let the clothes and community imagery carry the energy.
+Lagos-born editorial streetwear: warm, direct, tactile and restrained. A monochrome black, white and beige interface lets the clothes and community imagery carry the energy.
 
 ## Foundations
 
-- Ink: `#0b0b0a`
-- Paper: `#f0ede6`
-- Bright paper: `#faf8f3`
-- Signal red: `#b72228`
-- Highlight lime: `#d7ff38`
+- Ink: `#0c0c0b`
+- Warm beige: `#e8dfd2`
+- Sand accent: `#d3c3ae`
+- Soft sand surface: `#eee7dd`
+- Warm white: `#fffdf9`
 - Display: Cormorant Garamond
 - Interface: DM Sans
 - Content width: `1440px`
@@ -24,6 +24,7 @@ Lagos-born editorial streetwear: dark, direct, tactile and restrained. The inter
 5. Use motion only to clarify state or add quiet depth.
 6. Every clickable element must be a button or link with a visible focus state.
 7. Product facts and store policies must be confirmed before deployment.
+8. Interface colour is limited to black, white and beige; product swatches may use real garment colours.
 
 ## Image guidance
 
