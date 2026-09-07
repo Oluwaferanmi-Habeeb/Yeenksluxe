@@ -2,13 +2,11 @@
 
 import { useEffect } from 'react';
 import { StoreProvider, useStore } from '../context/StoreContext';
-import AnnouncementBar from '../components/AnnouncementBar';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import ProductGrid from '../components/ProductGrid';
 import EditorialPanels from '../components/EditorialPanels';
 import CommunityShowcase from '../components/CommunityShowcase';
-import TrustBar from '../components/TrustBar';
 import MembershipSection from '../components/MembershipSection';
 import FaqSection from '../components/FaqSection';
 import CheckoutForm from '../components/CheckoutForm';
@@ -44,7 +42,6 @@ function Storefront() {
 
   return (
     <div className="app-shell">
-      <AnnouncementBar />
       <Navbar />
       <main>
         {checkoutStep === 'shop' && (
@@ -53,7 +50,6 @@ function Storefront() {
             <ProductGrid />
             <EditorialPanels />
             <CommunityShowcase />
-            <TrustBar />
             <MembershipSection />
             <FaqSection />
           </>
