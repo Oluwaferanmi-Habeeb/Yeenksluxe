@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", title: "YEENKSLUXE", description: "Lagos-born streetwear for people who move with intent.", images: ["/images/hero_campaign.png"] },
   alternates: { canonical: "/" },
+  verification: { google: "wfBRgnxSmcAvaJwSfvsE4v8O8RdVkXjBms-pXvj_Ta4" },
   icons: {
     icon: [{ url: "/images/yeenksluxe-favicon.png", type: "image/png" }],
     apple: [{ url: "/images/yeenksluxe-favicon.png", type: "image/png" }],
