@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://yeenksluxe-x4ek.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://yeenksluxe.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -17,6 +17,11 @@ export const metadata: Metadata = {
     images: [{ url: "/images/hero_campaign.png", width: 1024, height: 1024, alt: "YEENKSLUXE SS26 campaign" }],
   },
   twitter: { card: "summary_large_image", title: "YEENKSLUXE", description: "Lagos-born streetwear for people who move with intent.", images: ["/images/hero_campaign.png"] },
+  alternates: { canonical: "/" },
+  icons: {
+    icon: [{ url: "/images/yeenksluxe-favicon.png", type: "image/png" }],
+    apple: [{ url: "/images/yeenksluxe-favicon.png", type: "image/png" }],
+  },
 };
 
 export const viewport: Viewport = { themeColor: "#0c0c0b", colorScheme: "dark light", width: "device-width", initialScale: 1 };
@@ -31,9 +36,15 @@ export default function RootLayout({
       <body>
         {children}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-          '@context': 'https://schema.org', '@type': 'Organization', name: 'YEENKSLUXE',
-          address: { '@type': 'PostalAddress', addressLocality: 'Lagos', addressCountry: 'NG' },
-          sameAs: ['https://instagram.com/yeenksluxe', 'https://tiktok.com/@yeenksluxe']
+          '@context': 'https://schema.org', '@graph': [
+            {
+              '@type': 'Organization', name: 'YEENKSLUXE', url: siteUrl,
+              logo: `${siteUrl}/images/yeenksluxe-favicon.png`,
+              address: { '@type': 'PostalAddress', addressLocality: 'Lagos', addressCountry: 'NG' },
+              sameAs: ['https://instagram.com/yeenksluxe', 'https://tiktok.com/@yeenksluxe']
+            },
+            { '@type': 'WebSite', name: 'YEENKSLUXE', url: siteUrl }
+          ]
         }) }} />
       </body>
     </html>

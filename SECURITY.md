@@ -2,17 +2,17 @@
 
 ## Supported deployment
 
-The supported production deployment is the latest commit on `main`, hosted by Vercel over HTTPS.
+The supported production deployment is the latest commit on `main`, hosted by Netlify over HTTPS at `https://yeenksluxe.com`.
 
 ## Operational checklist
 
-- Keep two-factor authentication enabled on GitHub, Vercel and the domain registrar.
-- Keep GitHub and Vercel recovery codes offline and private.
+- Keep two-factor authentication enabled on GitHub, Netlify and the domain registrar.
+- Keep GitHub and Netlify recovery codes offline and private.
 - Restrict collaborator access to people who actively maintain the store.
-- Enable automatic dependency update alerts on GitHub.
+- Enable Dependabot security updates and secret scanning alerts on GitHub.
 - Run `npm audit --omit=dev`, `npm run lint` and `npm run build` before deployment.
 - Enable DNSSEC in Namecheap after the domain is connected and stable.
-- Do not buy a separate SSL certificate for this deployment; Vercel provisions and renews HTTPS certificates.
+- Do not buy a separate SSL certificate for this deployment; Netlify provisions and renews HTTPS certificates after DNS verification completes.
 - Never place passwords, private API keys or payment secrets in variables prefixed with `NEXT_PUBLIC_`.
 
 ## Customer data
