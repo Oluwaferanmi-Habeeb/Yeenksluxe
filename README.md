@@ -18,7 +18,17 @@ To preview production metadata against a domain, copy `.env.example` to `.env.lo
 ```bash
 npm run lint
 npm run build
+npm audit --omit=dev
 ```
+
+## Security
+
+- Browser protections are applied in `next.config.ts`, including CSP, anti-framing, MIME sniffing protection, restricted browser permissions and HSTS.
+- Cart data restored from local storage is validated against the product catalogue; stored prices are never trusted.
+- Checkout fields are length-limited and sanitized before they are included in the WhatsApp order message.
+- Never commit `.env.local`, API secrets or account recovery codes.
+
+See `SECURITY.md` for the release and account-security checklist.
 
 ## Store data
 

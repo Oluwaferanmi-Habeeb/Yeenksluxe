@@ -24,7 +24,7 @@ export default function CheckoutForm() {
   if (!cart.length) return <div className="container checkout-empty"><p className="eyebrow">Your bag</p><h1>Nothing to check out yet.</h1><button className="button button-dark" onClick={() => setCheckoutStep('shop')}>Return to the collection</button></div>;
 
   const field = (key: 'name'|'email'|'phone'|'address'|'city', label: string, placeholder: string, type = 'text') => (
-    <label className={`checkout-field ${key === 'address' ? 'full' : ''}`}><span>{label}</span><input type={type} value={checkoutForm[key]} placeholder={placeholder} onChange={event => setCheckoutForm({ ...checkoutForm, [key]: sanitize(event.target.value) })} aria-invalid={!!errors[key]} />{errors[key] && <small>{errors[key]}</small>}</label>
+    <label className={`checkout-field ${key === 'address' ? 'full' : ''}`}><span>{label}</span><input type={type} value={checkoutForm[key]} placeholder={placeholder} onChange={event => setCheckoutForm({ ...checkoutForm, [key]: sanitize(event.target.value) })} aria-invalid={!!errors[key]} required={key !== 'email'} maxLength={key === 'email' ? 254 : key === 'address' ? 160 : 80} autoComplete={key === 'name' ? 'name' : key === 'email' ? 'email' : key === 'phone' ? 'tel' : key === 'address' ? 'street-address' : 'address-level2'} inputMode={key === 'phone' ? 'tel' : key === 'email' ? 'email' : 'text'} />{errors[key] && <small>{errors[key]}</small>}</label>
   );
 
   return (
@@ -41,7 +41,7 @@ export default function CheckoutForm() {
               {field('email', 'Email address', 'you@example.com', 'email')}
               {field('city', 'City / State *', 'Ikeja, Lagos')}
               {field('address', 'Delivery address *', 'House number, street and area')}
-              <label className="checkout-field full"><span>Order note</span><textarea rows={3} value={checkoutForm.notes} placeholder="Optional delivery or sizing note" onChange={event => setCheckoutForm({ ...checkoutForm, notes: sanitize(event.target.value) })}/></label>
+              <label className="checkout-field full"><span>Order note</span><textarea rows={3} value={checkoutForm.notes} maxLength={220} placeholder="Optional delivery or sizing note" onChange={event => setCheckoutForm({ ...checkoutForm, notes: sanitize(event.target.value) })}/></label>
             </div>
             <div className="whatsapp-checkout-note"><span>WA</span><div><strong>Order securely through WhatsApp</strong><p>Your order summary and delivery details will open in a chat with our official number. No payment is taken on this website.</p></div></div>
             <button className="button button-dark checkout-submit" type="submit">Review order on WhatsApp <span>↗</span></button>
@@ -51,7 +51,7 @@ export default function CheckoutForm() {
           <aside className="order-summary">
             <div className="order-summary-heading"><h2>Order summary</h2><span>{cart.reduce((sum, item) => sum + item.quantity, 0)} items</span></div>
             <div className="summary-products">{cart.map(item => <article key={`${item.product.id}-${item.selectedSize}`}><div className="summary-image"><Image src={item.product.image} alt="" fill className="product-image" sizes="72px"/><span>{item.quantity}</span></div><div><h3>{item.product.name.replace(/YĒĒNKSLUXÉ\s*x\s*/gi, '').replace(/[‘’']?26 Edition\s*/gi, '')}</h3><p>Size {item.selectedSize}</p></div><strong>{formatCurrency(item.product.price * item.quantity)}</strong></article>)}</div>
-            <dl><div><dt>Subtotal</dt><dd>{formatCurrency(cartSubtotal)}</dd></div><div><dt>Delivery</dt><dd>Free</dd></div><div className="summary-total"><dt>Total</dt><dd>{formatCurrency(cartSubtotal)}</dd></div></dl>
+            <dl><div><dt>Item subtotal</dt><dd>{formatCurrency(cartSubtotal)}</dd></div><div><dt>Delivery</dt><dd>Confirmed in chat</dd></div><div className="summary-total"><dt>Items</dt><dd>{formatCurrency(cartSubtotal)}</dd></div></dl>
           </aside>
         </div>
       </div>

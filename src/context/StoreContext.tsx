@@ -45,6 +45,37 @@ interface StoreContextType {
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
+function restoreCart(rawCart: string | null): CartItem[] {
+  if (!rawCart) return [];
+
+  try {
+    const saved: unknown = JSON.parse(rawCart);
+    if (!Array.isArray(saved)) return [];
+
+    return saved.flatMap((entry): CartItem[] => {
+      if (!entry || typeof entry !== 'object') return [];
+      const candidate = entry as Partial<CartItem>;
+      const productId = candidate.product?.id;
+      const product = products.find(item => item.id === productId);
+      if (!product) return [];
+
+      const quantity = Number.isInteger(candidate.quantity)
+        ? Math.min(Math.max(candidate.quantity as number, 1), 10)
+        : 1;
+      const selectedSize = product.sizes?.includes(candidate.selectedSize ?? '')
+        ? candidate.selectedSize as string
+        : product.sizes?.[0] ?? 'One Size';
+      const selectedColor = product.colors?.includes(candidate.selectedColor ?? '')
+        ? candidate.selectedColor as string
+        : product.colors?.[0] ?? '';
+
+      return [{ product, quantity, selectedSize, selectedColor }];
+    });
+  } catch {
+    return [];
+  }
+}
+
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [currency, setCurrency] = useState<CurrencyType>('NGN');
@@ -69,17 +100,23 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      const savedCart = localStorage.getItem('ynks_cart');
+      const savedCart = restoreCart(localStorage.getItem('ynks_cart'));
       const savedCurrency = localStorage.getItem('ynks_currency') as CurrencyType | null;
-      if (savedCart) { try { setCart(JSON.parse(savedCart)); } catch { localStorage.removeItem('ynks_cart'); } }
+      setCart(savedCart);
       if (savedCurrency === 'NGN' || savedCurrency === 'USD') setCurrency(savedCurrency);
       setMounted(true);
     }, 0);
     return () => window.clearTimeout(timer);
   }, []);
 
-  useEffect(() => { if (mounted) localStorage.setItem('ynks_cart', JSON.stringify(cart)); }, [cart, mounted]);
-  useEffect(() => { if (mounted) localStorage.setItem('ynks_currency', currency); }, [currency, mounted]);
+  useEffect(() => {
+    if (!mounted) return;
+    try { localStorage.setItem('ynks_cart', JSON.stringify(cart)); } catch { /* Storage may be unavailable. */ }
+  }, [cart, mounted]);
+  useEffect(() => {
+    if (!mounted) return;
+    try { localStorage.setItem('ynks_currency', currency); } catch { /* Storage may be unavailable. */ }
+  }, [currency, mounted]);
 
   const cartItemCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
   const cartSubtotal = useMemo(() => cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0), [cart]);
@@ -103,8 +140,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const addToCart = (product: Product, size: string, colour: string, quantity = 1) => {
     setCart(current => {
       const index = current.findIndex(item => item.product.id === product.id && item.selectedSize === size && item.selectedColor === colour);
-      if (index < 0) return [...current, { product, quantity, selectedSize: size, selectedColor: colour }];
-      return current.map((item, itemIndex) => itemIndex === index ? { ...item, quantity: item.quantity + quantity } : item);
+      if (index < 0) return [...current, { product, quantity: Math.min(Math.max(quantity, 1), 10), selectedSize: size, selectedColor: colour }];
+      return current.map((item, itemIndex) => itemIndex === index ? { ...item, quantity: Math.min(item.quantity + quantity, 10) } : item);
     });
     setSelectedProduct(null);
     setCartAnimated(true);
@@ -115,7 +152,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const updateCartQty = (index: number, delta: number) => setCart(current => current.flatMap((item, itemIndex) => {
     if (itemIndex !== index) return item;
     const quantity = item.quantity + delta;
-    return quantity > 0 ? { ...item, quantity } : [];
+    return quantity > 0 ? { ...item, quantity: Math.min(quantity, 10) } : [];
   }));
 
   const removeCartItem = (index: number) => setCart(current => current.filter((_, itemIndex) => itemIndex !== index));
