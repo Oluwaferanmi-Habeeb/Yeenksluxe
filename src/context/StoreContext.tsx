@@ -90,6 +90,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [chosenSize, setChosenSize] = useState('');
   const [chosenColor, setChosenColor] = useState('');
   const [checkoutForm, setCheckoutForm] = useState<CheckoutFormData>({ name: '', email: '', phone: '', address: '', city: '', notes: '' });
+  const [orderReference, setOrderReference] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
@@ -161,17 +162,29 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     ? new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount)
     : `${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(amount / 1500)} est.`;
 
-  const getWhatsAppLink = () => {
-    const orderLines = cart.map(item => `• ${item.product.name}\n  Qty ${item.quantity} · Size ${item.selectedSize}${item.selectedColor ? ` · Colour ${item.selectedColor}` : ''}`).join('\n\n');
-    const emailLine = checkoutForm.email ? `\nEmail: ${checkoutForm.email}` : '';
-    const message = `Hello YEENKSLUXE,\n\nI would like to confirm this order:\n\n${orderLines}\n\nName: ${checkoutForm.name}\nPhone: ${checkoutForm.phone}${emailLine}\nDelivery: ${checkoutForm.address}, ${checkoutForm.city}\nNote: ${checkoutForm.notes || 'None'}\n\nPlease confirm stock, final total and payment details.`;
+  const createOrderReference = () => {
+    const stamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 12);
+    const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
+    return `YNL-${stamp}-${suffix}`;
+  };
+
+  const getWhatsAppLink = (reference = orderReference ?? createOrderReference()) => {
+    const orderLines = cart.map((item, index) => {
+      const name = item.product.name.replace(/YĒĒNKSLUXÉ\s*x\s*/gi, '').replace(/[‘’']?26 Edition\s*/gi, '').trim();
+      return `${index + 1}. *${name}*\n   • Quantity: ${item.quantity}\n   • Size: ${item.selectedSize}${item.selectedColor ? `\n   • Colour: ${item.selectedColor}` : ''}\n   • Line total: ${formatCurrency(item.product.price * item.quantity)}`;
+    }).join('\n\n');
+    const emailLine = checkoutForm.email ? `\n• Email: ${checkoutForm.email}` : '';
+    const noteLine = checkoutForm.notes.trim() ? checkoutForm.notes.trim() : 'None';
+    const message = `*YEENKSLUXE — ORDER REQUEST*\n\n*Order reference:* ${reference}\n*Date:* ${new Intl.DateTimeFormat('en-NG', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date())}\n\n*ITEMS*\n${orderLines}\n\n*ITEM SUBTOTAL: ${formatCurrency(cartSubtotal)}*\n*Delivery fee:* To be confirmed\n*Final total:* To be confirmed after stock and delivery confirmation\n\n*CUSTOMER & DELIVERY DETAILS*\n• Name: ${checkoutForm.name}\n• Phone: ${checkoutForm.phone}${emailLine}\n• Address: ${checkoutForm.address}\n• City / State: ${checkoutForm.city}\n• Order note: ${noteLine}\n\n*NEXT STEP*\nPlease confirm item availability, delivery fee, final total and payment details. Thank you.`;
     return `https://wa.me/2349033364994?text=${encodeURIComponent(message)}`;
   };
 
   const handlePlaceOrder = (event: React.FormEvent) => {
     event.preventDefault();
     if (!cart.length) return;
-    window.open(getWhatsAppLink(), '_blank', 'noopener,noreferrer');
+    const reference = orderReference ?? createOrderReference();
+    if (!orderReference) setOrderReference(reference);
+    window.open(getWhatsAppLink(reference), '_blank', 'noopener,noreferrer');
     setCheckoutStep('success');
     showToast('Your order message is ready in WhatsApp.');
   };
