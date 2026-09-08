@@ -14,7 +14,7 @@ export default function Footer() {
         <div><h2>Help</h2><Link href="/shipping">Delivery</Link><Link href="/returns">Returns & exchanges</Link><Link href="/size-guide">Size guide</Link><a href="#faq">FAQ</a></div>
         <div><h2>Follow</h2><a href="https://instagram.com/yeenksluxe" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://tiktok.com/@yeenksluxe" target="_blank" rel="noopener noreferrer">TikTok ↗</a><a href="https://wa.me/2349033364994" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a></div>
       </div>
-      <div className="container footer-bottom"><span>© {new Date().getFullYear()} YEENKSLUXE</span><span>Lagos, Nigeria</span><div><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></div></div>
+      <div className="container footer-bottom"><span>© {new Date().getFullYear()} YEENKSLUXE</span><span>Lagos, Nigeria</span><div><Link href="/privacy">Privacy</Link><Link href="/cookies">Cookies</Link><Link href="/terms">Terms</Link></div></div>
       <div className="footer-word" aria-hidden="true">YEENKSLUXE</div>
     </footer>
   );

@@ -316,6 +316,7 @@ img { display: block; }
 .info-layout article { max-width: 720px; padding-top: 26px; border-top: 1px solid var(--ink); }
 .info-layout article h2 { margin: 0 0 10px; font: 30px var(--serif); }
 .info-layout article p { margin: 0 0 44px; color: var(--muted); font-size: 15px; line-height: 1.8; }
+.info-layout article a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 
 @media (max-width: 1050px) {
   .nav-links { display: none; }
