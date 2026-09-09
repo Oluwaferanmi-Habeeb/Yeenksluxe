@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { InputValidationError, safeEmail } from '../utils/validation';
 
 const POPUP_STORAGE_KEY = 'ynks_popup_shown';
 
@@ -8,6 +9,8 @@ export default function NewsletterPopup() {
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const alreadyShown = localStorage.getItem(POPUP_STORAGE_KEY);
@@ -36,12 +39,34 @@ export default function NewsletterPopup() {
     localStorage.setItem(POPUP_STORAGE_KEY, 'true');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!email) return;
-    setSubmitted(true);
-    localStorage.setItem(POPUP_STORAGE_KEY, 'true');
-    setTimeout(() => setVisible(false), 2000);
+    setStatus('');
+    try {
+      const address = safeEmail(email);
+      setSubmitting(true);
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 10_000);
+      try {
+        const body = new URLSearchParams({ 'form-name': 'newsletter', email: address, 'bot-field': '' });
+        const response = await fetch('/__forms.html', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body.toString(),
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error('Newsletter submission failed.');
+      } finally {
+        window.clearTimeout(timeout);
+      }
+      setSubmitted(true);
+      localStorage.setItem(POPUP_STORAGE_KEY, 'true');
+      window.setTimeout(() => setVisible(false), 2000);
+    } catch (error) {
+      setStatus(error instanceof InputValidationError ? error.message : 'We could not add you right now. Nothing was saved — please retry.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (!visible) return null;
@@ -71,18 +96,24 @@ export default function NewsletterPopup() {
               <span>YOU&rsquo;RE IN. CHECK YOUR INBOX FOR YOUR CODE.</span>
             </div>
           ) : (
-            <form className="popup-form" onSubmit={handleSubmit}>
+            <form className="popup-form" name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" onSubmit={handleSubmit}>
+              <input type="hidden" name="form-name" value="newsletter" />
+              <label className="sr-only">Leave this blank if you are human<input name="bot-field" tabIndex={-1} autoComplete="off" /></label>
               <input
                 type="email"
+                name="email"
                 required
                 placeholder="YOUR EMAIL ADDRESS"
                 className="popup-input"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => { setEmail(e.target.value); setStatus(''); }}
+                maxLength={254}
+                autoComplete="email"
               />
-              <button type="submit" className="popup-submit">GET 10% OFF</button>
+              <button type="submit" className="popup-submit" disabled={submitting}>{submitting ? 'JOINING…' : 'GET 10% OFF'}</button>
             </form>
           )}
+          {status && <p className="popup-error" role="alert">{status}</p>}
 
           <p className="popup-disclaimer">No spam. Unsubscribe anytime.</p>
         </div>

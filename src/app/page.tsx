@@ -1,5 +1,75 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíóžS¢Ö¥¢ëiºÙbë5'use client';
+'use client';
 
 import { useEffect } from 'react';
 import { StoreProvider, useStore } from '../context/StoreContext';
-import Navbar from '../componentsïžm¢G§²ÚîÆ­yÒóà¢ÂöF—cà¢“°§Ð ¦W‡÷'BFVfVÇBgVæ7F–öâ†öÖR‚’°¢&WGW&âÄ66÷VçE&÷f–FW#ãÅ7F÷&U&÷f–FW#ãÅ7F÷&Vg&öçBóãÂõ7F÷&U&÷f–FW#ãÂô66÷VçE&÷f–FW#ã°§Ð
+import Navbar from '../components/Navbar';
+import Hero from '../components/Hero';
+import ProductGrid from '../components/ProductGrid';
+import EditorialPanels from '../components/EditorialPanels';
+import CommunityShowcase from '../components/CommunityShowcase';
+import MembershipSection from '../components/MembershipSection';
+import FaqSection from '../components/FaqSection';
+import CheckoutForm from '../components/CheckoutForm';
+import SuccessPage from '../components/SuccessPage';
+import Footer from '../components/Footer';
+import CartDrawer from '../components/CartDrawer';
+import ProductModal from '../components/ProductModal';
+import ToastNotification from '../components/ToastNotification';
+import WhatsAppFloat from '../components/WhatsAppFloat';
+import AccountPanel from '../components/AccountPanel';
+import { AccountProvider } from '../context/AccountContext';
+
+function Storefront() {
+  const { checkoutStep, selectedCategory, searchQuery } = useStore();
+
+  useEffect(() => {
+    if (checkoutStep !== 'shop') return;
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      }),
+      { threshold: 0.08, rootMargin: '0px 0px -48px' }
+    );
+    const timer = window.setTimeout(() => {
+      document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+    }, 50);
+    return () => {
+      window.clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, [checkoutStep, selectedCategory, searchQuery]);
+
+  return (
+    <div className="app-shell">
+      <Navbar />
+      <main>
+        {checkoutStep === 'shop' && (
+          <>
+            <Hero />
+            <ProductGrid />
+            <EditorialPanels />
+            <CommunityShowcase />
+            <MembershipSection />
+            <FaqSection />
+          </>
+        )}
+        {checkoutStep === 'checkout' && <CheckoutForm />}
+        {checkoutStep === 'success' && <SuccessPage />}
+      </main>
+      <Footer />
+      <WhatsAppFloat />
+      <CartDrawer />
+      <ProductModal />
+      <AccountPanel />
+      <ToastNotification />
+      <div aria-live="polite" aria-atomic="true" className="sr-only" id="a11y-announcer" />
+    </div>
+  );
+}
+
+export default function Home() {
+  return <AccountProvider><StoreProvider><Storefront /></StoreProvider></AccountProvider>;
+}
