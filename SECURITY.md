@@ -19,6 +19,14 @@ The supported production deployment is the latest commit on `main`, hosted by Ne
 
 The storefront does not process card payments or send checkout details to a website backend. Delivery details are placed into a WhatsApp message only after the customer submits the checkout form. The form is not persisted to local storage.
 
+YNL Account profile data is stored by Netlify Identity. The client never receives an Identity operator token and no application database is currently connected, so there is no SQL query layer to inject into. Customer profile values are normalised, length-limited and stripped of markup before they are stored or included in the WhatsApp order summary.
+
+## Growth guardrails
+
+- Saved pieces are capped at 80 per account to prevent unbounded Identity metadata growth.
+- Netlify's CDN serves immutable Next.js build assets; each deploy invalidates the cached release.
+- If the store moves to real order history, inventory or an admin product system, use a server-side database with row-level permissions. Do not store those records in Identity metadata.
+
 ## Reporting a problem
 
 Do not publish suspected vulnerabilities in a public GitHub issue. Contact the store owner privately with the affected page, reproduction steps and screenshots where appropriate.

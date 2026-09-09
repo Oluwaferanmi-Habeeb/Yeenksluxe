@@ -1,14 +1,6 @@
+YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíÛ¾“¢Ö¥¢ëiºÙbë5'use client';
+
+import { useAccount } from '../context/AccountContext';
+
 export default function MembershipSection() {
-  return (
-    <section className="membership-section reveal-on-scroll">
-      <div className="membership-word" aria-hidden="true">INSIDE</div>
-      <div className="container membership-inner">
-        <p className="eyebrow">First access Â· direct line</p>
-        <h2>Join the inner circle.</h2>
-        <p>Get drop alerts, restock updates and personal sizing help directly from the YEENKSLUXE team.</p>
-        <a className="button button-light" href="https://wa.me/2349033364994?text=Hi%20YEENKSLUXE!%20Please%20add%20me%20to%20the%20VIP%20list%20for%20new%20drop%20and%20restock%20updates." target="_blank" rel="noopener noreferrer">Join on WhatsApp <span>â†—</span></a>
-        <small>No automated spam. Leave anytime.</small>
-      </div>
-    </section>
-  );
-}
+  const { setAccountOpen } = use×¾­¢G§²ÚîÆ­y×ãî(isÂ÷7ããÂö'WGFöãà¢Ç6ÖÆÃå6fR–÷W"–V6W2Âf—BæBFVÆ—fW'’FWF–Ç2âæòVææV6W76'’æö—6RãÂ÷6ÖÆÃà¢ÂöF—cà¢Â÷6V7F–öãà¢“°§Ğ 

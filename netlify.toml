@@ -6,3 +6,7 @@
   NODE_VERSION = "22"
   NEXT_PUBLIC_SITE_URL = "https://yeenksluxe.com"
 
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
