@@ -32,6 +32,7 @@ interface AccountContextType {
   ready: boolean;
   identityEnabled: boolean;
   settings: Settings | null;
+  recoveryPending: boolean;
   accountOpen: boolean;
   setAccountOpen: (open: boolean) => void;
   profile: AccountProfile;
@@ -43,6 +44,7 @@ interface AccountContextType {
   toggleSavedProduct: (productId: string) => Promise<boolean>;
   recordOrderReference: (reference: string) => Promise<void>;
   requestReset: (email: string) => Promise<void>;
+  completePasswordReset: (password: string) => Promise<void>;
   startGoogleLogin: () => void;
 }
 
@@ -123,17 +125,22 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
   const [identityEnabled, setIdentityEnabled] = useState(true);
   const [settings, setSettings] = useState<Settings | null>(null);
+  const [recoveryPending, setRecoveryPending] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
 
   useEffect(() => {
     let live = true;
     const initialise = async () => {
       try {
-        await handleAuthCallback();
+        const callback = await withTimeout(handleAuthCallback());
         const [currentUser, projectSettings] = await Promise.all([retryRead(getUser), retryRead(getSettings)]);
         if (!live) return;
-        setUser(currentUser);
+        setUser(callback?.user ?? currentUser);
         setSettings(projectSettings);
+        if (callback?.type === 'recovery') {
+          setRecoveryPending(true);
+          setAccountOpen(true);
+        }
       } catch (error) {
         if (live && error instanceof MissingIdentityError) setIdentityEnabled(false);
       } finally {
@@ -166,6 +173,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     await withTimeout(logout());
     setUser(null);
+    setRecoveryPending(false);
   };
 
   const saveProfile = async (nextProfile: AccountProfile) => {
@@ -215,12 +223,21 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     await withTimeout(requestPasswordRecovery(safeEmail(email)));
   };
 
+  const completePasswordReset = async (password: string) => {
+    ensureEnabled();
+    assertStrongPassword(password);
+    const next = await withTimeout(updateUser({ password }));
+    setUser(next);
+    setRecoveryPending(false);
+  };
+
   const profile = useMemo(() => readProfile(user), [user]);
   const savedProductIds = useMemo(() => readSavedProducts(user), [user]);
 
   return <AccountContext.Provider value={{
-    user, ready, identityEnabled, settings, accountOpen, setAccountOpen, profile, savedProductIds,
+    user, ready, identityEnabled, settings, recoveryPending, accountOpen, setAccountOpen, profile, savedProductIds,
     signIn, signUp, signOut, saveProfile, toggleSavedProduct, recordOrderReference, requestReset,
+    completePasswordReset,
     startGoogleLogin: () => oauthLogin('google'),
   }}>{children}</AccountContext.Provider>;
 }

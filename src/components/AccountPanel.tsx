@@ -7,11 +7,13 @@ import { containsUnsafeText } from '../utils/validation';
 type Mode = 'signin' | 'signup' | 'profile';
 
 export default function AccountPanel() {
-  const { user, ready, identityEnabled, settings, accountOpen, setAccountOpen, profile, signIn, signUp, signOut, saveProfile, requestReset, startGoogleLogin } = useAccount();
+  const { user, ready, identityEnabled, settings, recoveryPending, accountOpen, setAccountOpen, profile, signIn, signUp, signOut, saveProfile, requestReset, completePasswordReset, startGoogleLogin } = useAccount();
   const [mode, setMode] = useState<Mode>('signin');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [details, setDetails] = useState<AccountProfile>(emptyProfile);
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
@@ -24,6 +26,8 @@ export default function AccountPanel() {
       setName(profile.fullName);
       setEmail(user?.email ?? '');
       setPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
       setStatus('');
     }, 0);
     document.body.classList.add('modal-open');
@@ -66,13 +70,34 @@ export default function AccountPanel() {
     finally { setBusy(false); }
   };
 
+  const submitPasswordReset = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (newPassword !== confirmPassword) return setStatus('Your new passwords do not match.');
+    setStatus(''); setBusy(true);
+    try {
+      await completePasswordReset(newPassword);
+      setStatus('Password updated. You can now continue shopping.');
+      setNewPassword(''); setConfirmPassword('');
+    } catch (error) { setStatus(messageFor(error)); }
+    finally { setBusy(false); }
+  };
+
   return (
     <div className="account-overlay" onMouseDown={event => { if (event.target === event.currentTarget) close(); }}>
       <section className="account-panel" role="dialog" aria-modal="true" aria-labelledby="account-panel-title">
         <button className="modal-close" onClick={close} aria-label="Close YNL Account">Close <span>×</span></button>
         <p className="eyebrow">YEENKSLUXE</p>
         <h2 id="account-panel-title">{user ? `Welcome${user.name ? `, ${user.name.split(' ')[0]}` : ''}.` : 'YNL Account.'}</h2>
-        {!ready ? <p className="account-muted">Preparing your account…</p> : !identityEnabled ? <p className="account-muted">YNL Account is being activated. Please check back shortly.</p> : user ? (
+        {!ready ? <p className="account-muted">Preparing your account…</p> : !identityEnabled ? <p className="account-muted">YNL Account is being activated. Please check back shortly.</p> : recoveryPending ? (
+          <form className="account-form" onSubmit={submitPasswordReset}>
+            <p className="account-intro">Choose a new password for your YNL Account.</p>
+            <label><span>New password</span><input type="password" value={newPassword} onChange={event => setNewPassword(event.target.value)} required minLength={12} autoComplete="new-password" /></label>
+            <label><span>Confirm new password</span><input type="password" value={confirmPassword} onChange={event => setConfirmPassword(event.target.value)} required minLength={12} autoComplete="new-password" /></label>
+            <p className="account-password-help">12+ characters, including upper-case, lower-case and a number.</p>
+            {status && <p className="account-status" role="status">{status}</p>}
+            <button className="button button-dark" type="submit" disabled={busy}>{busy ? 'Updating…' : 'Set new password'} <span>↗</span></button>
+          </form>
+        ) : user ? (
           <form className="account-form" onSubmit={submitProfile}>
             <p className="account-intro">Save your delivery details and preferred fit for a quicker checkout.</p>
             <div className="account-email">{user.email}</div>
