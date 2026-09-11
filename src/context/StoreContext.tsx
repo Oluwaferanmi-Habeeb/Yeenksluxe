@@ -105,6 +105,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [checkoutForm, setCheckoutForm] = useState<CheckoutFormData>({ name: '', email: '', phone: '', address: '', city: '', notes: '' });
   const [orderReference, setOrderReference] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [cartStorageKey, setCartStorageKey] = useState<string | null>(null);
+
+  const accountCartKey = user?.id ? `ynks_cart_user_${user.id}` : 'ynks_cart_guest';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -114,19 +117,29 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      const savedCart = restoreCart(localStorage.getItem('ynks_cart'));
+      const savedCart = restoreCart(localStorage.getItem('ynks_cart_guest'));
       const savedCurrency = localStorage.getItem('ynks_currency') as CurrencyType | null;
       setCart(savedCart);
       if (savedCurrency === 'NGN' || savedCurrency === 'USD') setCurrency(savedCurrency);
+      setCartStorageKey('ynks_cart_guest');
       setMounted(true);
     }, 0);
     return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
-    try { localStorage.setItem('ynks_cart', JSON.stringify(cart)); } catch { /* Storage may be unavailable. */ }
-  }, [cart, mounted]);
+    if (!mounted || cartStorageKey === accountCartKey) return;
+    const timer = window.setTimeout(() => {
+      try { setCart(restoreCart(localStorage.getItem(accountCartKey))); } catch { setCart([]); }
+      setCartStorageKey(accountCartKey);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [accountCartKey, cartStorageKey, mounted]);
+
+  useEffect(() => {
+    if (!mounted || cartStorageKey !== accountCartKey) return;
+    try { localStorage.setItem(accountCartKey, JSON.stringify(cart)); } catch { /* Storage may be unavailable. */ }
+  }, [accountCartKey, cart, cartStorageKey, mounted]);
 
   useEffect(() => {
     if (!user) return;
