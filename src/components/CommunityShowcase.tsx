@@ -8,7 +8,7 @@ const looks = [
   { image: '/images/client_fit_1.jpg', productId: 'shirt-1', caption: 'Steezy Graphic Tee' },
   { image: '/images/client_fit_2.jpg', productId: 'hoodie-1', caption: 'Steezy Sleeveless Tee' },
   { image: '/images/client_fit_4.jpeg', productId: 'acc-1', caption: 'Signature Headwear' },
-  { image: '/images/snaptik_7625367276497292565_2_v2.jpeg', productId: 'shirt-16', caption: 'SS26 Campaign' },
+  { image: '/images/snaptik_7625367276497292565_2_v2.jpeg', productId: 'shirt-16', caption: 'Lagos fit' },
 ];
 
 export default function CommunityShowcase() {
