@@ -79,7 +79,7 @@ export default function ProductGrid() {
                     <button className={`save-piece ${savedProductIds.includes(product.id) ? 'saved' : ''}`} onClick={() => { toggleSavedProduct(product.id).catch(() => undefined); }} aria-label={savedProductIds.includes(product.id) ? `Remove ${shortName(product)} from saved pieces` : user ? `Save ${shortName(product)}` : `Sign in to save ${shortName(product)}`} aria-pressed={savedProductIds.includes(product.id)}><span aria-hidden="true">{savedProductIds.includes(product.id) ? '♥' : '♡'}</span></button>
                   </div>
                   <div className="product-info">
-                    <div><p>{product.category} · SS26</p><h3>{shortName(product)}</h3></div>
+                    <div><p>{product.category}</p><h3>{shortName(product)}</h3></div>
                     <strong>{formatCurrency(product.price)}</strong>
                   </div>
                   <div className="product-meta">
