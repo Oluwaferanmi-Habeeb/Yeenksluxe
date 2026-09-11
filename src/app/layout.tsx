@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     siteName: "YEENKSLUXE",
     locale: "en_NG",
     type: "website",
-    images: [{ url: "/images/ynl-hero-duo.svg", width: 952, height: 1592, alt: "YEENKSLUXE SS26" }],
+    images: [{ url: "/images/ynl-hero-duo.svg", width: 952, height: 1592, alt: "YEENKSLUXE campaign" }],
   },
   twitter: { card: "summary_large_image", title: "YEENKSLUXE", description: "Graphic tees, hoodies and caps from YEENKSLUXE, Lagos.", images: ["/images/ynl-hero-duo.svg"] },
   alternates: { canonical: "/" },
