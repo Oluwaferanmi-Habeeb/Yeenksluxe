@@ -18,15 +18,15 @@ export default function Hero() {
       <div className="hero-shade" />
       <div className="hero-noise" aria-hidden="true" />
       <div className="container hero-content">
-        <p className="eyebrow hero-eyebrow">SS26 · LIMITED RELEASE · LAGOS</p>
-        <h1 id="hero-title">Built for the ones<br /><em>who move different.</em></h1>
-        <p className="hero-copy">Statement silhouettes and limited pieces created where street culture meets considered design.</p>
+        <p className="eyebrow hero-eyebrow">YEENKSLUXE / SS26 / LAGOS</p>
+        <h1 id="hero-title">The new<br /><em>drop.</em></h1>
+        <p className="hero-copy">Graphic tees, hoodies and caps from YEENKSLUXE.</p>
         <div className="hero-actions">
           <button className="button button-light" onClick={scrollToShop}>Shop the latest drop</button>
-          <a className="text-link text-link-light" href="#campaign">Explore the campaign <span>↘</span></a>
+          <a className="text-link text-link-light" href="#campaign">See the looks <span>↘</span></a>
         </div>
       </div>
-      <div className="hero-index" aria-hidden="true"><span>YNL / 026</span><span>LAGOS → WORLD</span></div>
+      <div className="hero-index" aria-hidden="true"><span>YNL / 026</span><span>LAGOS</span></div>
     </header>
   );
 }

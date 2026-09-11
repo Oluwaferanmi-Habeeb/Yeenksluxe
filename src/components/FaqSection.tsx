@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 const faqs = [
-  ['How long does delivery take?', 'Lagos orders typically arrive within 1–3 business days. Other Nigerian locations typically take 3–7 business days.'],
+  ['How long does delivery take?', 'Lagos orders typically arrive within 1 to 3 business days. Other Nigerian locations typically take 3 to 7 business days.'],
   ['Can I exchange my size?', 'Yes. Unworn items with original tags can be exchanged within 7 days of delivery, subject to stock availability.'],
   ['How do I choose the right size?', 'Open the size guide inside any product, or message our team on WhatsApp for personal sizing help before ordering.'],
   ['How is payment completed?', 'Your order is prepared on the website and sent to our official WhatsApp line, where availability and payment details are confirmed.'],

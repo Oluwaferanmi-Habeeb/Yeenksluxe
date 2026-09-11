@@ -27,7 +27,7 @@ const CAP_FEATURES: string[] = [
   "Signature embroidered front patch",
   "Unique metal eyelet detail on the brim",
   "Structured crown for a clean fit",
-  "Adjustable strap — one size fits most",
+  "Adjustable strap, one size fits most",
   "Unisex design"
 ];
 
@@ -38,7 +38,7 @@ const CAP_CARE: string[] = [
   "Store in a cool, dry place to maintain its shape"
 ];
 
-const CAP_FIT = "One size fits most — adjustable strap";
+const CAP_FIT = "One size fits most, adjustable strap";
 
 export const products: Product[] = [
   // ── ORIGINAL COLLECTION ──
@@ -60,7 +60,7 @@ export const products: Product[] = [
     id: "shirt-3",
     shopifyVariantId: "45000000000038",
     name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Signature Tank Top",
-    description: "The icon. Reimagined for the culture.",
+    description: "Graphic tank top.",
     price: 30000,
     category: "Shirts",
     image: img("new_prod_6.jpg"),
@@ -201,7 +201,7 @@ export const products: Product[] = [
     id: "acc-1",
     shopifyVariantId: "45000000000009",
     name: "YĒĒNKSLUXÉ x MXUNDERSTOOD Signature Hat",
-    description: "Top off your look with confidence.",
+    description: "Signature Yeenksluxe cap.",
     features: CAP_FEATURES,
     care: CAP_CARE,
     fit: CAP_FIT,
@@ -224,10 +224,10 @@ export const products: Product[] = [
     colors: ["#000000", "#ffffff"]
   },
 
-  // ── NEW 28 PRODUCTS (July 15 Drop — WhatsApp Images) ──
+  // New 28 products (July 15 WhatsApp images)
   // Distributed across all categories. Rename and re-categorize as needed.
 
-  // Item 1–8: Shirts
+  // Items 1 to 8: shirts
 
   {
     id: "drop3-03",
@@ -243,7 +243,7 @@ export const products: Product[] = [
     id: "drop3-04",
     shopifyVariantId: "45000000000063",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Crew Tank",
-    description: "Classic crew neck. Unmatched comfort.",
+    description: "Crew neck tank top.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (1).jpeg"),
@@ -254,7 +254,7 @@ export const products: Product[] = [
     id: "drop3-05",
     shopifyVariantId: "45000000000064",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Printed Hoodie",
-    description: "Statement prints for the culture.",
+    description: "Printed hoodie.",
     price: 45000,
     category: "Hoodies",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (2).jpeg"),
@@ -265,7 +265,7 @@ export const products: Product[] = [
     id: "drop3-06",
     shopifyVariantId: "45000000000065",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Classic Tank",
-    description: "Timeless. Essential. Effortless.",
+    description: "Classic tank top.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (3).jpeg"),
@@ -276,7 +276,7 @@ export const products: Product[] = [
     id: "drop3-07",
     shopifyVariantId: "45000000000066",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Slim Tank",
-    description: "Streamlined fit. Maximum impact.",
+    description: "Slim tank top.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (4).jpeg"),
@@ -287,7 +287,7 @@ export const products: Product[] = [
     id: "drop3-08",
     shopifyVariantId: "45000000000067",
     name: "YĒĒNKSLUXÉ x STEEZY Graphic Tank",
-    description: "Clean lines. Stronger presence.",
+    description: "Graphic tank top.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM.jpeg"),
@@ -295,21 +295,21 @@ export const products: Product[] = [
     colors: ["#000000"]
   },
 
-  // Item 9–12: Tanks
+  // Items 9 to 12: tanks
   {
     id: "drop3-09",
     shopifyVariantId: "45000000000068",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Sleeveless Tank",
-    description: "Cut for movement. Built for the streets.",
+    description: "Sleeveless tank top.",
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM (1).jpeg"),
     sizes: ["M", "L", "XL", "XXL"],
     colors: ["#000000"]
   },
-  // Item 15–20: Hats
+  // Items 15 to 20: hats
 
-  // Item 21–28: Caps (rest of Signature Cap variants)
+  // Items 21 to 28: remaining signature cap variants
   {
     id: "drop3-21",
     shopifyVariantId: "45000000000080",
@@ -317,7 +317,7 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.52 PM (2).jpeg"),
-    description: "Top off your look with confidence.",
+    description: "Signature Yeenksluxe cap.",
     features: CAP_FEATURES,
     care: CAP_CARE,
     fit: CAP_FIT,
@@ -333,7 +333,7 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.52 PM.jpeg"),
-    description: "Top off your look with confidence.",
+    description: "Signature Yeenksluxe cap.",
     features: CAP_FEATURES,
     care: CAP_CARE,
     fit: CAP_FIT,
@@ -349,7 +349,7 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.53 PM (1).jpeg"),
-    description: "Top off your look with confidence.",
+    description: "Signature Yeenksluxe cap.",
     features: CAP_FEATURES,
     care: CAP_CARE,
     fit: CAP_FIT,
@@ -365,7 +365,7 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.53 PM.jpeg"),
-    description: "Top off your look with confidence.",
+    description: "Signature Yeenksluxe cap.",
     features: CAP_FEATURES,
     care: CAP_CARE,
     fit: CAP_FIT,
@@ -381,7 +381,7 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.54 PM.jpeg"),
-    description: "Top off your look with confidence.",
+    description: "Signature Yeenksluxe cap.",
     features: CAP_FEATURES,
     care: CAP_CARE,
     fit: CAP_FIT,
@@ -397,7 +397,7 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.55 PM (1).jpeg"),
-    description: "Top off your look with confidence.",
+    description: "Signature Yeenksluxe cap.",
     features: CAP_FEATURES,
     care: CAP_CARE,
     fit: CAP_FIT,
@@ -412,7 +412,7 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.55 PM.jpeg"),
-    description: "Top off your look with confidence.",
+    description: "Signature Yeenksluxe cap.",
     features: CAP_FEATURES,
     care: CAP_CARE,
     fit: CAP_FIT,
@@ -427,7 +427,7 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("WhatsApp Image 2026-07-15 at 1.56.56 PM.jpeg"),
-    description: "Top off your look with confidence.",
+    description: "Signature Yeenksluxe cap.",
     features: CAP_FEATURES,
     care: CAP_CARE,
     fit: CAP_FIT,

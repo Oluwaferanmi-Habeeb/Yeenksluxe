@@ -209,7 +209,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     };
     const emailLine = customer.email ? `\n• Email: ${customer.email}` : '';
     const noteLine = customer.notes || 'None';
-    const message = `*YEENKSLUXE — ORDER REQUEST*\n\n*Order reference:* ${reference}\n*Date:* ${new Intl.DateTimeFormat('en-NG', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date())}\n\n*ITEMS*\n${orderLines}\n\n*ITEM SUBTOTAL: ${formatCurrency(cartSubtotal)}*\n*Delivery fee:* To be confirmed\n*Final total:* To be confirmed after stock and delivery confirmation\n\n*CUSTOMER & DELIVERY DETAILS*\n• Name: ${customer.name}\n• Phone: ${customer.phone}${emailLine}\n• Address: ${customer.address}\n• City / State: ${customer.city}\n• Order note: ${noteLine}\n\n*NEXT STEP*\nPlease confirm item availability, delivery fee, final total and payment details. Thank you.`;
+    const message = `*YEENKSLUXE ORDER REQUEST*\n\n*Order reference:* ${reference}\n*Date:* ${new Intl.DateTimeFormat('en-NG', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date())}\n\n*ITEMS*\n${orderLines}\n\n*ITEM SUBTOTAL: ${formatCurrency(cartSubtotal)}*\n*Delivery fee:* To be confirmed\n*Final total:* To be confirmed after stock and delivery confirmation\n\n*CUSTOMER & DELIVERY DETAILS*\n• Name: ${customer.name}\n• Phone: ${customer.phone}${emailLine}\n• Address: ${customer.address}\n• City / State: ${customer.city}\n• Order note: ${noteLine}\n\n*NEXT STEP*\nPlease confirm item availability, delivery fee, final total and payment details. Thank you.`;
     return `https://wa.me/2349033364994?text=${encodeURIComponent(message)}`;
   };
 

@@ -50,7 +50,7 @@ export default function ProductModal() {
           <p className="eyebrow">{selectedProduct.category} · SS26</p>
           <h2 id="product-modal-title">{label}</h2>
           <p className="modal-price">{formatCurrency(selectedProduct.price)}</p>
-          <p className="modal-description">{selectedProduct.description || 'A limited YEENKSLUXE piece built for expressive everyday styling.'}</p>
+          <p className="modal-description">{selectedProduct.description || 'A YEENKSLUXE piece.'}</p>
 
           {!!selectedProduct.colors?.length && <fieldset className="product-options"><legend>Colour <span>{selectedProduct.colorNames?.[chosenColor] || colourNames[chosenColor] || 'Selected'}</span></legend><div className="colour-options">{selectedProduct.colors.map(colour => <button key={colour} className={chosenColor === colour ? 'active' : ''} style={{ '--swatch': colour } as React.CSSProperties} onClick={() => setChosenColor(colour)} aria-label={selectedProduct.colorNames?.[colour] || colourNames[colour] || colour} aria-pressed={chosenColor === colour} />)}</div></fieldset>}
 
@@ -61,14 +61,14 @@ export default function ProductModal() {
 
           <div className="product-accordions">
             <ProductAccordion title="Details & care" open={detailsOpen === 'details'} onClick={() => setDetailsOpen('details')}>
-              <ul>{(selectedProduct.features?.length ? selectedProduct.features : ['Limited-run release', 'Designed for everyday statement styling', selectedProduct.fit || 'Relaxed streetwear silhouette']).map(item => <li key={item}>{item}</li>)}</ul>
+              <ul>{(selectedProduct.features?.length ? selectedProduct.features : ['Limited release', selectedProduct.fit || 'Relaxed fit']).map(item => <li key={item}>{item}</li>)}</ul>
               {!!selectedProduct.care?.length && <p>{selectedProduct.care.join(' · ')}</p>}
             </ProductAccordion>
             <ProductAccordion title="Size guide" open={detailsOpen === 'size'} onClick={() => setDetailsOpen('size')}>
               <p>Use your usual size for a relaxed fit. Size down for a closer fit. Exact garment measurements should be confirmed with our team before dispatch.</p>
             </ProductAccordion>
             <ProductAccordion title="Delivery & exchanges" open={detailsOpen === 'delivery'} onClick={() => setDetailsOpen('delivery')}>
-              <p>Lagos: 1–3 business days. Other Nigerian locations: 3–7 business days. Unworn pieces with original tags can be exchanged within 7 days, subject to availability.</p>
+              <p>Lagos: 1 to 3 business days. Other Nigerian locations: 3 to 7 business days. Unworn pieces with original tags can be exchanged within 7 days, subject to availability.</p>
             </ProductAccordion>
           </div>
         </div>

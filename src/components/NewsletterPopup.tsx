@@ -63,7 +63,7 @@ export default function NewsletterPopup() {
       localStorage.setItem(POPUP_STORAGE_KEY, 'true');
       window.setTimeout(() => setVisible(false), 2000);
     } catch (error) {
-      setStatus(error instanceof InputValidationError ? error.message : 'We could not add you right now. Nothing was saved — please retry.');
+      setStatus(error instanceof InputValidationError ? error.message : 'We could not add you right now. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -81,10 +81,10 @@ export default function NewsletterPopup() {
         </button>
 
         <div className="popup-content">
-          <span className="popup-badge">WELCOME OFFER</span>
-          <h2 className="popup-title">JOIN THE<br />INNER CIRCLE</h2>
+          <span className="popup-badge">EMAIL UPDATES</span>
+          <h2 className="popup-title">KEEP IN<br />TOUCH</h2>
           <p className="popup-subtitle">
-            Subscribe and receive <strong>10% off</strong> your first order. Be first to know about limited drops, exclusive collections, and private sales.
+            Get updates when new pieces are available.
           </p>
 
           {submitted ? (
@@ -93,7 +93,7 @@ export default function NewsletterPopup() {
                 <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
                 <polyline points="22 4 12 14.01 9 11.01" />
               </svg>
-              <span>YOU&rsquo;RE IN. CHECK YOUR INBOX FOR YOUR CODE.</span>
+              <span>YOU&rsquo;RE ON THE LIST.</span>
             </div>
           ) : (
             <form className="popup-form" name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" onSubmit={handleSubmit}>
@@ -110,7 +110,7 @@ export default function NewsletterPopup() {
                 maxLength={254}
                 autoComplete="email"
               />
-              <button type="submit" className="popup-submit" disabled={submitting}>{submitting ? 'JOINING…' : 'GET 10% OFF'}</button>
+              <button type="submit" className="popup-submit" disabled={submitting}>{submitting ? 'ADDING…' : 'JOIN THE LIST'}</button>
             </form>
           )}
           {status && <p className="popup-error" role="alert">{status}</p>}

@@ -8,11 +8,11 @@ export default function MembershipSection() {
     <section className="membership-section reveal-on-scroll">
       <div className="membership-word" aria-hidden="true">INSIDE</div>
       <div className="container membership-inner">
-        <p className="eyebrow">First access · direct line</p>
-        <h2>Join the inner circle.</h2>
-        <p>Get drop alerts, restock updates and personal sizing help directly from the YEENKSLUXE team.</p>
+        <p className="eyebrow">YNL ACCOUNT</p>
+        <h2>Keep your<br/>details saved.</h2>
+        <p>Save your fit and delivery details for your next order.</p>
         <button className="button button-light" onClick={() => setAccountOpen(true)}>Create your YNL Account <span>↗</span></button>
-        <small>Save your pieces, fit and delivery details. No unnecessary noise.</small>
+        <small>Only account and order details.</small>
       </div>
     </section>
   );

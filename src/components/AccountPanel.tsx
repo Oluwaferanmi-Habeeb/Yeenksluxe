@@ -112,7 +112,7 @@ export default function AccountPanel() {
           </form>
         ) : (
           <>
-            <p className="account-intro">Save pieces, remember your fit and make your next order easier.</p>
+            <p className="account-intro">Save pieces and your fit details for your next order.</p>
             <form className="account-form" onSubmit={submitAuth}>
               {mode === 'signup' && <label><span>Full name</span><input value={name} onChange={event => acceptPublicText(event.target.value, () => setName(event.target.value))} required maxLength={80} autoComplete="name" /></label>}
               <label><span>Email address</span><input type="email" value={email} onChange={event => acceptPublicText(event.target.value, () => setEmail(event.target.value))} required maxLength={254} autoComplete="email" /></label>

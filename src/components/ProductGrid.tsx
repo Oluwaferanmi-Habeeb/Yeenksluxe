@@ -37,7 +37,7 @@ export default function ProductGrid() {
             <p className="eyebrow">The latest release</p>
             <h2 id="catalogue-title">Shop the drop.</h2>
           </div>
-          <p className="shop-intro">Limited-run tees, hoodies and headwear designed to hold their own.</p>
+          <p className="shop-intro">Tees, hoodies and caps.</p>
         </div>
 
         <div className="shop-toolbar">

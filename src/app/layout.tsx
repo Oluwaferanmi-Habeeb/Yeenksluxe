@@ -6,17 +6,17 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://yeenksluxe.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: "YEENKSLUXE | Lagos-Born Streetwear", template: "%s | YEENKSLUXE" },
-  description: "Limited streetwear, graphic tees, hoodies and signature headwear designed in Lagos by YEENKSLUXE.",
+  description: "Graphic tees, hoodies and caps from YEENKSLUXE, Lagos.",
   keywords: ["YEENKSLUXE", "Nigerian streetwear", "Lagos fashion", "graphic tees", "streetwear Nigeria"],
   openGraph: {
     title: "YEENKSLUXE | Lagos-Born Streetwear",
-    description: "Limited streetwear for people who move with intent.",
+    description: "Graphic tees, hoodies and caps from YEENKSLUXE, Lagos.",
     siteName: "YEENKSLUXE",
     locale: "en_NG",
     type: "website",
-    images: [{ url: "/images/hero_campaign.png", width: 1024, height: 1024, alt: "YEENKSLUXE SS26 campaign" }],
+    images: [{ url: "/images/ynl-hero-duo.svg", width: 952, height: 1592, alt: "YEENKSLUXE SS26" }],
   },
-  twitter: { card: "summary_large_image", title: "YEENKSLUXE", description: "Lagos-born streetwear for people who move with intent.", images: ["/images/hero_campaign.png"] },
+  twitter: { card: "summary_large_image", title: "YEENKSLUXE", description: "Graphic tees, hoodies and caps from YEENKSLUXE, Lagos.", images: ["/images/ynl-hero-duo.svg"] },
   alternates: { canonical: "/" },
   verification: { google: "wfBRgnxSmcAvaJwSfvsE4v8O8RdVkXjBms-pXvj_Ta4" },
   icons: {
