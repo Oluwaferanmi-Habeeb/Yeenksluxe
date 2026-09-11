@@ -304,6 +304,7 @@ export const products: Product[] = [
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM (1).jpeg"),
+    video: "/videos/cream-tank.mp4.b64",
     sizes: ["M", "L", "XL", "XXL"],
     colors: ["#000000"]
   },

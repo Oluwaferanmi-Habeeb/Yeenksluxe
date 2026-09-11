@@ -205,6 +205,9 @@ img { display: block; }
 .modal-gallery { position: relative; min-height: 720px; padding: 16px 16px 16px 92px; background: var(--sand-soft); }
 .modal-main-image { position: relative; height: 100%; min-height: 688px; overflow: hidden; background: var(--paper); }
 .modal-product-image { object-fit: contain; }
+.product-motion { margin-top: 14px; }
+.product-motion p { margin: 0 0 7px; font-size: 9px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.product-motion video { display: block; width: 100%; max-height: 330px; background: var(--ink); object-fit: cover; }
 .modal-image-counter { position: absolute; right: 13px; bottom: 12px; padding: 6px 8px; background: var(--ink); color: white; font-size: 9px; }
 .modal-thumbnails { position: absolute; left: 14px; top: 16px; display: flex; flex-direction: column; gap: 9px; }
 .modal-thumbnails button { position: relative; width: 62px; height: 78px; padding: 0; background: #ccc; border: 1px solid transparent; }
@@ -391,6 +394,7 @@ img { display: block; }
   .modal-overlay { padding: 0; }
   .modal-gallery { min-height: 500px; padding: 12px 12px 12px 74px; }
   .modal-main-image { min-height: 476px; }
+  .product-motion video { max-height: 270px; }
   .modal-thumbnails { left: 10px; top: 12px; }
   .modal-thumbnails button { width: 54px; height: 68px; }
   .modal-details { padding: 45px 22px; }

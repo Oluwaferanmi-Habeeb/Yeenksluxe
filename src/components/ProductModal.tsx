@@ -43,6 +43,7 @@ export default function ProductModal() {
             <Image src={gallery[imageIndex]} alt={`${label}, view ${imageIndex + 1}`} fill className="modal-product-image" sizes="(max-width: 850px) 100vw, 55vw" />
             <span className="modal-image-counter">{String(imageIndex + 1).padStart(2, '0')} / {String(gallery.length).padStart(2, '0')}</span>
           </div>
+          {selectedProduct.video && <ProductMotion source={selectedProduct.video} poster={selectedProduct.image} />}
           {gallery.length > 1 && <div className="modal-thumbnails">{gallery.map((image, index) => <button key={image} className={imageIndex === index ? 'active' : ''} onClick={() => setImageIndex(index)} aria-label={`View image ${index + 1}`}><Image src={image} alt="" fill className="modal-thumb-image" sizes="72px" /></button>)}</div>}
         </div>
 
@@ -79,4 +80,33 @@ export default function ProductModal() {
 
 function ProductAccordion({ title, open, onClick, children }: { title: string; open: boolean; onClick: () => void; children: React.ReactNode }) {
   return <div className={`product-accordion ${open ? 'open' : ''}`}><button onClick={onClick} aria-expanded={open}><span>{title}</span><span>{open ? '−' : '+'}</span></button><div>{children}</div></div>;
+}
+
+function ProductMotion({ source, poster }: { source: string; poster: string }) {
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    let objectUrl: string | null = null;
+    fetch(source)
+      .then(response => {
+        if (!response.ok) throw new Error('Video unavailable');
+        return response.text();
+      })
+      .then(encoded => {
+        const binary = window.atob(encoded.trim());
+        const bytes = new Uint8Array(binary.length);
+        for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+        objectUrl = URL.createObjectURL(new Blob([bytes], { type: 'video/mp4' }));
+        if (active) setVideoUrl(objectUrl);
+      })
+      .catch(() => { if (active) setVideoUrl(null); });
+    return () => {
+      active = false;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [source]);
+
+  if (!videoUrl) return null;
+  return <div className="product-motion"><p>See it in motion</p><video controls muted playsInline preload="metadata" poster={poster} src={videoUrl}>Your browser does not support this video.</video></div>;
 }
