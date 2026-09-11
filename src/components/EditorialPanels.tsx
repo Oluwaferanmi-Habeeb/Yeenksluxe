@@ -18,7 +18,7 @@ export default function EditorialPanels() {
         <p>Pieces worn by people around the city.</p>
         <button className="text-link" onClick={() => shop('Shirts')}>Shop tees <span>↗</span></button>
         <div className="campaign-inset">
-          <Image src="/images/new_prod_5.jpg" alt="YEENKSLUXE signature tiger hoodie artwork" fill className="campaign-image" sizes="(max-width: 800px) 50vw, 25vw" />
+          <Image src="/images/ynl-cap-stack.svg" alt="Stacked YEENKSLUXE caps" fill className="campaign-image" sizes="(max-width: 800px) 50vw, 25vw" />
         </div>
       </div>
     </section>
