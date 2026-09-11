@@ -48,7 +48,7 @@ export default function ProductModal() {
         </div>
 
         <div className="modal-details">
-          <p className="eyebrow">{selectedProduct.category} · SS26</p>
+          <p className="eyebrow">{selectedProduct.category}</p>
           <h2 id="product-modal-title">{label}</h2>
           <p className="modal-price">{formatCurrency(selectedProduct.price)}</p>
           <p className="modal-description">{selectedProduct.description || 'A YEENKSLUXE piece.'}</p>
