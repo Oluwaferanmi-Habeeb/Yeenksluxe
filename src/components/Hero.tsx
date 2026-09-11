@@ -7,7 +7,14 @@ export default function Hero() {
   const { scrollToShop } = useStore();
   return (
     <header className="hero" aria-labelledby="hero-title">
-      <Image src="/images/hero_campaign.png" alt="YEENKSLUXE campaign model in black streetwear" fill priority className="hero-image" sizes="100vw" />
+      <Image
+        src="/images/ynl-hero-duo.svg"
+        alt="Two people wearing YEENKSLUXE graphic tees beside a car in Lagos"
+        fill
+        priority
+        className="hero-image"
+        sizes="100vw"
+      />
       <div className="hero-shade" />
       <div className="hero-noise" aria-hidden="true" />
       <div className="container hero-content">
