@@ -428,3 +428,12 @@ img { display: block; }
   .checkout-fields { grid-template-columns: 1fr; }
   .checkout-field.full { grid-column: auto; }
   .summary-products article { grid-template-columns: 58px 1fr; }
+  .summary-products article > strong { grid-column: 2; }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 40px 24px; }
+  .footer-bottom > span:nth-child(2) { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .reveal-on-scroll { opacity: 1; transform: none; }
+}
