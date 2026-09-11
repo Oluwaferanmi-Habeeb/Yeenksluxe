@@ -16,7 +16,6 @@ export default function Hero() {
         <div className="hero-noise" aria-hidden="true" />
       </div>
       <div className="container hero-content">
-        <p className="eyebrow hero-eyebrow">YEENKSLUXE / SS26 / LAGOS</p>
         <h1 id="hero-title">The new<br /><em>drop.</em></h1>
         <p className="hero-copy">Graphic tees, hoodies and caps from YEENKSLUXE.</p>
         <div className="hero-actions">
