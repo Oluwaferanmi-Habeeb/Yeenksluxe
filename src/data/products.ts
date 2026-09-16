@@ -84,7 +84,7 @@ export const products: Product[] = [
     id: "shirt-9",
     shopifyVariantId: "45000000000021",
     name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Boxy Shirt",
-    price: 30000,
+    price: 35000,
     category: "Shirts",
     image: img("494e40da-2c31-4f83-b377-2a1c917a900d.jpg"),
     gallery: [img("client_fit_4.jpeg")],
