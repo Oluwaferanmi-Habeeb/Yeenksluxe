@@ -15,6 +15,7 @@ export interface Product {
   care?: string[];        // Care instructions
   fit?: string;           // Fit description (e.g. 'Regular fit, true to size')
   colorNames?: Record<string, string>; // Maps hex → color name (e.g. '#ffffff' → 'White')
+  published?: boolean;
 }
 
 // Helper - make sure the image file exists
