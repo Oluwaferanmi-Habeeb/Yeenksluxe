@@ -14,9 +14,9 @@ export const metadata: Metadata = {
     siteName: "YEENKSLUXE",
     locale: "en_NG",
     type: "website",
-    images: [{ url: "/images/ynl-hero-duo.svg", width: 952, height: 1592, alt: "YEENKSLUXE campaign" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "YEENKSLUXE campaign" }],
   },
-  twitter: { card: "summary_large_image", title: "YEENKSLUXE", description: "YEENKSLUXE, also known as Yeenks Wears, is a Lagos-born label for graphic tees, hoodies and caps.", images: ["/images/ynl-hero-duo.svg"] },
+  twitter: { card: "summary_large_image", title: "YEENKSLUXE", description: "YEENKSLUXE, also known as Yeenks Wears, is a Lagos-born label for graphic tees, hoodies and caps.", images: ["/opengraph-image"] },
   alternates: { canonical: "/" },
   verification: { google: "wfBRgnxSmcAvaJwSfvsE4v8O8RdVkXjBms-pXvj_Ta4" },
   icons: {
