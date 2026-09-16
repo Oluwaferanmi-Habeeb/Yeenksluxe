@@ -52,8 +52,9 @@ export default function OpenGraphImage() {
           <div style={{ fontFamily: "Arial", fontSize: 23, fontWeight: 700, letterSpacing: 6 }}>
             YEENKSLUXE
           </div>
-          <div style={{ fontFamily: "Georgia", fontSize: 76, lineHeight: 0.98 }}>
-            Made for the<br />everyday statement.
+          <div style={{ display: "flex", flexDirection: "column", fontFamily: "Georgia", fontSize: 76, lineHeight: 0.98 }}>
+            <span>Made for the</span>
+            <span>everyday statement.</span>
           </div>
           <div style={{ fontFamily: "Arial", fontSize: 20, letterSpacing: 1.5 }}>
             Lagos born streetwear
