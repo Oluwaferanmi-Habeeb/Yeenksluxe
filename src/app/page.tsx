@@ -17,6 +17,7 @@ import ProductModal from '../components/ProductModal';
 import ToastNotification from '../components/ToastNotification';
 import WhatsAppFloat from '../components/WhatsAppFloat';
 import AccountPanel from '../components/AccountPanel';
+import CookieConsent from '../components/CookieConsent';
 import { AccountProvider } from '../context/AccountContext';
 
 function Storefront() {
@@ -65,6 +66,7 @@ function Storefront() {
       <ProductModal />
       <AccountPanel />
       <ToastNotification />
+      <CookieConsent />
       <div aria-live="polite" aria-atomic="true" className="sr-only" id="a11y-announcer" />
     </div>
   );
