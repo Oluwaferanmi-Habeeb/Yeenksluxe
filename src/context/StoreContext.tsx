@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { products, type Product } from '../data/products';
+import { products as defaultProducts, type Product } from '../data/products';
 import type { CartItem, CheckoutFormData, CheckoutStep, CurrencyType } from '../types';
 import { useAccount } from './AccountContext';
 
@@ -31,6 +31,7 @@ interface StoreContextType {
   cartItemCount: number;
   cartSubtotal: number;
   filteredProducts: Product[];
+  catalog: Product[];
   toast: string | null;
   setToast: (message: string | null) => void;
   showToast: (message: string) => void;
@@ -46,7 +47,7 @@ interface StoreContextType {
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
-function restoreCart(rawCart: string | null): CartItem[] {
+function restoreCart(rawCart: string | null, catalog: Product[] = defaultProducts): CartItem[] {
   if (!rawCart) return [];
 
   try {
@@ -57,7 +58,7 @@ function restoreCart(rawCart: string | null): CartItem[] {
       if (!entry || typeof entry !== 'object') return [];
       const candidate = entry as Partial<CartItem>;
       const productId = candidate.product?.id;
-      const product = products.find(item => item.id === productId);
+      const product = catalog.find(item => item.id === productId);
       if (!product) return [];
 
       const quantity = Number.isInteger(candidate.quantity)
@@ -106,6 +107,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [orderReference, setOrderReference] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [cartStorageKey, setCartStorageKey] = useState<string | null>(null);
+  const [catalog, setCatalog] = useState<Product[]>(defaultProducts);
 
   const accountCartKey = user?.id ? `ynks_cart_user_${user.id}` : 'ynks_cart_guest';
 
@@ -113,6 +115,21 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    fetch('/api/products', { headers: { Accept: 'application/json' } })
+      .then(async response => {
+        if (!response.ok) throw new Error('Catalogue unavailable');
+        return response.json() as Promise<{ products?: Product[] }>;
+      })
+      .then(payload => {
+        if (!active || !Array.isArray(payload.products) || !payload.products.length) return;
+        setCatalog(payload.products);
+      })
+      .catch(() => { /* The built-in catalogue remains available during first setup or an outage. */ });
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {
@@ -135,6 +152,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }, 0);
     return () => window.clearTimeout(timer);
   }, [accountCartKey, cartStorageKey, mounted]);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const timer = window.setTimeout(() => setCart(current => current.flatMap(item => {
+      const product = catalog.find(candidate => candidate.id === item.product.id && candidate.published !== false);
+      return product ? [{ ...item, product }] : [];
+    })), 0);
+    return () => window.clearTimeout(timer);
+  }, [catalog, mounted]);
 
   useEffect(() => {
     if (!mounted || cartStorageKey !== accountCartKey) return;
@@ -160,11 +186,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const cartItemCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
   const cartSubtotal = useMemo(() => cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0), [cart]);
-  const filteredProducts = useMemo(() => products.filter(product => {
+  const filteredProducts = useMemo(() => catalog.filter(product => {
+    if (product.published === false) return false;
     const categoryMatch = selectedCategory === 'All' || product.category === selectedCategory;
     const searchMatch = product.name.toLowerCase().includes(searchQuery.trim().toLowerCase());
     return categoryMatch && searchMatch;
-  }), [selectedCategory, searchQuery]);
+  }), [catalog, selectedCategory, searchQuery]);
 
   const showToast = (message: string) => {
     setToast(message);
@@ -242,7 +269,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   return <StoreContext.Provider value={{
     cart, currency, setCurrency, searchQuery, setSearchQuery, selectedCategory, setSelectedCategory,
     selectedProduct, setSelectedProduct, cartOpen, setCartOpen, checkoutStep, setCheckoutStep,
-    mounted, cartAnimated, scrolled, chosenSize, setChosenSize, chosenColor, setChosenColor,
+    mounted, cartAnimated, scrolled, chosenSize, setChosenSize, chosenColor, setChosenColor, catalog,
     checkoutForm, setCheckoutForm, cartItemCount, cartSubtotal, filteredProducts, toast, setToast,
     showToast, openQuickView, addToCart, updateCartQty, removeCartItem, handlePlaceOrder,
     getWhatsAppLink, formatCurrency, scrollToShop,
