@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
-import { products } from '../data/products';
 
 const looks = [
   { image: '/images/client_fit_1.jpg', productId: 'shirt-1', caption: 'Steezy Graphic Tee' },
@@ -12,7 +11,7 @@ const looks = [
 ];
 
 export default function CommunityShowcase() {
-  const { openQuickView } = useStore();
+  const { openQuickView, catalog } = useStore();
   return (
     <section className="community-section reveal-on-scroll" aria-labelledby="community-title">
       <div className="container">
@@ -22,7 +21,10 @@ export default function CommunityShowcase() {
         </div>
         <div className="community-grid">
           {looks.map((look, index) => (
-            <button className={`community-card community-card-${index + 1}`} key={look.image} onClick={() => openQuickView(products.find(product => product.id === look.productId) || products[0])}>
+            <button className={`community-card community-card-${index + 1}`} key={look.image} onClick={() => {
+              const product = catalog.find(candidate => candidate.id === look.productId) || catalog[0];
+              if (product) openQuickView(product);
+            }}>
               <Image src={look.image} alt={`${look.caption} styled by the YEENKSLUXE community`} fill className="community-image" sizes="(max-width: 700px) 50vw, 25vw" />
               <span><small>Shop the look</small>{look.caption}</span>
             </button>
