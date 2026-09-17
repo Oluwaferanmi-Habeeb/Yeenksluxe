@@ -17,7 +17,8 @@
     "react-dom": "19.2.4"
   },
   "overrides": {
-    "import-in-the-middle": "3.5.0"
+    "import-in-the-middle": "3.5.0",
+    "ansis": "4.3.1"
   },
   "devDependencies": {
     "@types/node": "^20",
