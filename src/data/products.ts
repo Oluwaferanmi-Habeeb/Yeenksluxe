@@ -241,17 +241,6 @@ export const products: Product[] = [
     colors: ["#000000"]
   },
   {
-    id: "drop3-04",
-    shopifyVariantId: "45000000000063",
-    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Crew Tank",
-    description: "Crew neck tank top.",
-    price: 30000,
-    category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (1).jpeg"),
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000"]
-  },
-  {
     id: "drop3-05",
     shopifyVariantId: "45000000000064",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Printed Hoodie",
@@ -292,6 +281,7 @@ export const products: Product[] = [
     price: 30000,
     category: "Shirts",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM.jpeg"),
+    gallery: [img("WhatsApp Image 2026-07-15 at 1.56.48 PM (1).jpeg")],
     sizes: ["S", "M", "L", "XL"],
     colors: ["#000000"]
   },
