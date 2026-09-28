@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useStore } from '../context/StoreContext';
 import { useAccount } from '../context/AccountContext';
 import { categories } from '../data/products';
@@ -45,6 +46,7 @@ export default function Navbar() {
         )}
 
         <div className="nav-actions">
+          {(user?.role === 'admin' || user?.roles?.includes('admin')) && <Link className="admin-link" href="/admin">CEO</Link>}
           {checkoutStep === 'shop' && (
             <button className="icon-button search-trigger" onClick={() => setSearchOpen(!searchOpen)} aria-label="Search products" aria-expanded={searchOpen}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
@@ -91,3 +93,4 @@ export default function Navbar() {
     </nav>
   );
 }
+

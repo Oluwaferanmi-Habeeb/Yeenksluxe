@@ -6,17 +6,17 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://yeenksluxe.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: "YEENKSLUXE | Lagos-Born Streetwear", template: "%s | YEENKSLUXE" },
-  description: "YEENKSLUXE, also known as Yeenks Wears, is a Lagos-born label for graphic tees, hoodies and caps.",
+  description: "Independent streetwear designed in Lagos, Nigeria. Discover the YEENKSLUXE collection.",
   keywords: ["YEENKSLUXE", "Yeenks Wears", "Yeenkswears", "Nigerian streetwear", "Lagos fashion", "graphic tees", "streetwear Nigeria"],
   openGraph: {
     title: "YEENKSLUXE | Lagos-Born Streetwear",
-    description: "YEENKSLUXE, also known as Yeenks Wears, is a Lagos-born label for graphic tees, hoodies and caps.",
+    description: "Independent streetwear designed in Lagos, Nigeria. Discover the YEENKSLUXE collection.",
     siteName: "YEENKSLUXE",
     locale: "en_NG",
     type: "website",
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "YEENKSLUXE campaign" }],
   },
-  twitter: { card: "summary_large_image", title: "YEENKSLUXE", description: "YEENKSLUXE, also known as Yeenks Wears, is a Lagos-born label for graphic tees, hoodies and caps.", images: ["/opengraph-image"] },
+  twitter: { card: "summary_large_image", title: "YEENKSLUXE", description: "Independent streetwear designed in Lagos, Nigeria. Discover the YEENKSLUXE collection.", images: ["/opengraph-image"] },
   alternates: { canonical: "/" },
   verification: { google: "wfBRgnxSmcAvaJwSfvsE4v8O8RdVkXjBms-pXvj_Ta4" },
   icons: {
@@ -51,3 +51,4 @@ export default function RootLayout({
     </html>
   );
 }
+

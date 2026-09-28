@@ -31,8 +31,9 @@ export default function AdminDashboard() {
   const { user, ready, identityEnabled, setAccountOpen, signOut } = useAccount();
   const isAdmin = user?.role === 'admin' || user?.roles?.includes('admin');
   const [catalog, setCatalog] = useState<Product[]>(starterProducts);
+  const [backups, setBackups] = useState<{ key: string; createdAt: string; productCount: number }[]>([]);
   const [draft, setDraft] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
@@ -42,9 +43,10 @@ export default function AdminDashboard() {
     let active = true;
     fetch('/api/admin/products', { headers: { Accept: 'application/json' } })
       .then(async response => {
-        const body = await response.json() as { products?: Product[]; error?: string };
+        const body = await response.json() as { products?: Product[]; backups?: typeof backups; error?: string };
         if (!response.ok) throw new Error(body.error || 'Could not load the catalogue.');
-        if (active && Array.isArray(body.products) && body.products.length) setCatalog(body.products);
+        if (active && Array.isArray(body.products)) setCatalog(body.products);
+        if (active && Array.isArray(body.backups)) setBackups(body.backups);
       })
       .catch(error => active && setMessage(error instanceof Error ? error.message : 'Could not load the catalogue.'))
       .finally(() => active && setLoading(false));
@@ -53,17 +55,20 @@ export default function AdminDashboard() {
 
   const publishedCount = useMemo(() => catalog.filter(product => product.published !== false).length, [catalog]);
 
-  const persist = async (nextCatalog: Product[], successMessage: string) => {
+  const persist = async (nextCatalog: Product[], successMessage: string, action?: 'restore') => {
     setSaving(true); setMessage('');
     try {
       const response = await fetch('/api/admin/products', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ products: nextCatalog }),
+        body: JSON.stringify({ products: nextCatalog, ...(action ? { action } : {}) }),
       });
       const body = await response.json() as { products?: Product[]; error?: string };
       if (!response.ok || !body.products) throw new Error(body.error || 'Could not save the catalogue.');
       setCatalog(body.products);
+      const historyResponse = await fetch('/api/admin/products', { headers: { Accept: 'application/json' } });
+      const updated = await historyResponse.json() as { backups?: typeof backups };
+      if (Array.isArray(updated.backups)) setBackups(updated.backups);
       setDraft(null);
       setMessage(successMessage);
     } catch (error) {
@@ -85,6 +90,23 @@ export default function AdminDashboard() {
     const product = catalog.find(item => item.id === id);
     if (!product || !window.confirm(`Remove “${product.name}” from the catalogue?`)) return;
     await persist(catalog.filter(item => item.id !== id), 'Product removed.');
+  };
+
+  const restoreBackup = async (key: string) => {
+    if (saving || loading) return;
+    setMessage('');
+    try {
+    const response = await fetch('/api/admin/products', { headers: { Accept: 'application/json' } });
+    const body = await response.json() as { backups?: typeof backups; error?: string };
+    if (!response.ok || !body.backups?.some(backup => backup.key === key)) throw new Error(body.error || 'That backup is no longer available.');
+    if (!window.confirm('Restore this catalogue version? The current catalogue will be saved as a backup first.')) return;
+    const backupResponse = await fetch(`/api/admin/products?backup=${encodeURIComponent(key)}`, { headers: { Accept: 'application/json' } });
+    const backup = await backupResponse.json() as { products?: Product[]; error?: string };
+    if (!backupResponse.ok || !Array.isArray(backup.products)) throw new Error(backup.error || 'Could not load that backup.');
+    await persist(backup.products, 'Catalogue version restored.', 'restore');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Could not restore that backup.');
+    }
   };
 
   const uploadImage = async (file: File, destination: 'image' | 'gallery') => {
@@ -135,7 +157,10 @@ export default function AdminDashboard() {
         </div>
         <div className="admin-images"><div><span>Primary image</span>{draft.image ? <img src={draft.image} alt="Product preview" /> : <div className="admin-image-empty">Add a product image</div>}<label className="admin-upload">{uploading ? 'Uploading…' : 'Upload primary image'}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; if (file) void uploadImage(file, 'image'); event.currentTarget.value = ''; }} disabled={uploading} /></label></div><div><span>Extra images</span><div className="admin-gallery">{(draft.gallery || []).map((image, index) => <figure key={image}><img src={image} alt="Additional product view" /><button onClick={() => setDraft({ ...draft, gallery: draft.gallery?.filter((_, itemIndex) => itemIndex !== index) })} aria-label="Remove additional image">×</button></figure>)}</div><label className="admin-upload admin-upload-light">Add extra image<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; if (file) void uploadImage(file, 'gallery'); event.currentTarget.value = ''; }} disabled={uploading || (draft.gallery?.length || 0) >= 8} /></label></div></div>
         <div className="admin-actions"><button className="button button-dark" onClick={() => void saveDraft()} disabled={saving || uploading}>{saving ? 'Saving…' : draft.published === false ? 'Save as draft' : 'Save changes'} <span>↗</span></button><button className="button button-outline" onClick={() => setDraft(null)} disabled={saving}>Cancel</button></div>
-      </> : <div className="admin-empty"><h2>Select a product</h2><p>Choose a product from the list or add a new one.</p></div>}</section>
+      </> : <div className="admin-empty"><h2>Select a product</h2><p>Choose a product from the list or add a new one.</p></div>}
+        {backups.length > 0 && <section className="admin-history" aria-label="Catalogue history"><h3>Catalogue history</h3>{backups.map(backup => <div key={backup.key}><span>{new Date(backup.createdAt).toLocaleString()} · {backup.productCount} products</span><button onClick={() => void restoreBackup(backup.key)} disabled={saving || loading}>Restore</button></div>)}</section>}
+      </section>
     </section>
   </main>;
 }
+

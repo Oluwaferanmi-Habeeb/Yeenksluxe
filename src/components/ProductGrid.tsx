@@ -7,9 +7,6 @@ import { categories, Product } from '../data/products';
 import { useAccount } from '../context/AccountContext';
 
 const shortName = (product: Product) => product.name
-  .replace(/YĒĒNKSLUXÉ\s*x\s*/gi, '')
-  .replace(/YEENKSLUXE\s*x\s*/gi, '')
-  .replace(/STEEZY\s*x\s*/gi, '')
   .replace(/[‘’']?26\s+Edition\s*/gi, '')
   .replace(/\s{2,}/g, ' ')
   .trim();
@@ -34,10 +31,10 @@ export default function ProductGrid() {
       <div className="container">
         <div className="shop-heading-row">
           <div>
-            <p className="eyebrow">The latest release</p>
-            <h2 id="catalogue-title">Shop the drop.</h2>
+            <p className="eyebrow">The collection / 026</p>
+            <h2 id="catalogue-title">The collection.</h2>
           </div>
-          <p className="shop-intro">Tees, hoodies and caps.</p>
+          <p className="shop-intro">Designed in Lagos. Cut for a point of view.</p>
         </div>
 
         <div className="shop-toolbar">
@@ -79,7 +76,7 @@ export default function ProductGrid() {
                     <button className={`save-piece ${savedProductIds.includes(product.id) ? 'saved' : ''}`} onClick={() => { toggleSavedProduct(product.id).catch(() => undefined); }} aria-label={savedProductIds.includes(product.id) ? `Remove ${shortName(product)} from saved pieces` : user ? `Save ${shortName(product)}` : `Sign in to save ${shortName(product)}`} aria-pressed={savedProductIds.includes(product.id)}><span aria-hidden="true">{savedProductIds.includes(product.id) ? '♥' : '♡'}</span></button>
                   </div>
                   <div className="product-info">
-                    <div><p>{product.category}</p><h3>{shortName(product)}</h3></div>
+                    <div><p>YEENKSLUXE · {product.category}</p><h3>{shortName(product)}</h3></div>
                     <strong>{formatCurrency(product.price)}</strong>
                   </div>
                   <div className="product-meta">
@@ -96,3 +93,4 @@ export default function ProductGrid() {
     </section>
   );
 }
+

@@ -32,7 +32,11 @@ See `SECURITY.md` for the release and account-security checklist.
 
 ## Store data
 
-Products live in `src/data/products.ts`. Before publishing a new drop, verify:
+The built-in catalogue lives in `src/data/products.ts`. The CEO can manage the live catalogue at `/admin`; `/admin/preview` is a read-only preview of the workspace.
+
+The secure dashboard requires a Netlify Identity account with the server-controlled `admin` role. Product changes and images are stored in Netlify Blobs, and every management request is authorized again in the Netlify Function. Test the complete management flow on a Netlify deploy because the standard Next.js development server does not provide the Netlify Identity and Blobs runtime.
+
+Before publishing a new drop, verify:
 
 - product name and category;
 - price and available sizes;
@@ -59,3 +63,4 @@ Empty categories should not be added to the navigation.
 - Review the privacy and terms pages with appropriate local professional guidance.
 
 See `DESIGN_SYSTEM.md` for visual and content rules.
+

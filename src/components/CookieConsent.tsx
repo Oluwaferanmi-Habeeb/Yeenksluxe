@@ -13,5 +13,6 @@ export default function CookieConsent() {
   }, []);
   const decide = (choice: 'accepted' | 'essential') => { localStorage.setItem(key, choice); setVisible(false); };
   if (!visible) return null;
-  return <section className="cookie-consent" role="dialog" aria-label="Cookie choices"><p>We use essential browser storage to keep your bag and account flow working. Optional analytics are off unless you accept them. <Link href="/cookies">Cookie Policy</Link></p><div><button className="button button-outline" onClick={() => decide('essential')}>Essential only</button><button className="button button-dark" onClick={() => decide('accepted')}>Accept</button></div></section>;
+  return <section className="cookie-consent" role="dialog" aria-label="Cookie choices"><p>Essential storage keeps your bag and account working. Optional analytics are off unless accepted. <Link href="/cookies">Cookie policy</Link></p><div><button className="button button-outline" onClick={() => decide('essential')}>Essential only</button><button className="button button-dark" onClick={() => decide('accepted')}>Accept</button></div></section>;
 }
+

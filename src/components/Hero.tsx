@@ -8,19 +8,21 @@ export default function Hero() {
   return (
     <header className="hero" aria-labelledby="hero-title">
       <div className="hero-stage">
-        <div className="hero-image" role="img" aria-label="Two people wearing YEENKSLUXE graphic tees" />
+        <div className="hero-image" role="img" aria-label="YEENKSLUXE campaign portrait" />
         <div className="hero-shade" />
         <div className="hero-noise" aria-hidden="true" />
       </div>
       <div className="container hero-content">
-        <h1 id="hero-title">The new<br /><em>drop.</em></h1>
-        <p className="hero-copy">Graphic tees, hoodies and caps from YEENKSLUXE.</p>
+        <p className="eyebrow hero-eyebrow">Lagos, Nigeria · Collection 026</p>
+        <h1 id="hero-title">Made to<br /><em>be seen.</em></h1>
+        <p className="hero-copy">Considered streetwear. Made in Lagos, worn everywhere.</p>
         <div className="hero-actions">
           <button className="button button-light" onClick={scrollToShop}>Shop the latest drop</button>
           <a className="text-link text-link-light" href="#campaign">See the looks <span>↘</span></a>
         </div>
       </div>
-      <div className="hero-index" aria-hidden="true"><span>YNL / 026</span><span>LAGOS</span></div>
+      <div className="hero-index" aria-hidden="true"><span>YEENKSLUXE / 026</span><span>LAGOS, NIGERIA</span></div>
     </header>
   );
 }
+

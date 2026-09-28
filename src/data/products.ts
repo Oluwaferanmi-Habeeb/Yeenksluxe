@@ -427,4 +427,5 @@ export const products: Product[] = [
 
 // Shared constants for Signature Caps to avoid duplication
 
-export const categories = ['Shirts', 'Hoodies', 'Hats'] as const;
+export const categories = ['Shirts', 'Hoodies', 'Hats', 'Accessories'] as const;
+

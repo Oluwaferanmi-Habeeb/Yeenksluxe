@@ -19,8 +19,26 @@ export default async (request: Request) => {
   const catalogue = getStore({ name: CATALOG_STORE, consistency: 'strong' });
 
   if (request.method === 'GET') {
+    const backupKey = new URL(request.url).searchParams.get('backup');
     const products = await catalogue.get('products', { type: 'json' });
-    return json({ products: validateCatalog(products) }, 200, { 'Cache-Control': 'no-store' });
+    const snapshots = await catalogue.list({ prefix: 'backups/' });
+    const backups = (await Promise.all(snapshots.blobs.map(async blob => {
+      const result = await catalogue.getWithMetadata(blob.key, { type: 'json' });
+      const value = validateCatalog(result?.data);
+      return value ? {
+        key: blob.key,
+        createdAt: typeof result?.metadata?.createdAt === 'string' ? result.metadata.createdAt : blob.key.slice('backups/'.length, 'backups/'.length + 13),
+        productCount: value.length,
+      } : null;
+    }))).filter((backup): backup is { key: string; createdAt: string; productCount: number } => backup !== null)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    if (backupKey) {
+      const backup = backups.find(item => item.key === backupKey);
+      if (!backup) return json({ error: 'Backup not found.' }, 404, { 'Cache-Control': 'no-store' });
+      const restored = validateCatalog(await catalogue.get(backup.key, { type: 'json' }));
+      return restored ? json({ products: restored }, 200, { 'Cache-Control': 'no-store' }) : json({ error: 'Backup not found.' }, 404, { 'Cache-Control': 'no-store' });
+    }
+    return json({ products: validateCatalog(products), backups }, 200, { 'Cache-Control': 'no-store' });
   }
 
   if (request.method === 'PUT') {
@@ -28,9 +46,38 @@ export default async (request: Request) => {
     if (contentLength > 1_000_000) return json({ error: 'Catalogue request is too large.' }, 413);
     let body: unknown;
     try { body = await request.json(); } catch { return json({ error: 'Invalid request body.' }, 400); }
-    const products = validateCatalog((body as { products?: unknown })?.products);
+    const payload = body as { products?: unknown; action?: unknown };
+    const products = validateCatalog(payload.products);
     if (!products) return json({ error: 'One or more product details are invalid.' }, 422);
-    await catalogue.setJSON('products', products, { metadata: { updatedBy: user.id, updatedAt: new Date().toISOString() } });
+    const now = new Date().toISOString();
+    const previous = validateCatalog(await catalogue.get('products', { type: 'json' }));
+    if (payload.action !== 'restore') {
+      if (previous) {
+        await catalogue.setJSON(`backups/${Date.now()}-${crypto.randomUUID()}`, previous, {
+          metadata: { updatedBy: user.id, createdAt: now },
+        });
+      }
+    }
+    await catalogue.setJSON('products', products, { metadata: { updatedBy: user.id, updatedAt: now } });
+
+    const retainedBackups = await catalogue.list({ prefix: 'backups/' });
+    const expired = retainedBackups.blobs.sort((a, b) => b.key.localeCompare(a.key)).slice(20);
+    await Promise.all(expired.map(blob => catalogue.delete(blob.key)));
+
+    const currentImages = new Set(products.flatMap(product => [product.image, ...(product.gallery || [])])
+      .map(path => path.match(/^\/api\/product-image\/([A-Za-z0-9_-]{8,80})$/)?.[1])
+      .filter((id): id is string => Boolean(id)));
+    const previouslyReferenced = new Set((previous || []).flatMap(product => [product.image, ...(product.gallery || [])])
+      .map(path => path.match(/^\/api\/product-image\/([A-Za-z0-9_-]{8,80})$/)?.[1])
+      .filter((id): id is string => Boolean(id)));
+    const backupPaths = await catalogue.list({ prefix: 'backups/' });
+    const backupProducts = await Promise.all(backupPaths.blobs.map(blob => catalogue.get(blob.key, { type: 'json' })));
+    const retainedImages = new Set(backupProducts.flatMap(value => validateCatalog(value) || [])
+      .flatMap(product => [product.image, ...(product.gallery || [])])
+      .map(path => path.match(/^\/api\/product-image\/([A-Za-z0-9_-]{8,80})$/)?.[1])
+      .filter((id): id is string => Boolean(id)));
+    await Promise.all([...previouslyReferenced].filter(id => !currentImages.has(id) && !retainedImages.has(id))
+      .map(id => getStore({ name: IMAGE_STORE, consistency: 'strong' }).delete(`images/${id}`)));
     return json({ products });
   }
 
@@ -52,3 +99,4 @@ export default async (request: Request) => {
 };
 
 export const config: Config = { path: '/api/admin/products', method: ['GET', 'POST', 'PUT'] };
+
