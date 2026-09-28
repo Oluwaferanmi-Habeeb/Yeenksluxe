@@ -51,12 +51,10 @@ export default async (request: Request) => {
     if (!products) return json({ error: 'One or more product details are invalid.' }, 422);
     const now = new Date().toISOString();
     const previous = validateCatalog(await catalogue.get('products', { type: 'json' }));
-    if (payload.action !== 'restore') {
-      if (previous) {
-        await catalogue.setJSON(`backups/${Date.now()}-${crypto.randomUUID()}`, previous, {
-          metadata: { updatedBy: user.id, createdAt: now },
-        });
-      }
+    if (previous) {
+      await catalogue.setJSON(`backups/${Date.now()}-${crypto.randomUUID()}`, previous, {
+        metadata: { updatedBy: user.id, createdAt: now },
+      });
     }
     await catalogue.setJSON('products', products, { metadata: { updatedBy: user.id, updatedAt: now } });
 
