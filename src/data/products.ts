@@ -67,7 +67,7 @@ export const products: Product[] = [
     },
     colorGalleries: {
       "#8b8d62": [img("WhatsApp Image 2026-07-15 at 1.56.48 PM (1).jpeg")]
-    }
+    },
   {
         id: "shirt-13",
     shopifyVariantId: "45000000000033",
