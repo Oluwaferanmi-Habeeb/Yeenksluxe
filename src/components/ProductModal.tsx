@@ -14,7 +14,12 @@ export default function ProductModal() {
   const [imageIndex, setImageIndex] = useState(0);
   const [detailsOpen, setDetailsOpen] = useState<'details' | 'size' | 'delivery'>('details');
 
-  const gallery = useMemo(() => selectedProduct ? [selectedProduct.image, ...(selectedProduct.gallery || [])] : [], [selectedProduct]);
+  const gallery = useMemo(() => {
+    if (!selectedProduct) return [];
+    const primary = selectedProduct.colorImages?.[chosenColor] || selectedProduct.image;
+    const additionalViews = selectedProduct.colorGalleries?.[chosenColor] ?? selectedProduct.gallery ?? [];
+    return [primary, ...additionalViews.filter(image => image !== primary)];
+  }, [selectedProduct, chosenColor]);
 
   useEffect(() => {
     if (!selectedProduct) return;
@@ -53,7 +58,7 @@ export default function ProductModal() {
           <p className="modal-price">{formatCurrency(selectedProduct.price)}</p>
           <p className="modal-description">{selectedProduct.description || 'A YEENKSLUXE piece.'}</p>
 
-          {!!selectedProduct.colors?.length && <fieldset className="product-options"><legend>Colour <span>{selectedProduct.colorNames?.[chosenColor] || colourNames[chosenColor] || 'Selected'}</span></legend><div className="colour-options">{selectedProduct.colors.map(colour => <button key={colour} className={chosenColor === colour ? 'active' : ''} style={{ '--swatch': colour } as React.CSSProperties} onClick={() => setChosenColor(colour)} aria-label={selectedProduct.colorNames?.[colour] || colourNames[colour] || colour} aria-pressed={chosenColor === colour} />)}</div></fieldset>}
+          {!!selectedProduct.colors?.length && <fieldset className="product-options"><legend>Colour <span>{selectedProduct.colorNames?.[chosenColor] || colourNames[chosenColor] || 'Selected'}</span></legend><div className="colour-options">{selectedProduct.colors.map(colour => <button key={colour} className={chosenColor === colour ? 'active' : ''} style={{ '--swatch': colour } as React.CSSProperties} onClick={() => { setImageIndex(0); setChosenColor(colour); }} aria-label={selectedProduct.colorNames?.[colour] || colourNames[colour] || colour} aria-pressed={chosenColor === colour} />)}</div></fieldset>}
 
           {!!selectedProduct.sizes?.length && <fieldset className="product-options"><legend>Choose size</legend><div className="size-options">{selectedProduct.sizes.map(size => <button key={size} className={chosenSize === size ? 'active' : ''} onClick={() => setChosenSize(size)} aria-pressed={chosenSize === size}>{size}</button>)}</div></fieldset>}
 

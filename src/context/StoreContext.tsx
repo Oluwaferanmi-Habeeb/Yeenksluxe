@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { products as defaultProducts, type Product } from '../data/products';
+import { normalizeProductVariants, products as defaultProducts, type Product } from '../data/products';
 import type { CartItem, CheckoutFormData, CheckoutStep, CurrencyType } from '../types';
 import { useAccount } from './AccountContext';
 
@@ -107,7 +107,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [orderReference, setOrderReference] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [cartStorageKey, setCartStorageKey] = useState<string | null>(null);
-  const [catalog, setCatalog] = useState<Product[]>(defaultProducts);
+  const [catalog, setCatalog] = useState<Product[]>(() => normalizeProductVariants(defaultProducts));
 
   const accountCartKey = user?.id ? `ynks_cart_user_${user.id}` : 'ynks_cart_guest';
 
@@ -126,7 +126,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       })
       .then(payload => {
         if (!active || !Array.isArray(payload.products) || !payload.products.length) return;
-        setCatalog(payload.products);
+        setCatalog(normalizeProductVariants(payload.products));
       })
       .catch(() => { /* The built-in catalogue remains available during first setup or an outage. */ });
     return () => { active = false; };

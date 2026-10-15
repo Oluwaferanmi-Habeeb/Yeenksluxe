@@ -510,3 +510,12 @@ img { display: block; }
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
   .reveal-on-scroll { opacity: 1; transform: none; }
 }
+
+.admin-color-images { margin-top: 32px; }
+.admin-color-images h3 { margin: 0 0 14px; font: 20px var(--serif); }
+.admin-color-images > div { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+.admin-color-images article > span { display: block; margin-bottom: 8px; font-size: 11px; }
+.admin-color-images img, .admin-color-images .admin-image-empty { width: 100%; aspect-ratio: 1 / 1.15; object-fit: cover; }
+.admin-color-images figure { position: relative; margin: 8px 0; }
+.admin-color-images figure button { position: absolute; top: 5px; right: 5px; width: 24px; height: 24px; border: 0; background: var(--paper); color: var(--ink); cursor: pointer; }
+.admin-color-images article > button { margin-top: 8px; padding: 0; border: 0; border-bottom: 1px solid; background: transparent; color: var(--ink); font-size: 10px; cursor: pointer; }

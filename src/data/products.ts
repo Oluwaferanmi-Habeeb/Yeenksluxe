@@ -52,10 +52,25 @@ export const products: Product[] = [
     description: "Graphic tank top.",
     price: 30000,
     category: "Shirts",
-    image: img("new_prod_6.jpg"),
+    image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM.jpeg"),
     gallery: [img("snaptik_7625367276497292565_3_v2.jpeg")],
     sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000", "#ffffff"]
+    colors: ["#000000", "#696969", "#ffffff", "#b59b72", "#8b8d62"],
+    colorNames: { "#000000": "Black", "#696969": "Grey", "#ffffff": "White", "#b59b72": "Brown", "#8b8d62": "Olive" },
+    colorImages: {
+      "#000000": img("new_prod_6.jpg"),
+      "#696969": img("WhatsApp Image 2026-07-15 at 1.56.49 PM.jpeg"),
+      "#ffffff": img("WhatsApp Image 2026-07-15 at 1.56.48 PM (3).jpeg"),
+      "#b59b72": img("WhatsApp Image 2026-07-15 at 1.56.49 PM (1).jpeg"),
+      "#8b8d62": img("WhatsApp Image 2026-07-15 at 1.56.51 PM (1).jpeg")
+    },
+    colorGalleries: {
+      "#000000": [],
+      "#696969": [],
+      "#ffffff": [],
+      "#b59b72": [],
+      "#8b8d62": [img("WhatsApp Image 2026-07-15 at 1.56.48 PM (1).jpeg")]
+    }
   },
   {
         id: "shirt-13",
@@ -370,3 +385,27 @@ export const products: Product[] = [
 // Shared constants for Signature Caps to avoid duplication
 
 export const categories = ['Shirts', 'Hoodies', 'Hats', 'Accessories'] as const;
+
+export function normalizeProductVariants(catalog: Product[]): Product[] {
+  const signatureTank = catalog.find(product => product.id === 'shirt-3');
+  if (!signatureTank) return catalog;
+  const variantIds = new Set(['drop3-06', 'drop3-08']);
+  const variantProducts = catalog.filter(product => variantIds.has(product.id));
+  const colorImages = { ...signatureTank.colorImages };
+  const colorGalleries = { ...signatureTank.colorGalleries };
+  for (const variant of variantProducts) {
+    const color = variant.id === 'drop3-06' ? '#ffffff' : '#8b8d62';
+    colorImages[color] = variant.image;
+    if (variant.gallery?.length) colorGalleries[color] = variant.gallery;
+  }
+  const mergedTank: Product = {
+    ...signatureTank,
+    image: colorImages['#696969'] || signatureTank.image,
+    colors: ['#000000', '#696969', '#ffffff', '#b59b72', '#8b8d62'],
+    colorNames: { '#000000': 'Black', '#696969': 'Grey', '#ffffff': 'White', '#b59b72': 'Brown', '#8b8d62': 'Olive' },
+    colorImages,
+    colorGalleries,
+  };
+  return catalog.filter(product => !variantIds.has(product.id))
+    .map(product => product.id === 'shirt-3' ? mergedTank : product);
+}

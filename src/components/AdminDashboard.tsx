@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { products as starterProducts, type Product } from '../data/products';
+import { normalizeProductVariants, products as starterProducts, type Product } from '../data/products';
 import { useAccount } from '../context/AccountContext';
 import AccountPanel from './AccountPanel';
 
@@ -30,7 +30,7 @@ function readList(value: string, maxLength = 20) {
 export default function AdminDashboard() {
   const { user, ready, identityEnabled, setAccountOpen, signOut } = useAccount();
   const isAdmin = user?.role === 'admin' || user?.roles?.includes('admin');
-  const [catalog, setCatalog] = useState<Product[]>(starterProducts);
+  const [catalog, setCatalog] = useState<Product[]>(() => normalizeProductVariants(starterProducts));
   const [backups, setBackups] = useState<{ key: string; createdAt: string; productCount: number }[]>([]);
   const [draft, setDraft] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
       .then(async response => {
         const body = await response.json() as { products?: Product[]; backups?: typeof backups; error?: string };
         if (!response.ok) throw new Error(body.error || 'Could not load the catalogue.');
-        if (active && Array.isArray(body.products)) setCatalog(body.products);
+        if (active && Array.isArray(body.products)) setCatalog(normalizeProductVariants(body.products));
         if (active && Array.isArray(body.backups)) setBackups(body.backups);
       })
       .catch(error => active && setMessage(error instanceof Error ? error.message : 'Could not load the catalogue.'))
@@ -100,13 +100,13 @@ export default function AdminDashboard() {
       const backup = await response.json() as { products?: Product[]; error?: string };
       if (!response.ok || !Array.isArray(backup.products)) throw new Error(backup.error || 'Could not load that backup.');
       if (!window.confirm('Restore this catalogue version? The current catalogue will be saved as a backup first.')) return;
-      await persist(backup.products, 'Catalogue version restored.', 'restore');
+      await persist(normalizeProductVariants(backup.products), 'Catalogue version restored.', 'restore');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Could not restore that backup.');
     }
   };
 
-  const uploadImage = async (file: File, destination: 'image' | 'gallery') => {
+  const uploadImage = async (file: File, destination: 'image' | 'gallery' | 'color' | 'colorGallery', color?: string) => {
     if (!draft) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 4 * 1024 * 1024) {
       setMessage('Use a JPG, PNG or WebP image below 4 MB.'); return;
@@ -153,6 +153,18 @@ export default function AdminDashboard() {
           <label className="admin-field full"><span>Short description</span><textarea value={draft.description || ''} maxLength={280} onChange={event => setDraft({ ...draft, description: event.target.value })} placeholder="Short product description" /></label>
         </div>
         <div className="admin-images"><div><span>Primary image</span>{draft.image ? <img src={draft.image} alt="Product preview" /> : <div className="admin-image-empty">Add a product image</div>}<label className="admin-upload">{uploading ? 'Uploading…' : 'Upload primary image'}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; if (file) void uploadImage(file, 'image'); event.currentTarget.value = ''; }} disabled={uploading} /></label></div><div><span>Extra images</span><div className="admin-gallery">{(draft.gallery || []).map((image, index) => <figure key={image}><img src={image} alt="Additional product view" /><button onClick={() => setDraft({ ...draft, gallery: draft.gallery?.filter((_, itemIndex) => itemIndex !== index) })} aria-label="Remove additional image">×</button></figure>)}</div><label className="admin-upload admin-upload-light">Add extra image<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; if (file) void uploadImage(file, 'gallery'); event.currentTarget.value = ''; }} disabled={uploading || (draft.gallery?.length || 0) >= 8} /></label></div></div>
+        {!!draft.colors?.length && <section className="admin-color-images" aria-label="Images by colour"><h3>Images by colour</h3><div>{draft.colors.map((color, index) => {
+          const image = draft.colorImages?.[color] || (index === 0 ? draft.image : '');
+          const colorName = draft.colorNames?.[color] || ({ '#000000': 'Black', '#ffffff': 'White' }[color] ?? color);
+          const views = draft.colorGalleries?.[color] || [];
+          return <article key={color}>
+            <span>{colorName}</span>
+            {image ? <img src={image} alt={`${colorName} product preview`} /> : <div className="admin-image-empty">No colour image</div>}
+            <label className="admin-upload admin-upload-light">{draft.colorImages?.[color] ? 'Replace front image' : 'Add front image'}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; if (file) void uploadImage(file, 'color', color); event.currentTarget.value = ''; }} disabled={uploading} /></label>
+            {views.map((view, viewIndex) => <figure key={view}><img src={view} alt={`${colorName} additional view`} /><button type="button" onClick={() => setDraft({ ...draft, colorGalleries: { ...draft.colorGalleries, [color]: views.filter((_, index) => index !== viewIndex) } })} aria-label={`Remove ${colorName} additional view`}>×</button></figure>)}
+            <label className="admin-upload admin-upload-light">Add back / detail view<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; if (file) void uploadImage(file, 'colorGallery', color); event.currentTarget.value = ''; }} disabled={uploading || views.length >= 8} /></label>
+          </article>;
+        })}</div></section>}
         <div className="admin-actions"><button className="button button-dark" onClick={() => void saveDraft()} disabled={saving || uploading}>{saving ? 'Saving…' : draft.published === false ? 'Save as draft' : 'Save changes'} <span>↗</span></button><button className="button button-outline" onClick={() => setDraft(null)} disabled={saving || uploading}>Cancel</button></div>
       </> : <div className="admin-empty"><h2>Select a product</h2><p>Choose a product from the list or add a new one.</p></div>}
         {backups.length > 0 && <section className="admin-history" aria-label="Catalogue history"><h3>Catalogue history</h3>{backups.map(backup => <div key={backup.key}><span>{new Date(backup.createdAt).toLocaleString()} · {backup.productCount} products</span><button onClick={() => void restoreBackup(backup.key)} disabled={saving || loading}>Restore</button></div>)}</section>}

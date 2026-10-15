@@ -21,6 +21,8 @@ export interface CatalogProduct {
   care?: string[];
   fit?: string;
   colorNames?: Record<string, string>;
+  colorImages?: Record<string, string>;
+  colorGalleries?: Record<string, string[]>;
   published?: boolean;
 }
 
@@ -70,6 +72,27 @@ export function validateCatalog(value: unknown): CatalogProduct[] | null {
     if (gallery.length) product.gallery = gallery;
     if (sizes.length) product.sizes = sizes;
     if (colors.length) product.colors = colors;
+    if (input.colorNames && typeof input.colorNames === 'object' && !Array.isArray(input.colorNames)) {
+      const names = Object.fromEntries(Object.entries(input.colorNames as Record<string, unknown>)
+        .filter(([color]) => colors.includes(color))
+        .map(([color, name]) => [color, text(name, 32)])
+        .filter(([, name]) => Boolean(name)));
+      if (Object.keys(names).length) product.colorNames = names;
+    }
+    if (input.colorImages && typeof input.colorImages === 'object' && !Array.isArray(input.colorImages)) {
+      const images = Object.fromEntries(Object.entries(input.colorImages as Record<string, unknown>)
+        .filter(([color]) => colors.includes(color))
+        .map(([color, path]) => [color, safeMediaPath(path)])
+        .filter(([, path]) => Boolean(path)));
+      if (Object.keys(images).length) product.colorImages = images;
+    }
+    if (input.colorGalleries && typeof input.colorGalleries === 'object' && !Array.isArray(input.colorGalleries)) {
+      const galleries = Object.fromEntries(Object.entries(input.colorGalleries as Record<string, unknown>)
+        .filter(([color]) => colors.includes(color))
+        .map(([color, paths]) => [color, stringList(paths, 8, 300).map(safeMediaPath).filter(Boolean)])
+        .filter(([, paths]) => paths.length));
+      if (Object.keys(galleries).length) product.colorGalleries = galleries;
+    }
     const description = text(input.description, 280); if (description) product.description = description;
     const badge = text(input.badge, 36); if (badge) product.badge = badge;
     const video = safeMediaPath(input.video); if (video) product.video = video;
