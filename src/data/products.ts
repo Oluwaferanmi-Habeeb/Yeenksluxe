@@ -15,6 +15,8 @@ export interface Product {
   care?: string[];        // Care instructions
   fit?: string;           // Fit description (e.g. 'Regular fit, true to size')
   colorNames?: Record<string, string>; // Maps hex → color name (e.g. '#ffffff' → 'White')
+  colorImages?: Record<string, string>;
+  colorGalleries?: Record<string, string[]>;
   published?: boolean;
 }
 
@@ -52,26 +54,20 @@ export const products: Product[] = [
     description: "Graphic tank top.",
     price: 30000,
     category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM.jpeg"),
-    gallery: [img("snaptik_7625367276497292565_3_v2.jpeg")],
+    image: img("new_prod_6.jpg"),
     sizes: ["S", "M", "L", "XL"],
     colors: ["#000000", "#696969", "#ffffff", "#b59b72", "#8b8d62"],
     colorNames: { "#000000": "Black", "#696969": "Grey", "#ffffff": "White", "#b59b72": "Brown", "#8b8d62": "Olive" },
     colorImages: {
       "#000000": img("new_prod_6.jpg"),
-      "#696969": img("WhatsApp Image 2026-07-15 at 1.56.49 PM.jpeg"),
+      "#696969": img("WhatsApp Image 2026-07-15 at 1.56.48 PM (4).jpeg"),
       "#ffffff": img("WhatsApp Image 2026-07-15 at 1.56.48 PM (3).jpeg"),
       "#b59b72": img("WhatsApp Image 2026-07-15 at 1.56.49 PM (1).jpeg"),
-      "#8b8d62": img("WhatsApp Image 2026-07-15 at 1.56.51 PM (1).jpeg")
+      "#8b8d62": img("WhatsApp Image 2026-07-15 at 1.56.48 PM.jpeg")
     },
     colorGalleries: {
-      "#000000": [],
-      "#696969": [],
-      "#ffffff": [],
-      "#b59b72": [],
       "#8b8d62": [img("WhatsApp Image 2026-07-15 at 1.56.48 PM (1).jpeg")]
     }
-  },
   {
         id: "shirt-13",
     shopifyVariantId: "45000000000033",
@@ -208,54 +204,8 @@ export const products: Product[] = [
     sizes: ["M", "L", "XL", "XXL"],
     colors: ["#000000"]
   },
-  {
-    id: "drop3-06",
-    shopifyVariantId: "45000000000065",
-    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Classic Tank",
-    description: "Classic tank top.",
-    price: 30000,
-    category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (3).jpeg"),
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000"]
-  },
-  {
-    id: "drop3-07",
-    shopifyVariantId: "45000000000066",
-    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Slim Tank",
-    description: "Slim tank top.",
-    price: 30000,
-    category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (4).jpeg"),
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000"]
-  },
-  {
-    id: "drop3-08",
-    shopifyVariantId: "45000000000067",
-    name: "YĒĒNKSLUXÉ x STEEZY Graphic Tank",
-    description: "Graphic tank top.",
-    price: 30000,
-    category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM.jpeg"),
-    gallery: [img("WhatsApp Image 2026-07-15 at 1.56.48 PM (1).jpeg")],
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000"]
-  },
 
   // Items 9 to 12: tanks
-  {
-    id: "drop3-09",
-    shopifyVariantId: "45000000000068",
-    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Sleeveless Tank",
-    description: "Sleeveless tank top.",
-    price: 30000,
-    category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM (1).jpeg"),
-    video: "/videos/cream-tank.mp4.b64",
-    sizes: ["M", "L", "XL", "XXL"],
-    colors: ["#000000"]
-  },
   // Items 15 to 20: hats
 
   // Items 21 to 28: remaining signature cap variants
@@ -387,25 +337,6 @@ export const products: Product[] = [
 export const categories = ['Shirts', 'Hoodies', 'Hats', 'Accessories'] as const;
 
 export function normalizeProductVariants(catalog: Product[]): Product[] {
-  const signatureTank = catalog.find(product => product.id === 'shirt-3');
-  if (!signatureTank) return catalog;
-  const variantIds = new Set(['drop3-06', 'drop3-08']);
-  const variantProducts = catalog.filter(product => variantIds.has(product.id));
-  const colorImages = { ...signatureTank.colorImages };
-  const colorGalleries = { ...signatureTank.colorGalleries };
-  for (const variant of variantProducts) {
-    const color = variant.id === 'drop3-06' ? '#ffffff' : '#8b8d62';
-    colorImages[color] = variant.image;
-    if (variant.gallery?.length) colorGalleries[color] = variant.gallery;
-  }
-  const mergedTank: Product = {
-    ...signatureTank,
-    image: colorImages['#696969'] || signatureTank.image,
-    colors: ['#000000', '#696969', '#ffffff', '#b59b72', '#8b8d62'],
-    colorNames: { '#000000': 'Black', '#696969': 'Grey', '#ffffff': 'White', '#b59b72': 'Brown', '#8b8d62': 'Olive' },
-    colorImages,
-    colorGalleries,
-  };
-  return catalog.filter(product => !variantIds.has(product.id))
-    .map(product => product.id === 'shirt-3' ? mergedTank : product);
+  const variantIds = new Set(['drop3-06', 'drop3-07', 'drop3-08', 'drop3-09']);
+  return catalog.filter(product => !variantIds.has(product.id));
 }
