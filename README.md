@@ -63,4 +63,3 @@ Empty categories should not be added to the navigation.
 - Review the privacy and terms pages with appropriate local professional guidance.
 
 See `DESIGN_SYSTEM.md` for visual and content rules.
-

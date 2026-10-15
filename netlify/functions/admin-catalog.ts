@@ -51,13 +51,12 @@ export default async (request: Request) => {
     if (!products) return json({ error: 'One or more product details are invalid.' }, 422);
     const now = new Date().toISOString();
     const previous = validateCatalog(await catalogue.get('products', { type: 'json' }));
-    if (previous) {
+    if (payload.action !== 'restore' && previous) {
       await catalogue.setJSON(`backups/${Date.now()}-${crypto.randomUUID()}`, previous, {
         metadata: { updatedBy: user.id, createdAt: now },
       });
     }
     await catalogue.setJSON('products', products, { metadata: { updatedBy: user.id, updatedAt: now } });
-
     const retainedBackups = await catalogue.list({ prefix: 'backups/' });
     const expired = retainedBackups.blobs.sort((a, b) => b.key.localeCompare(a.key)).slice(20);
     await Promise.all(expired.map(blob => catalogue.delete(blob.key)));
@@ -97,4 +96,3 @@ export default async (request: Request) => {
 };
 
 export const config: Config = { path: '/api/admin/products', method: ['GET', 'POST', 'PUT'] };
-

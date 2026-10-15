@@ -46,18 +46,6 @@ export const products: Product[] = [
 
   // SHIRTS
   {
-    id: "shirt-1",
-    shopifyVariantId: "45000000000004",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Graphic Tee",
-    price: 35000,
-    category: "Shirts",
-    image: img("48f48c19-513c-41ce-9e20-4a7ddc9539da.jpg"),
-    gallery: [img("client_fit_1.jpg")],
-    badge: "Limited",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["#000000", "#ffffff"]
-  },
-  {
     id: "shirt-3",
     shopifyVariantId: "45000000000038",
     name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Signature Tank Top",
@@ -66,52 +54,6 @@ export const products: Product[] = [
     category: "Shirts",
     image: img("new_prod_6.jpg"),
     gallery: [img("snaptik_7625367276497292565_3_v2.jpeg")],
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000", "#ffffff"]
-  },
-  {
-    id: "shirt-5",
-    shopifyVariantId: "45000000000012",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Rhinestone Tee",
-    price: 35000,
-    category: "Shirts",
-    image: img("2636b850-f5d5-40db-a383-bfa29001cdde.jpg"),
-    gallery: [img("client_fit_3.jpg")],
-    badge: "Exclusive",
-    sizes: ["M", "L", "XL"],
-    colors: ["#000000"]
-  },
-  {
-    id: "shirt-9",
-    shopifyVariantId: "45000000000021",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Boxy Shirt",
-    price: 35000,
-    category: "Shirts",
-    image: img("494e40da-2c31-4f83-b377-2a1c917a900d.jpg"),
-    gallery: [img("client_fit_4.jpeg")],
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#ffffff", "#000000"]
-  },
-  {
-    id: "shirt-11",
-    shopifyVariantId: "45000000000023",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Editorial Tee",
-    price: 35000,
-    category: "Shirts",
-    image: img("8b853438-c364-464e-aefc-8eb8368060b9.jpg"),
-    gallery: [img("snaptik_7621552137285192981_1_v2.jpeg")],
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#1a1a1a", "#ffffff"]
-  },
-  {
-    id: "shirt-12",
-    shopifyVariantId: "45000000000005",
-    name: "YĒĒNKSLUXÉ x MXUNDERSTOOD Tee",
-    price: 35000,
-    category: "Shirts",
-    image: img("c540c115-2167-4cce-a411-6acfcc765a57.jpg"),
-    gallery: [img("snaptik_7621552137285192981_2_v2.jpeg")],
-    badge: "New Season",
     sizes: ["S", "M", "L", "XL"],
     colors: ["#000000", "#ffffff"]
   },
@@ -428,4 +370,3 @@ export const products: Product[] = [
 // Shared constants for Signature Caps to avoid duplication
 
 export const categories = ['Shirts', 'Hoodies', 'Hats', 'Accessories'] as const;
-
