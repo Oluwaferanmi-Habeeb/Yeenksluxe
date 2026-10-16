@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { normalizeProductVariants, products as starterProducts, type Product } from '../data/products';
+import { products as starterProducts, type Product } from '../data/products';
 import { useAccount } from '../context/AccountContext';
 import AccountPanel from './AccountPanel';
 
-const categories: Product['category'][] = ['Shirts', 'Hoodies', 'Hats', 'Accessories'];
+const categories: Product['category'][] = ['Shirts', 'Tanks', 'Hoodies', 'Hats', 'Accessories'];
 const blankProduct = (): Product => ({
   id: `piece-${Date.now()}`,
   shopifyVariantId: `ceo-${Date.now()}`,
@@ -30,7 +30,7 @@ function readList(value: string, maxLength = 20) {
 export default function AdminDashboard() {
   const { user, ready, identityEnabled, setAccountOpen, signOut } = useAccount();
   const isAdmin = user?.role === 'admin' || user?.roles?.includes('admin');
-  const [catalog, setCatalog] = useState<Product[]>(() => normalizeProductVariants(starterProducts));
+  const [catalog, setCatalog] = useState<Product[]>(starterProducts);
   const [backups, setBackups] = useState<{ key: string; createdAt: string; productCount: number }[]>([]);
   const [draft, setDraft] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
       .then(async response => {
         const body = await response.json() as { products?: Product[]; backups?: typeof backups; error?: string };
         if (!response.ok) throw new Error(body.error || 'Could not load the catalogue.');
-        if (active && Array.isArray(body.products)) setCatalog(normalizeProductVariants(body.products));
+        if (active && Array.isArray(body.products)) setCatalog(body.products);
         if (active && Array.isArray(body.backups)) setBackups(body.backups);
       })
       .catch(error => active && setMessage(error instanceof Error ? error.message : 'Could not load the catalogue.'))
@@ -100,7 +100,7 @@ export default function AdminDashboard() {
       const backup = await response.json() as { products?: Product[]; error?: string };
       if (!response.ok || !Array.isArray(backup.products)) throw new Error(backup.error || 'Could not load that backup.');
       if (!window.confirm('Restore this catalogue version? The current catalogue will be saved as a backup first.')) return;
-      await persist(normalizeProductVariants(backup.products), 'Catalogue version restored.', 'restore');
+      await persist(backup.products, 'Catalogue version restored.', 'restore');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Could not restore that backup.');
     }
@@ -123,9 +123,13 @@ export default function AdminDashboard() {
       const body = await response.json() as { path?: string; error?: string };
       if (!response.ok || !body.path) throw new Error(body.error || 'Image upload failed.');
       const uploadedPath = body.path;
-      setDraft(current => !current ? current : destination === 'image'
-        ? { ...current, image: uploadedPath }
-        : { ...current, gallery: [...(current.gallery || []), uploadedPath].slice(0, 8) });
+      setDraft(current => {
+        if (!current) return current;
+        if (destination === 'image') return { ...current, image: uploadedPath };
+        if (destination === 'gallery') return { ...current, gallery: [...(current.gallery || []), uploadedPath].slice(0, 8) };
+        if (destination === 'colorGallery' && color) return { ...current, colorGalleries: { ...(current.colorGalleries || {}), [color]: [...(current.colorGalleries?.[color] || []), uploadedPath].slice(0, 8) } };
+        return color ? { ...current, colorImages: { ...(current.colorImages || {}), [color]: uploadedPath } } : current;
+      });
     } catch (error) { setMessage(error instanceof Error ? error.message : 'Image upload failed.'); }
     finally { setUploading(false); }
   };
@@ -172,3 +176,4 @@ export default function AdminDashboard() {
     </section>
   </main>;
 }
+
