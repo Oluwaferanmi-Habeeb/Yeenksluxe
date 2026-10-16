@@ -15,6 +15,8 @@ interface StoreContextType {
   setSelectedCategory: (category: string) => void;
   selectedProduct: Product | null;
   setSelectedProduct: (product: Product | null) => void;
+  selectedStyleId: string;
+  setSelectedStyleId: (id: string) => void;
   cartOpen: boolean;
   setCartOpen: (open: boolean) => void;
   checkoutStep: CheckoutStep;
@@ -35,7 +37,7 @@ interface StoreContextType {
   toast: string | null;
   setToast: (message: string | null) => void;
   showToast: (message: string) => void;
-  openQuickView: (product: Product) => void;
+  openQuickView: (product: Product, styleId?: string, color?: string) => void;
   addToCart: (product: Product, size: string, colour: string, quantity?: number) => void;
   updateCartQty: (index: number, delta: number) => void;
   removeCartItem: (index: number) => void;
@@ -47,7 +49,7 @@ interface StoreContextType {
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
-function restoreCart(rawCart: string | null, catalog: Product[] = defaultProducts): CartItem[] {
+function restoreCart(rawCart: string | null, catalog: Product[] = normalizeProductVariants(defaultProducts)): CartItem[] {
   if (!rawCart) return [];
 
   try {
@@ -96,6 +98,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedStyleId, setSelectedStyleId] = useState('');
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>('shop');
   const [mounted, setMounted] = useState(false);
@@ -198,9 +201,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     window.setTimeout(() => setToast(null), 2800);
   };
 
-  const openQuickView = (product: Product) => {
-    setChosenSize(product.sizes?.[0] || 'One Size');
-    setChosenColor(product.colors?.[0] || '');
+  const openQuickView = (product: Product, styleId?: string, color?: string) => {
+    const activeProduct = product.styleVariants?.find(variant => variant.id === styleId) || product.styleVariants?.[0] || product;
+    setSelectedStyleId(activeProduct.id);
+    setChosenSize(activeProduct.sizes?.[0] || 'One Size');
+    setChosenColor(activeProduct.colors?.includes(color || '') ? color || '' : activeProduct.colors?.[0] || '');
     setSelectedProduct(product);
   };
 
@@ -231,13 +236,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const createOrderReference = () => {
     const stamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 12);
     const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
-    return `YNL-${stamp}-${suffix}`;
+    return `YKL-${stamp}-${suffix}`;
   };
 
   const getWhatsAppLink = (reference = orderReference ?? createOrderReference()) => {
     const orderLines = cart.map((item, index) => {
       const name = item.product.name.replace(/YĒĒNKSLUXÉ\s*x\s*/gi, '').replace(/[‘’']?26 Edition\s*/gi, '').trim();
-      return `${index + 1}. *${name}*\n   • Quantity: ${item.quantity}\n   • Size: ${item.selectedSize}${item.selectedColor ? `\n   • Colour: ${item.selectedColor}` : ''}\n   • Line total: ${formatCurrency(item.product.price * item.quantity)}`;
+      const colorName = item.product.colorNames?.[item.selectedColor] || item.selectedColor;
+      return `${index + 1}. *${name}*\n   • Quantity: ${item.quantity}\n   • Size: ${item.selectedSize}${item.selectedColor ? `\n   • Colour: ${colorName}` : ''}\n   • Line total: ${formatCurrency(item.product.price * item.quantity)}`;
     }).join('\n\n');
     const customer = {
       name: cleanOrderValue(checkoutForm.name, 80),
@@ -268,7 +274,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   return <StoreContext.Provider value={{
     cart, currency, setCurrency, searchQuery, setSearchQuery, selectedCategory, setSelectedCategory,
-    selectedProduct, setSelectedProduct, cartOpen, setCartOpen, checkoutStep, setCheckoutStep,
+    selectedProduct, setSelectedProduct, selectedStyleId, setSelectedStyleId, cartOpen, setCartOpen, checkoutStep, setCheckoutStep,
     mounted, cartAnimated, scrolled, chosenSize, setChosenSize, chosenColor, setChosenColor, catalog,
     checkoutForm, setCheckoutForm, cartItemCount, cartSubtotal, filteredProducts, toast, setToast,
     showToast, openQuickView, addToCart, updateCartQty, removeCartItem, handlePlaceOrder,
@@ -281,3 +287,4 @@ export function useStore() {
   if (!context) throw new Error('useStore must be used within StoreProvider');
   return context;
 }
+
