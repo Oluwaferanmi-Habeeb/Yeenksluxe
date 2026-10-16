@@ -17,7 +17,7 @@ export default function CommunityShowcase() {
       <div className="container">
         <div className="community-heading">
           <div><p className="eyebrow">Seen in the city</p><h2 id="community-title">Worn your way.</h2></div>
-          <p>Real people. Real styling. Tag <a href="https://instagram.com/yeenksluxe" target="_blank" rel="noopener noreferrer">@yeenksluxe</a> to be featured.</p>
+          <p>Real people. Real styling. Tag <a href="https://www.instagram.com/yeenks_official/" target="_blank" rel="noopener noreferrer">@yeenks_official</a> to be featured.</p>
         </div>
         <div className="community-grid">
           {looks.map((look, index) => (
