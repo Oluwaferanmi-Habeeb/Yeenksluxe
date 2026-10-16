@@ -222,6 +222,9 @@ img { display: block; }
 .product-options { margin: 25px 0; padding: 0; border: 0; }
 .product-options legend { width: 100%; display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
 .product-options legend span { color: var(--muted); font-weight: 400; }
+.style-option { display: grid; gap: 10px; }
+.style-option > span { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.style-option select { width: 100%; min-height: 46px; padding: 0 14px; border: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--ink); font: inherit; }
 .colour-options, .size-options { display: flex; flex-wrap: wrap; gap: 8px; }
 .colour-options button { width: 34px; height: 34px; padding: 4px; border-radius: 50%; background: var(--swatch); border: 5px solid var(--paper-bright); box-shadow: 0 0 0 1px var(--line); }
 .colour-options button.active { box-shadow: 0 0 0 2px var(--ink); }
@@ -400,6 +403,13 @@ img { display: block; }
 .admin-gallery figure { position: relative; margin: 0; }
 .admin-gallery img { aspect-ratio: 1; }
 .admin-gallery button { position: absolute; top: 5px; right: 5px; width: 22px; height: 22px; border: 0; border-radius: 50%; background: var(--ink); color: white; cursor: pointer; }
+.admin-color-images { margin-top: 32px; }
+.admin-color-images h3 { margin: 0 0 14px; font: 20px var(--serif); }
+.admin-color-images > div { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+.admin-color-images article > span { display: block; margin-bottom: 8px; font-size: 11px; }
+.admin-color-images img, .admin-color-images .admin-image-empty { width: 100%; aspect-ratio: 1 / 1.15; object-fit: cover; }
+.admin-color-images figure { position: relative; margin: 8px 0; }
+.admin-color-images figure button { position: absolute; top: 5px; right: 5px; width: 24px; height: 24px; border: 0; background: var(--paper); color: var(--ink); cursor: pointer; }
 .admin-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 38px; }
 .admin-actions .button { min-width: 160px; }
 .admin-empty { display: grid; place-content: center; min-height: 450px; text-align: center; }
