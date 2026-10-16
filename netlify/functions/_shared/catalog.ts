@@ -1,7 +1,7 @@
 export const CATALOG_STORE = 'yeenks-catalog-v1';
 export const IMAGE_STORE = 'yeenks-product-images-v1';
 
-export const CATEGORIES = ['Shirts', 'Hoodies', 'Hats', 'Accessories'] as const;
+export const CATEGORIES = ['Shirts', 'Tanks', 'Hoodies', 'Hats', 'Accessories'] as const;
 type Category = (typeof CATEGORIES)[number];
 
 export interface CatalogProduct {
