@@ -87,7 +87,7 @@ export default function Navbar() {
               <button key={category} onClick={() => navigateTo(category)}><span>0{index + 1}</span>{category === 'All' ? 'Shop all' : category}</button>
             ))}
           </div>
-          <div className="mobile-menu-footer"><span>Lagos, Nigeria</span><a href="https://instagram.com/yeenksluxe" target="_blank" rel="noopener noreferrer">Instagram ↗</a></div>
+          <div className="mobile-menu-footer"><span>Lagos, Nigeria</span><a href="https://www.instagram.com/yeenks_official/" target="_blank" rel="noopener noreferrer">Instagram ↗</a></div>
         </div>
       )}
     </nav>
