@@ -42,7 +42,7 @@ export default function RootLayout({
               '@type': 'Organization', name: 'YEENKSLUXE', alternateName: ['Yeenks Wears', 'Yeenkswears'], url: siteUrl,
               logo: `${siteUrl}/images/yeenksluxe-favicon.png`,
               address: { '@type': 'PostalAddress', addressLocality: 'Lagos', addressCountry: 'NG' },
-              sameAs: ['https://instagram.com/yeenksluxe', 'https://tiktok.com/@yeenksluxe']
+              sameAs: ['https://www.instagram.com/yeenks_official/', 'https://www.tiktok.com/@yinka_yeenks']
             },
             { '@type': 'WebSite', name: 'YEENKSLUXE', alternateName: 'Yeenks Wears', url: siteUrl }
           ]
