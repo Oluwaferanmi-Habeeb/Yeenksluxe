@@ -80,7 +80,7 @@ export default function ProductGrid() {
                     <strong>{formatCurrency(product.price)}</strong>
                   </div>
                   <div className="product-meta">
-                    <span>{product.colors?.length || 1} {(product.colors?.length || 1) === 1 ? 'colour' : 'colours'}</span>
+                    <span>{product.styleVariants?.length ? `${product.styleVariants.length} styles` : `${product.colors?.length || 1} ${(product.colors?.length || 1) === 1 ? 'colour' : 'colours'}`}</span>
                     <button onClick={() => openQuickView(product)}>Select options</button>
                   </div>
                 </article>
