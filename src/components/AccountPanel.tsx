@@ -52,7 +52,7 @@ export default function AccountPanel({ adminOnly = false }: { adminOnly?: boolea
     try {
       if (mode === 'signup' && !adminOnly) {
         await signUp(name, email, password);
-        setStatus('Check your email to confirm your YNL Account, then return here to sign in.');
+        setStatus('Check your email to confirm your YKL Account, then return here to sign in.');
         setMode('signin');
         setPassword('');
       } else {
@@ -65,7 +65,7 @@ export default function AccountPanel({ adminOnly = false }: { adminOnly?: boolea
 
   const submitProfile = async (event: React.FormEvent) => {
     event.preventDefault(); setStatus(''); setBusy(true);
-    try { await saveProfile(details); setStatus('Your YNL Account has been updated.'); }
+    try { await saveProfile(details); setStatus('Your YKL Account has been updated.'); }
     catch (error) { setStatus(messageFor(error)); }
     finally { setBusy(false); }
   };
@@ -85,12 +85,12 @@ export default function AccountPanel({ adminOnly = false }: { adminOnly?: boolea
   return (
     <div className="account-overlay" onMouseDown={event => { if (event.target === event.currentTarget) close(); }}>
       <section className="account-panel" role="dialog" aria-modal="true" aria-labelledby="account-panel-title">
-        <button className="modal-close" onClick={close} aria-label="Close YNL Account">Close <span>×</span></button>
+        <button className="modal-close" onClick={close} aria-label="Close YKL Account">Close <span>×</span></button>
         <p className="eyebrow">YEENKSLUXE</p>
-        <h2 id="account-panel-title">{user ? `Welcome${user.name ? `, ${user.name.split(' ')[0]}` : ''}.` : adminOnly ? 'CEO sign in.' : 'YNL Account.'}</h2>
-        {!ready ? <p className="account-muted">Preparing your account…</p> : !identityEnabled ? <p className="account-muted">YNL Account is being activated. Please check back shortly.</p> : recoveryPending ? (
+        <h2 id="account-panel-title">{user ? `Welcome${user.name ? `, ${user.name.split(' ')[0]}` : ''}.` : adminOnly ? 'CEO sign in.' : 'YKL Account.'}</h2>
+        {!ready ? <p className="account-muted">Preparing your account…</p> : !identityEnabled ? <p className="account-muted">YKL Account is being activated. Please check back shortly.</p> : recoveryPending ? (
           <form className="account-form" onSubmit={submitPasswordReset}>
-            <p className="account-intro">Choose a new password for your YNL Account.</p>
+            <p className="account-intro">Choose a new password for your YKL Account.</p>
             <label><span>New password</span><input type="password" value={newPassword} onChange={event => setNewPassword(event.target.value)} required minLength={12} autoComplete="new-password" /></label>
             <label><span>Confirm new password</span><input type="password" value={confirmPassword} onChange={event => setConfirmPassword(event.target.value)} required minLength={12} autoComplete="new-password" /></label>
             <p className="account-password-help">12+ characters, including upper-case, lower-case and a number.</p>
@@ -119,7 +119,7 @@ export default function AccountPanel({ adminOnly = false }: { adminOnly?: boolea
               <label><span>Password</span><input type="password" value={password} onChange={event => setPassword(event.target.value)} required minLength={mode === 'signup' && !adminOnly ? 12 : 8} autoComplete={mode === 'signup' && !adminOnly ? 'new-password' : 'current-password'} /></label>
               {mode === 'signup' && !adminOnly && <p className="account-password-help">12+ characters, including upper-case, lower-case and a number.</p>}
               {status && <p className="account-status" role="status">{status}</p>}
-              <button className="button button-dark" type="submit" disabled={busy}>{busy ? 'Please wait…' : mode === 'signup' && !adminOnly ? 'Create YNL Account' : adminOnly ? 'Sign in to CEO workspace' : 'Sign in'} <span>↗</span></button>
+              <button className="button button-dark" type="submit" disabled={busy}>{busy ? 'Please wait…' : mode === 'signup' && !adminOnly ? 'Create YKL Account' : adminOnly ? 'Sign in to CEO workspace' : 'Sign in'} <span>↗</span></button>
             </form>
             {!adminOnly && settings?.providers.google && <button className="account-google" onClick={startGoogleLogin}>Continue with Google</button>}
             <div className="account-actions">
@@ -132,3 +132,4 @@ export default function AccountPanel({ adminOnly = false }: { adminOnly?: boolea
     </div>
   );
 }
+
