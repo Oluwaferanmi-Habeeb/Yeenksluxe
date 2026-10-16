@@ -375,7 +375,7 @@ export function normalizeProductVariants(catalog: Product[]): Product[] {
   const signatureTank = catalog.find(product => product.id === 'shirt-3');
   if (!signatureTank) return catalog;
 
-  const tankIds = new Set(['shirt-3', 'drop3-07', 'drop3-08', 'drop3-09']);
+  const tankIds = new Set(['shirt-3', 'shirt-14', 'drop3-07', 'drop3-08', 'drop3-09']);
   const slimTank = catalog.find(product => product.id === 'drop3-07');
   const tankBase = products.find(product => product.id === 'shirt-3') || signatureTank;
   const tankStyles: Product[] = [];
@@ -404,9 +404,8 @@ export function normalizeProductVariants(catalog: Product[]): Product[] {
     published: tankStyles.length > 0,
   };
 
-  const teeIds = new Set(['shirt-14', 'hoodie-1', 'hoodie-2', 'acc-2', 'acc-4']);
+  const teeIds = new Set(['shirt-15', 'hoodie-1', 'hoodie-2', 'acc-2', 'acc-4']);
   const teeStyles = catalog.filter(product => teeIds.has(product.id) && product.published !== false).map(product => {
-    if (product.id === 'shirt-14') return { ...product, image: img('WhatsApp Image 2026-07-15 at 1.56.49 PM.jpeg'), gallery: [], colors: ['#696969'], colorNames: { '#696969': 'Grey' }, colorImages: { '#696969': img('WhatsApp Image 2026-07-15 at 1.56.49 PM.jpeg') } };
     if (product.id === 'shirt-15') return { ...product, image: img('snaptik_7625367276497292565_1_v2.jpeg'), gallery: [], colors: ['#000000'] };
     if (product.id === 'hoodie-1') return { ...product, image: img('a3548e8a-a0bd-4271-ae46-c588155d8144.jpg'), gallery: [], colors: ['#111111'] };
     if (product.id === 'hoodie-2') return { ...product, image: img('snaptik_7625367276497292565_0_v2.jpeg'), gallery: [img('snaptik_7625367276497292565_2_v2.jpeg')], colors: ['#000000'] };
@@ -443,7 +442,7 @@ export function normalizeProductVariants(catalog: Product[]): Product[] {
   const hiddenIds = new Set([...tankIds, ...teeIds, ...capIds, 'shirt-15']);
   return catalog.flatMap(product => {
     if (product.id === 'shirt-3') return [mergedTank];
-    if (product.id === 'shirt-14') return groupedTees ? [groupedTees] : [];
+    if (product.id === 'shirt-15') return groupedTees ? [groupedTees] : [];
     if (product.id === 'drop3-23') return mergedCap ? [mergedCap] : [];
     if (hiddenIds.has(product.id)) return [];
     if (product.id === 'shirt-13') return [{ ...product, colors: ['#000000'], colorNames: { '#000000': 'Black' } }];
