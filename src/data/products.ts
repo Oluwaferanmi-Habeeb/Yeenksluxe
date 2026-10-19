@@ -421,18 +421,26 @@ export function normalizeProductVariants(catalog: Product[]): Product[] {
     styleVariants: teeStyles,
   } : null;
 
-  const capIds = new Set(['drop3-23', 'drop3-24', 'drop3-27', 'drop3-28']);
+  const capIds = new Set(['drop3-23', 'drop3-24', 'drop3-25', 'drop3-26', 'drop3-28']);
   const caps = catalog.filter(product => capIds.has(product.id) && product.published !== false);
   const patchCap = caps.find(product => product.id === 'drop3-23');
   const capImage = (id: string) => products.find(product => product.id === id)?.image;
   const mergedCap: Product | null = patchCap ? {
     ...patchCap,
-    colors: ['#a65232', '#d2bd9a', '#677348'],
-    colorNames: { '#a65232': 'Rust / navy', '#d2bd9a': 'Sand / brown', '#677348': 'Olive / black' },
+    colors: ['#d2bd9a', '#c66b2f', '#111111', '#737b55', '#f2aa00'],
+    colorNames: {
+      '#d2bd9a': 'Sand / brown',
+      '#c66b2f': 'Rust / navy',
+      '#111111': 'Black',
+      '#737b55': 'Olive / black',
+      '#f2aa00': 'Yellow',
+    },
     colorImages: {
-      '#a65232': capImage('drop3-23') || patchCap.image,
-      '#d2bd9a': capImage('drop3-24') || patchCap.image,
-      '#677348': capImage('drop3-27') || patchCap.image,
+      '#d2bd9a': capImage('drop3-23') || patchCap.image,
+      '#c66b2f': capImage('drop3-24') || patchCap.image,
+      '#111111': capImage('drop3-25') || patchCap.image,
+      '#737b55': capImage('drop3-26') || patchCap.image,
+      '#f2aa00': img('WhatsApp Image 2026-07-15 at 1.56.52 PM (1).jpeg'),
     },
     colorGalleries: {
       '#d2bd9a': [capImage('drop3-28')].filter((image): image is string => Boolean(image)),
