@@ -421,8 +421,9 @@ export function normalizeProductVariants(catalog: Product[]): Product[] {
     styleVariants: teeStyles,
   } : null;
 
-  const capIds = new Set(['drop3-23', 'drop3-24', 'drop3-25', 'drop3-26', 'drop3-28']);
-  const caps = catalog.filter(product => capIds.has(product.id) && product.published !== false);
+  const selectedCapIds = new Set(['drop3-23', 'drop3-24', 'drop3-25', 'drop3-26', 'drop3-28']);
+  const hiddenCapIds = new Set([...selectedCapIds, 'shirt-13', 'acc-1', 'drop3-21', 'drop3-22', 'drop3-27']);
+  const caps = catalog.filter(product => selectedCapIds.has(product.id) && product.published !== false);
   const patchCap = caps.find(product => product.id === 'drop3-23');
   const capImage = (id: string) => products.find(product => product.id === id)?.image;
   const mergedCap: Product | null = patchCap ? {
@@ -447,7 +448,7 @@ export function normalizeProductVariants(catalog: Product[]): Product[] {
     },
   } : null;
 
-  const hiddenIds = new Set([...tankIds, ...teeIds, ...capIds, 'shirt-15']);
+  const hiddenIds = new Set([...tankIds, ...teeIds, ...hiddenCapIds, 'shirt-15']);
   return catalog.flatMap(product => {
     if (product.id === 'shirt-3') return [mergedTank];
     if (product.id === 'shirt-15') return groupedTees ? [groupedTees] : [];
