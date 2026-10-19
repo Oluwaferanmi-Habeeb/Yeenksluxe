@@ -6,7 +6,7 @@ import { products as starterProducts, type Product } from '../data/products';
 import { useAccount } from '../context/AccountContext';
 import AccountPanel from './AccountPanel';
 
-const categories: Product['category'][] = ['Shirts', 'Hoodies', 'Hats', 'Accessories'];
+const categories: Product['category'][] = ['Shirts', 'Tanks', 'Hoodies', 'Hats', 'Accessories'];
 const blankProduct = (): Product => ({
   id: `piece-${Date.now()}`,
   shopifyVariantId: `ceo-${Date.now()}`,
@@ -31,8 +31,9 @@ export default function AdminDashboard() {
   const { user, ready, identityEnabled, setAccountOpen, signOut } = useAccount();
   const isAdmin = user?.role === 'admin' || user?.roles?.includes('admin');
   const [catalog, setCatalog] = useState<Product[]>(starterProducts);
+  const [backups, setBackups] = useState<{ key: string; createdAt: string; productCount: number }[]>([]);
   const [draft, setDraft] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
@@ -42,9 +43,10 @@ export default function AdminDashboard() {
     let active = true;
     fetch('/api/admin/products', { headers: { Accept: 'application/json' } })
       .then(async response => {
-        const body = await response.json() as { products?: Product[]; error?: string };
+        const body = await response.json() as { products?: Product[]; backups?: typeof backups; error?: string };
         if (!response.ok) throw new Error(body.error || 'Could not load the catalogue.');
-        if (active && Array.isArray(body.products) && body.products.length) setCatalog(body.products);
+        if (active && Array.isArray(body.products)) setCatalog(body.products);
+        if (active && Array.isArray(body.backups)) setBackups(body.backups);
       })
       .catch(error => active && setMessage(error instanceof Error ? error.message : 'Could not load the catalogue.'))
       .finally(() => active && setLoading(false));
@@ -53,17 +55,20 @@ export default function AdminDashboard() {
 
   const publishedCount = useMemo(() => catalog.filter(product => product.published !== false).length, [catalog]);
 
-  const persist = async (nextCatalog: Product[], successMessage: string) => {
+  const persist = async (nextCatalog: Product[], successMessage: string, action?: 'restore') => {
     setSaving(true); setMessage('');
     try {
       const response = await fetch('/api/admin/products', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ products: nextCatalog }),
+        body: JSON.stringify({ products: nextCatalog, ...(action ? { action } : {}) }),
       });
       const body = await response.json() as { products?: Product[]; error?: string };
       if (!response.ok || !body.products) throw new Error(body.error || 'Could not save the catalogue.');
       setCatalog(body.products);
+      const historyResponse = await fetch('/api/admin/products', { headers: { Accept: 'application/json' } });
+      const updated = await historyResponse.json() as { backups?: typeof backups };
+      if (Array.isArray(updated.backups)) setBackups(updated.backups);
       setDraft(null);
       setMessage(successMessage);
     } catch (error) {
@@ -87,7 +92,21 @@ export default function AdminDashboard() {
     await persist(catalog.filter(item => item.id !== id), 'Product removed.');
   };
 
-  const uploadImage = async (file: File, destination: 'image' | 'gallery') => {
+  const restoreBackup = async (key: string) => {
+    if (saving || loading) return;
+    setMessage('');
+    try {
+      const response = await fetch(`/api/admin/products?backup=${encodeURIComponent(key)}`, { headers: { Accept: 'application/json' } });
+      const backup = await response.json() as { products?: Product[]; error?: string };
+      if (!response.ok || !Array.isArray(backup.products)) throw new Error(backup.error || 'Could not load that backup.');
+      if (!window.confirm('Restore this catalogue version? The current catalogue will be saved as a backup first.')) return;
+      await persist(backup.products, 'Catalogue version restored.', 'restore');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Could not restore that backup.');
+    }
+  };
+
+  const uploadImage = async (file: File, destination: 'image' | 'gallery' | 'color' | 'colorGallery', color?: string) => {
     if (!draft) return;
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 4 * 1024 * 1024) {
       setMessage('Use a JPG, PNG or WebP image below 4 MB.'); return;
@@ -104,16 +123,20 @@ export default function AdminDashboard() {
       const body = await response.json() as { path?: string; error?: string };
       if (!response.ok || !body.path) throw new Error(body.error || 'Image upload failed.');
       const uploadedPath = body.path;
-      setDraft(current => !current ? current : destination === 'image'
-        ? { ...current, image: uploadedPath }
-        : { ...current, gallery: [...(current.gallery || []), uploadedPath].slice(0, 8) });
+      setDraft(current => {
+        if (!current) return current;
+        if (destination === 'image') return { ...current, image: uploadedPath };
+        if (destination === 'gallery') return { ...current, gallery: [...(current.gallery || []), uploadedPath].slice(0, 8) };
+        if (destination === 'colorGallery' && color) return { ...current, colorGalleries: { ...(current.colorGalleries || {}), [color]: [...(current.colorGalleries?.[color] || []), uploadedPath].slice(0, 8) } };
+        return color ? { ...current, colorImages: { ...(current.colorImages || {}), [color]: uploadedPath } } : current;
+      });
     } catch (error) { setMessage(error instanceof Error ? error.message : 'Image upload failed.'); }
     finally { setUploading(false); }
   };
 
   if (!ready) return <main className="admin-page"><p className="admin-loading">Loading secure workspace…</p></main>;
 
-  if (!user) return <main className="admin-page"><section className="admin-gate"><p className="eyebrow">YEENKSLUXE</p><h1>Catalogue desk.</h1><p>Sign in with the CEO account to manage products, pricing and product images.</p>{identityEnabled ? <button className="button button-dark" onClick={() => setAccountOpen(true)}>Sign in <span>↗</span></button> : <p className="admin-notice">Netlify Identity needs to be enabled before this workspace can be used.</p>}</section><AccountPanel /></main>;
+  if (!user) return <main className="admin-page"><section className="admin-gate"><p className="eyebrow">YEENKSLUXE</p><h1>Catalogue desk.</h1><p>Sign in with the CEO administrator login to manage products, pricing and product images.</p>{identityEnabled ? <><button className="button button-dark" onClick={() => setAccountOpen(true)}>CEO sign in <span>↗</span></button><p className="admin-notice">Need to set up the CEO? In Netlify, open Project configuration → Identity → Users, invite the CEO by email, then open that user and add the <strong>admin</strong> role. They can set a password from the invitation email and sign in here.</p></> : <p className="admin-notice">Netlify Identity needs to be enabled before this workspace can be used.</p>}</section><AccountPanel adminOnly /></main>;
 
   if (!isAdmin) return <main className="admin-page"><section className="admin-gate"><p className="eyebrow">Access restricted</p><h1>Administrator role required.</h1><p>{user.email} is signed in, but is not allowed to manage the catalogue.</p><p className="admin-notice">In Netlify: Project configuration → Identity → Users. Open the CEO account and add the <strong>admin</strong> role.</p><button className="button button-outline" onClick={() => signOut()}>Sign out</button></section></main>;
 
@@ -134,8 +157,22 @@ export default function AdminDashboard() {
           <label className="admin-field full"><span>Short description</span><textarea value={draft.description || ''} maxLength={280} onChange={event => setDraft({ ...draft, description: event.target.value })} placeholder="Short product description" /></label>
         </div>
         <div className="admin-images"><div><span>Primary image</span>{draft.image ? <img src={draft.image} alt="Product preview" /> : <div className="admin-image-empty">Add a product image</div>}<label className="admin-upload">{uploading ? 'Uploading…' : 'Upload primary image'}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; if (file) void uploadImage(file, 'image'); event.currentTarget.value = ''; }} disabled={uploading} /></label></div><div><span>Extra images</span><div className="admin-gallery">{(draft.gallery || []).map((image, index) => <figure key={image}><img src={image} alt="Additional product view" /><button onClick={() => setDraft({ ...draft, gallery: draft.gallery?.filter((_, itemIndex) => itemIndex !== index) })} aria-label="Remove additional image">×</button></figure>)}</div><label className="admin-upload admin-upload-light">Add extra image<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; if (file) void uploadImage(file, 'gallery'); event.currentTarget.value = ''; }} disabled={uploading || (draft.gallery?.length || 0) >= 8} /></label></div></div>
-        <div className="admin-actions"><button className="button button-dark" onClick={() => void saveDraft()} disabled={saving || uploading}>{saving ? 'Saving…' : draft.published === false ? 'Save as draft' : 'Save changes'} <span>↗</span></button><button className="button button-outline" onClick={() => setDraft(null)} disabled={saving}>Cancel</button></div>
-      </> : <div className="admin-empty"><h2>Select a product</h2><p>Choose a product from the list or add a new one.</p></div>}</section>
+        {!!draft.colors?.length && <section className="admin-color-images" aria-label="Images by colour"><h3>Images by colour</h3><div>{draft.colors.map((color, index) => {
+          const image = draft.colorImages?.[color] || (index === 0 ? draft.image : '');
+          const colorName = draft.colorNames?.[color] || ({ '#000000': 'Black', '#ffffff': 'White' }[color] ?? color);
+          const views = draft.colorGalleries?.[color] || [];
+          return <article key={color}>
+            <span>{colorName}</span>
+            {image ? <img src={image} alt={`${colorName} product preview`} /> : <div className="admin-image-empty">No colour image</div>}
+            <label className="admin-upload admin-upload-light">{draft.colorImages?.[color] ? 'Replace front image' : 'Add front image'}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; if (file) void uploadImage(file, 'color', color); event.currentTarget.value = ''; }} disabled={uploading} /></label>
+            {views.map((view, viewIndex) => <figure key={view}><img src={view} alt={`${colorName} additional view`} /><button type="button" onClick={() => setDraft({ ...draft, colorGalleries: { ...draft.colorGalleries, [color]: views.filter((_, index) => index !== viewIndex) } })} aria-label={`Remove ${colorName} additional view`}>×</button></figure>)}
+            <label className="admin-upload admin-upload-light">Add back / detail view<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => { const file = event.target.files?.[0]; if (file) void uploadImage(file, 'colorGallery', color); event.currentTarget.value = ''; }} disabled={uploading || views.length >= 8} /></label>
+          </article>;
+        })}</div></section>}
+        <div className="admin-actions"><button className="button button-dark" onClick={() => void saveDraft()} disabled={saving || uploading}>{saving ? 'Saving…' : draft.published === false ? 'Save as draft' : 'Save changes'} <span>↗</span></button><button className="button button-outline" onClick={() => setDraft(null)} disabled={saving || uploading}>Cancel</button></div>
+      </> : <div className="admin-empty"><h2>Select a product</h2><p>Choose a product from the list or add a new one.</p></div>}
+        {backups.length > 0 && <section className="admin-history" aria-label="Catalogue history"><h3>Catalogue history</h3>{backups.map(backup => <div key={backup.key}><span>{new Date(backup.createdAt).toLocaleString()} · {backup.productCount} products</span><button onClick={() => void restoreBackup(backup.key)} disabled={saving || loading}>Restore</button></div>)}</section>}
+      </section>
     </section>
   </main>;
 }

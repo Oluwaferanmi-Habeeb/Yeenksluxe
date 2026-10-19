@@ -3,7 +3,7 @@ export interface Product {
   shopifyVariantId: string; // Required for Shopify Cart Permalink checkout
   name: string;
   price: number; // Price in Naira (NGN)
-  category: 'Shirts' | 'Hoodies' | 'Hats' | 'Accessories';
+  category: 'Shirts' | 'Tanks' | 'Hoodies' | 'Hats' | 'Accessories';
   image: string;
   gallery?: string[];
   video?: string;
@@ -15,6 +15,9 @@ export interface Product {
   care?: string[];        // Care instructions
   fit?: string;           // Fit description (e.g. 'Regular fit, true to size')
   colorNames?: Record<string, string>; // Maps hex → color name (e.g. '#ffffff' → 'White')
+  colorImages?: Record<string, string>; // Maps a color hex code to its product image
+  colorGalleries?: Record<string, string[]>; // Additional views for each color
+  styleVariants?: Product[];
   published?: boolean;
 }
 
@@ -46,74 +49,25 @@ export const products: Product[] = [
 
   // SHIRTS
   {
-    id: "shirt-1",
-    shopifyVariantId: "45000000000004",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Graphic Tee",
-    price: 35000,
-    category: "Shirts",
-    image: img("48f48c19-513c-41ce-9e20-4a7ddc9539da.jpg"),
-    gallery: [img("client_fit_1.jpg")],
-    badge: "Limited",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["#000000", "#ffffff"]
-  },
-  {
     id: "shirt-3",
     shopifyVariantId: "45000000000038",
     name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Signature Tank Top",
     description: "Graphic tank top.",
     price: 30000,
-    category: "Shirts",
+    category: "Tanks",
     image: img("new_prod_6.jpg"),
-    gallery: [img("snaptik_7625367276497292565_3_v2.jpeg")],
     sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000", "#ffffff"]
-  },
-  {
-    id: "shirt-5",
-    shopifyVariantId: "45000000000012",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Rhinestone Tee",
-    price: 35000,
-    category: "Shirts",
-    image: img("2636b850-f5d5-40db-a383-bfa29001cdde.jpg"),
-    gallery: [img("client_fit_3.jpg")],
-    badge: "Exclusive",
-    sizes: ["M", "L", "XL"],
-    colors: ["#000000"]
-  },
-  {
-    id: "shirt-9",
-    shopifyVariantId: "45000000000021",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Boxy Shirt",
-    price: 35000,
-    category: "Shirts",
-    image: img("494e40da-2c31-4f83-b377-2a1c917a900d.jpg"),
-    gallery: [img("client_fit_4.jpeg")],
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#ffffff", "#000000"]
-  },
-  {
-    id: "shirt-11",
-    shopifyVariantId: "45000000000023",
-    name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Editorial Tee",
-    price: 35000,
-    category: "Shirts",
-    image: img("8b853438-c364-464e-aefc-8eb8368060b9.jpg"),
-    gallery: [img("snaptik_7621552137285192981_1_v2.jpeg")],
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#1a1a1a", "#ffffff"]
-  },
-  {
-    id: "shirt-12",
-    shopifyVariantId: "45000000000005",
-    name: "YĒĒNKSLUXÉ x MXUNDERSTOOD Tee",
-    price: 35000,
-    category: "Shirts",
-    image: img("c540c115-2167-4cce-a411-6acfcc765a57.jpg"),
-    gallery: [img("snaptik_7621552137285192981_2_v2.jpeg")],
-    badge: "New Season",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000", "#ffffff"]
+    colors: ["#000000", "#ffffff", "#c9b99d", "#8b8d62"],
+    colorNames: { "#000000": "Black", "#ffffff": "White", "#c9b99d": "Sand", "#8b8d62": "Olive" },
+    colorImages: {
+      "#000000": img("new_prod_6.jpg"),
+      "#ffffff": img("WhatsApp Image 2026-07-15 at 1.56.48 PM (3).jpeg"),
+      "#c9b99d": img("WhatsApp Image 2026-07-15 at 1.56.49 PM (1).jpeg"),
+      "#8b8d62": img("WhatsApp Image 2026-07-15 at 1.56.48 PM.jpeg")
+    },
+    colorGalleries: {
+      "#8b8d62": [img("WhatsApp Image 2026-07-15 at 1.56.48 PM (1).jpeg")]
+    }
   },
   {
         id: "shirt-13",
@@ -124,7 +78,7 @@ export const products: Product[] = [
     image: img("new_prod_1.jpg"),
     gallery: [img("snaptik_7621552137285192981_0_v2.jpeg")],
     sizes: ["One Size"],
-    colors: ["#000000", "#ffffff"]
+    colors: ["#000000"]
   },
   {
     id: "shirt-14",
@@ -132,10 +86,12 @@ export const products: Product[] = [
     name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Oversized Tee",
     price: 35000,
     category: "Shirts",
-    image: img("new_prod_3.jpg"),
-    gallery: [img("snaptik_7621552137285192981_4_v2.jpeg")],
+    image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM.jpeg"),
+    gallery: [],
     sizes: ["S", "M", "L", "XL"],
-    colors: ["#ffffff", "#000000"]
+    colors: ["#696969"],
+    colorNames: { "#696969": "Grey" },
+    colorImages: { "#696969": img("WhatsApp Image 2026-07-15 at 1.56.49 PM.jpeg") }
   },
   {
     id: "shirt-15",
@@ -143,10 +99,11 @@ export const products: Product[] = [
     name: "YĒĒNKSLUXÉ x STEEZY ‘26 Edition Statement Tee",
     price: 35000,
     category: "Shirts",
-    image: img("new_prod_4.jpg"),
-    gallery: [img("snaptik_7625367276497292565_1_v2.jpeg")],
+    image: img("snaptik_7625367276497292565_1_v2.jpeg"),
+    gallery: [],
     sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000"]
+    colors: ["#000000"],
+    colorNames: { "#000000": "Black" }
   },
   {
     id: "shirt-16",
@@ -155,9 +112,8 @@ export const products: Product[] = [
     price: 45000,
     category: "Hoodies",
     image: img("new_prod_5.jpg"),
-    gallery: [img("snaptik_7625367276497292565_2_v2.jpeg")],
     sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["#333333", "#000000"]
+    colors: ["#000000"]
   },
 
   // HOODIES
@@ -168,10 +124,10 @@ export const products: Product[] = [
     price: 35000,
     category: "Shirts",
     image: img("a3548e8a-a0bd-4271-ae46-c588155d8144.jpg"),
-    gallery: [img("new_prod_2.jpg")],
+    gallery: [],
     badge: "Campaign",
     sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["#111111", "#ffffff"]
+    colors: ["#111111"]
   },
   {
     id: "hoodie-2",
@@ -179,8 +135,7 @@ export const products: Product[] = [
     name: "YĒĒNKSLUXÉ x STEEZY ’26 Edition Steeezy Tee",
     price: 35000,
     category: "Shirts",
-    image: img("new_prod_2.jpg"),
-    gallery: [img("snaptik_7621552137285192981_3_v2.jpeg")],
+    image: img("snaptik_7625367276497292565_0_v2.jpeg"),
     sizes: ["S", "M", "L", "XL", "XXL"],
     colors: ["#000000"]
   },
@@ -192,9 +147,9 @@ export const products: Product[] = [
     price: 35000,
     category: "Shirts",
     image: img("f12d0220-a9fe-437b-b736-64a573bb8193.jpg"),
-    gallery: [img("new_prod_6.jpg")],
+    gallery: [],
     sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000", "#ffffff"]
+    colors: ["#000000"]
   },
 
   // ACCESSORIES
@@ -209,9 +164,8 @@ export const products: Product[] = [
     price: 25000,
     category: "Hats",
     image: img("d7d9b8dd-971a-4010-900d-8403c2e44666.jpg"),
-    gallery: [img("new_prod_1.jpg")],
     sizes: ["One Size"],
-    colors: ["#ffffff", "#000000"]
+    colors: ["#000000"]
   },
   {
     id: "acc-4",
@@ -220,9 +174,9 @@ export const products: Product[] = [
     price: 35000,
     category: "Shirts",
     image: img("d4413ae8-baac-4551-838d-632fd109f35c.jpg"),
-    gallery: [img("new_prod_4.jpg")],
+    gallery: [],
     sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000", "#ffffff"]
+    colors: ["#000000"]
   },
 
   // New 28 products (July 15 WhatsApp images)
@@ -252,23 +206,12 @@ export const products: Product[] = [
     colors: ["#000000"]
   },
   {
-    id: "drop3-06",
-    shopifyVariantId: "45000000000065",
-    name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Classic Tank",
-    description: "Classic tank top.",
-    price: 30000,
-    category: "Shirts",
-    image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (3).jpeg"),
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["#000000"]
-  },
-  {
     id: "drop3-07",
     shopifyVariantId: "45000000000066",
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Slim Tank",
     description: "Slim tank top.",
     price: 30000,
-    category: "Shirts",
+    category: "Tanks",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM (4).jpeg"),
     sizes: ["S", "M", "L", "XL"],
     colors: ["#000000"]
@@ -279,7 +222,7 @@ export const products: Product[] = [
     name: "YĒĒNKSLUXÉ x STEEZY Graphic Tank",
     description: "Graphic tank top.",
     price: 30000,
-    category: "Shirts",
+    category: "Tanks",
     image: img("WhatsApp Image 2026-07-15 at 1.56.48 PM.jpeg"),
     gallery: [img("WhatsApp Image 2026-07-15 at 1.56.48 PM (1).jpeg")],
     sizes: ["S", "M", "L", "XL"],
@@ -293,7 +236,7 @@ export const products: Product[] = [
     name: "YĒĒNKSLUXÉ x STEEZY '26 Edition Sleeveless Tank",
     description: "Sleeveless tank top.",
     price: 30000,
-    category: "Shirts",
+    category: "Tanks",
     image: img("WhatsApp Image 2026-07-15 at 1.56.49 PM (1).jpeg"),
     video: "/videos/cream-tank.mp4.b64",
     sizes: ["M", "L", "XL", "XXL"],
@@ -358,7 +301,6 @@ export const products: Product[] = [
     features: CAP_FEATURES,
     care: CAP_CARE,
     fit: CAP_FIT,
-    gallery: [img("WhatsApp Image 2026-07-15 at 1.56.51 PM (2).jpeg")],
     sizes: ["One Size"],
     colors: ["#000000"],
     colorNames: { "#000000": "Black" }
@@ -427,4 +369,93 @@ export const products: Product[] = [
 
 // Shared constants for Signature Caps to avoid duplication
 
-export const categories = ['Shirts', 'Hoodies', 'Hats'] as const;
+export const categories = ['Shirts', 'Tanks', 'Hoodies', 'Hats', 'Accessories'] as const;
+
+export function normalizeProductVariants(catalog: Product[]): Product[] {
+  const signatureTank = catalog.find(product => product.id === 'shirt-3');
+  if (!signatureTank) return catalog;
+
+  const tankIds = new Set(['shirt-3', 'shirt-14', 'drop3-07', 'drop3-08', 'drop3-09']);
+  const slimTank = catalog.find(product => product.id === 'drop3-07');
+  const tankBase = products.find(product => product.id === 'shirt-3') || signatureTank;
+  const tankStyles: Product[] = [];
+  if (signatureTank.published !== false) tankStyles.push({
+    ...tankBase,
+    ...signatureTank,
+    category: 'Tanks',
+    image: tankBase.image,
+    colors: tankBase.colors,
+    colorNames: tankBase.colorNames,
+    colorImages: tankBase.colorImages,
+    colorGalleries: tankBase.colorGalleries,
+  });
+  if (slimTank && slimTank.published !== false) tankStyles.push({ ...slimTank, category: 'Tanks' });
+  const mergedTank: Product = {
+    ...signatureTank,
+    id: 'steezy-tanks',
+    name: 'YĒĒNKSLUXÉ x STEEZY Tank Tops',
+    category: 'Tanks',
+    image: tankBase.image,
+    colors: tankBase.colors,
+    colorNames: tankBase.colorNames,
+    colorImages: tankBase.colorImages,
+    colorGalleries: tankBase.colorGalleries,
+    styleVariants: tankStyles,
+    published: tankStyles.length > 0,
+  };
+
+  const teeIds = new Set(['shirt-15', 'hoodie-1', 'hoodie-2', 'acc-2', 'acc-4']);
+  const teeStyles = catalog.filter(product => teeIds.has(product.id) && product.published !== false).map(product => {
+    if (product.id === 'shirt-15') return { ...product, image: img('snaptik_7625367276497292565_1_v2.jpeg'), gallery: [], colors: ['#000000'] };
+    if (product.id === 'hoodie-1') return { ...product, image: img('a3548e8a-a0bd-4271-ae46-c588155d8144.jpg'), gallery: [], colors: ['#111111'] };
+    if (product.id === 'hoodie-2') return { ...product, image: img('snaptik_7625367276497292565_0_v2.jpeg'), gallery: [img('snaptik_7625367276497292565_2_v2.jpeg')], colors: ['#000000'] };
+    if (product.id === 'acc-2') return { ...product, image: img('f12d0220-a9fe-437b-b736-64a573bb8193.jpg'), gallery: [], colors: ['#000000'] };
+    return { ...product, image: img('d4413ae8-baac-4551-838d-632fd109f35c.jpg'), gallery: [], colors: ['#000000'] };
+  });
+  const firstTee = teeStyles[0];
+  const groupedTees: Product | null = firstTee ? {
+    ...firstTee,
+    id: 'steezy-tees',
+    name: 'YĒĒNKSLUXÉ x STEEZY Tees',
+    category: 'Shirts',
+    styleVariants: teeStyles,
+  } : null;
+
+  const capIds = new Set(['drop3-23', 'drop3-24', 'drop3-25', 'drop3-26', 'drop3-28']);
+  const caps = catalog.filter(product => capIds.has(product.id) && product.published !== false);
+  const patchCap = caps.find(product => product.id === 'drop3-23');
+  const capImage = (id: string) => products.find(product => product.id === id)?.image;
+  const mergedCap: Product | null = patchCap ? {
+    ...patchCap,
+    colors: ['#d2bd9a', '#c66b2f', '#111111', '#737b55', '#f2aa00'],
+    colorNames: {
+      '#d2bd9a': 'Sand / brown',
+      '#c66b2f': 'Rust / navy',
+      '#111111': 'Black',
+      '#737b55': 'Olive / black',
+      '#f2aa00': 'Yellow',
+    },
+    colorImages: {
+      '#d2bd9a': capImage('drop3-23') || patchCap.image,
+      '#c66b2f': capImage('drop3-24') || patchCap.image,
+      '#111111': capImage('drop3-25') || patchCap.image,
+      '#737b55': capImage('drop3-26') || patchCap.image,
+      '#f2aa00': img('WhatsApp Image 2026-07-15 at 1.56.52 PM (1).jpeg'),
+    },
+    colorGalleries: {
+      '#d2bd9a': [capImage('drop3-28')].filter((image): image is string => Boolean(image)),
+    },
+  } : null;
+
+  const hiddenIds = new Set([...tankIds, ...teeIds, ...capIds, 'shirt-15']);
+  return catalog.flatMap(product => {
+    if (product.id === 'shirt-3') return [mergedTank];
+    if (product.id === 'shirt-15') return groupedTees ? [groupedTees] : [];
+    if (product.id === 'drop3-23') return mergedCap ? [mergedCap] : [];
+    if (hiddenIds.has(product.id)) return [];
+    if (product.id === 'shirt-13') return [{ ...product, colors: ['#000000'], colorNames: { '#000000': 'Black' } }];
+    if (product.id === 'shirt-16') return [{ ...product, gallery: [] }];
+    if (product.id === 'acc-1') return [{ ...product, gallery: [], colors: ['#000000'], colorNames: { '#000000': 'Black' } }];
+    return [product];
+  });
+}

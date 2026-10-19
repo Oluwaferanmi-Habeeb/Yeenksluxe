@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
 
 export default function Hero() {
@@ -8,7 +9,7 @@ export default function Hero() {
   return (
     <header className="hero" aria-labelledby="hero-title">
       <div className="hero-stage">
-        <div className="hero-image" role="img" aria-label="Two people wearing YEENKSLUXE graphic tees" />
+        <Image src="/images/ynl-hero-duo.svg" alt="Two people wearing YEENKSLUXE graphic tees" fill priority sizes="100vw" className="hero-image" />
         <div className="hero-shade" />
         <div className="hero-noise" aria-hidden="true" />
       </div>

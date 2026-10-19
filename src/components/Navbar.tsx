@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useStore } from '../context/StoreContext';
 import { useAccount } from '../context/AccountContext';
 import { categories } from '../data/products';
@@ -45,6 +46,7 @@ export default function Navbar() {
         )}
 
         <div className="nav-actions">
+          {(user?.role === 'admin' || user?.roles?.includes('admin')) && <Link className="admin-link" href="/admin">CEO</Link>}
           {checkoutStep === 'shop' && (
             <button className="icon-button search-trigger" onClick={() => setSearchOpen(!searchOpen)} aria-label="Search products" aria-expanded={searchOpen}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
@@ -53,7 +55,7 @@ export default function Navbar() {
           <button className="currency-button" onClick={() => setCurrency(currency === 'NGN' ? 'USD' : 'NGN')} aria-label={`Prices shown in ${currency}`}>
             {currency}
           </button>
-          <button className="icon-button account-trigger" onClick={() => setAccountOpen(true)} aria-label={user ? 'Open your YNL Account' : 'Sign in or create a YNL Account'}>
+          <button className="icon-button account-trigger" onClick={() => setAccountOpen(true)} aria-label={user ? 'Open your YKL Account' : 'Sign in or create a YKL Account'}>
             {user?.name ? <span>{user.name.slice(0, 1).toUpperCase()}</span> : <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.8 20c.8-3.6 3.2-5.5 7.2-5.5s6.4 1.9 7.2 5.5"/></svg>}
           </button>
           <button className={`icon-button cart-trigger ${cartAnimated ? 'cart-pop-animation' : ''}`} onClick={() => setCartOpen(true)} aria-label={`Open cart, ${cartItemCount} items`}>

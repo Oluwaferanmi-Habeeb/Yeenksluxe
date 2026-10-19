@@ -4,10 +4,10 @@ import Image from 'next/image';
 import { useStore } from '../context/StoreContext';
 
 const looks = [
-  { image: '/images/client_fit_1.jpg', productId: 'shirt-1', caption: 'Steezy Graphic Tee' },
-  { image: '/images/client_fit_2.jpg', productId: 'hoodie-1', caption: 'Steezy Sleeveless Tee' },
-  { image: '/images/client_fit_4.jpeg', productId: 'acc-1', caption: 'Signature Headwear' },
-  { image: '/images/snaptik_7625367276497292565_2_v2.jpeg', productId: 'shirt-16', caption: 'Lagos fit' },
+  { image: '/images/client_fit_1.jpg', productId: 'steezy-tees', styleId: 'hoodie-2', caption: 'Steezy Graphic Tee' },
+  { image: '/images/client_fit_2.jpg', productId: 'steezy-tanks', styleId: 'shirt-3', color: '#c9b99d', caption: 'Signature Tank' },
+  { image: '/images/client_fit_4.jpeg', productId: 'drop3-25', caption: 'Signature Headwear' },
+  { image: '/images/snaptik_7625367276497292565_2_v2.jpeg', productId: 'steezy-tees', styleId: 'hoodie-2', caption: 'Lagos fit' },
 ];
 
 export default function CommunityShowcase() {
@@ -22,8 +22,10 @@ export default function CommunityShowcase() {
         <div className="community-grid">
           {looks.map((look, index) => (
             <button className={`community-card community-card-${index + 1}`} key={look.image} onClick={() => {
-              const product = catalog.find(candidate => candidate.id === look.productId) || catalog[0];
-              if (product) openQuickView(product);
+              const group = catalog.find(candidate => candidate.id === look.productId);
+              const groupedProduct = catalog.find(candidate => candidate.styleVariants?.some(variant => variant.id === (look.styleId || look.productId)));
+              const product = group || groupedProduct || catalog.find(candidate => candidate.id === (look.styleId || look.productId));
+              if (product) openQuickView(product, look.styleId || (groupedProduct ? look.productId : undefined), 'color' in look ? look.color : undefined);
             }}>
               <Image src={look.image} alt={`${look.caption} styled by the YEENKSLUXE community`} fill className="community-image" sizes="(max-width: 700px) 50vw, 25vw" />
               <span><small>Shop the look</small>{look.caption}</span>

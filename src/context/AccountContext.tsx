@@ -110,7 +110,7 @@ function readSavedProducts(user: User | null): string[] {
 
 function messageFor(error: unknown) {
   if (error instanceof InputValidationError || error instanceof IdentityTimeoutError) return error.message;
-  if (error instanceof MissingIdentityError) return 'YNL Account is being activated. Please try again shortly.';
+  if (error instanceof MissingIdentityError) return 'YKL Account is being activated. Please try again shortly.';
   if (error instanceof AuthError) {
     if (error.status === 401) return 'Incorrect email or password.';
     if (error.status === 403) return 'That action is not available right now.';

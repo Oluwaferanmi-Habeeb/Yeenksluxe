@@ -10,18 +10,29 @@ const colourNames: Record<string, string> = {
 };
 
 export default function ProductModal() {
-  const { selectedProduct, setSelectedProduct, chosenSize, setChosenSize, chosenColor, setChosenColor, addToCart, formatCurrency } = useStore();
-  const [imageIndex, setImageIndex] = useState(0);
-  const [detailsOpen, setDetailsOpen] = useState<'details' | 'size' | 'delivery'>('details');
+  const { selectedProduct, setSelectedProduct, selectedStyleId, setSelectedStyleId, chosenSize, setChosenSize, chosenColor, setChosenColor, addToCart, formatCurrency } = useStore();
+  const [imageSelection, setImageSelection] = useState({ key: '', index: 0 });
+  const imageKey = `${selectedProduct?.id || ''}:${selectedStyleId}:${chosenColor}`;
+  const imageIndex = imageSelection.key === imageKey ? imageSelection.index : 0;
+  const setImageIndex = (index: number) => setImageSelection({ key: imageKey, index });
+  const [detailsSelection, setDetailsSelection] = useState({ key: '', open: 'details' as 'details' | 'size' | 'delivery' });
+  const detailsOpen = detailsSelection.key === imageKey ? detailsSelection.open : 'details';
+  const setDetailsOpen = (open: 'details' | 'size' | 'delivery') => setDetailsSelection({ key: imageKey, open });
 
-  const gallery = useMemo(() => selectedProduct ? [selectedProduct.image, ...(selectedProduct.gallery || [])] : [], [selectedProduct]);
+  const gallery = useMemo(() => {
+    if (!selectedProduct) return [];
+    const activeProduct = selectedProduct.styleVariants?.find(variant => variant.id === selectedStyleId) || selectedProduct.styleVariants?.[0] || selectedProduct;
+    const primary = activeProduct.colorImages?.[chosenColor] || activeProduct.image;
+    const additionalViews = activeProduct.colorGalleries?.[chosenColor] ?? activeProduct.gallery ?? [];
+    return [primary, ...additionalViews.filter(image => image !== primary)];
+  }, [selectedProduct, selectedStyleId, chosenColor]);
 
   useEffect(() => {
     if (!selectedProduct) return;
     const close = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setImageIndex(0);
-        setDetailsOpen('details');
+        setImageSelection(current => ({ ...current, index: 0 }));
+        setDetailsSelection(current => ({ ...current, open: 'details' }));
         setSelectedProduct(null);
       }
     };
@@ -31,7 +42,8 @@ export default function ProductModal() {
   }, [selectedProduct, setSelectedProduct]);
 
   if (!selectedProduct) return null;
-  const label = selectedProduct.name.replace(/YĒĒNKSLUXÉ\s*x\s*/gi, '').replace(/[‘’']?26 Edition\s*/gi, '');
+  const activeProduct = selectedProduct.styleVariants?.find(variant => variant.id === selectedStyleId) || selectedProduct.styleVariants?.[0] || selectedProduct;
+  const label = activeProduct.name.replace(/YĒĒNKSLUXÉ\s*x\s*/gi, '').replace(/[‘’']?26 Edition\s*/gi, '');
   const close = () => { setImageIndex(0); setDetailsOpen('details'); setSelectedProduct(null); };
 
   return (
@@ -43,27 +55,36 @@ export default function ProductModal() {
             <Image src={gallery[imageIndex]} alt={`${label}, view ${imageIndex + 1}`} fill className="modal-product-image" sizes="(max-width: 850px) 100vw, 55vw" />
             <span className="modal-image-counter">{String(imageIndex + 1).padStart(2, '0')} / {String(gallery.length).padStart(2, '0')}</span>
           </div>
-          {selectedProduct.video && <ProductMotion source={selectedProduct.video} poster={selectedProduct.image} />}
+          {activeProduct.video && <ProductMotion source={activeProduct.video} poster={activeProduct.image} />}
           {gallery.length > 1 && <div className="modal-thumbnails">{gallery.map((image, index) => <button key={image} className={imageIndex === index ? 'active' : ''} onClick={() => setImageIndex(index)} aria-label={`View image ${index + 1}`}><Image src={image} alt="" fill className="modal-thumb-image" sizes="72px" /></button>)}</div>}
         </div>
 
         <div className="modal-details">
-          <p className="eyebrow">{selectedProduct.category}</p>
+          <p className="eyebrow">{activeProduct.category}</p>
           <h2 id="product-modal-title">{label}</h2>
-          <p className="modal-price">{formatCurrency(selectedProduct.price)}</p>
-          <p className="modal-description">{selectedProduct.description || 'A YEENKSLUXE piece.'}</p>
+          <p className="modal-price">{formatCurrency(activeProduct.price)}</p>
+          <p className="modal-description">{activeProduct.description || 'A YEENKSLUXE piece.'}</p>
 
-          {!!selectedProduct.colors?.length && <fieldset className="product-options"><legend>Colour <span>{selectedProduct.colorNames?.[chosenColor] || colourNames[chosenColor] || 'Selected'}</span></legend><div className="colour-options">{selectedProduct.colors.map(colour => <button key={colour} className={chosenColor === colour ? 'active' : ''} style={{ '--swatch': colour } as React.CSSProperties} onClick={() => setChosenColor(colour)} aria-label={selectedProduct.colorNames?.[colour] || colourNames[colour] || colour} aria-pressed={chosenColor === colour} />)}</div></fieldset>}
+          {!!selectedProduct.styleVariants?.length && <label className="product-options style-option"><span>Style</span><select value={activeProduct.id} onChange={event => {
+            const next = selectedProduct.styleVariants?.find(variant => variant.id === event.target.value);
+            if (!next) return;
+            setSelectedStyleId(next.id);
+            setChosenSize(next.sizes?.[0] || 'One Size');
+            setChosenColor(next.colors?.[0] || '');
+            setImageIndex(0);
+          }}>{selectedProduct.styleVariants.map(variant => <option key={variant.id} value={variant.id}>{variant.name.replace(/YĒĒNKSLUXÉ\s*x\s*/gi, '').replace(/[‘’']?26 Edition\s*/gi, '')}</option>)}</select></label>}
 
-          {!!selectedProduct.sizes?.length && <fieldset className="product-options"><legend>Choose size</legend><div className="size-options">{selectedProduct.sizes.map(size => <button key={size} className={chosenSize === size ? 'active' : ''} onClick={() => setChosenSize(size)} aria-pressed={chosenSize === size}>{size}</button>)}</div></fieldset>}
+          {!!activeProduct.colors?.length && <fieldset className="product-options"><legend>Colour <span>{activeProduct.colorNames?.[chosenColor] || colourNames[chosenColor] || 'Selected'}</span></legend><div className="colour-options">{activeProduct.colors.map(colour => <button key={colour} className={chosenColor === colour ? 'active' : ''} style={{ '--swatch': colour } as React.CSSProperties} onClick={() => { setImageIndex(0); setChosenColor(colour); }} aria-label={activeProduct.colorNames?.[colour] || colourNames[colour] || colour} aria-pressed={chosenColor === colour} />)}</div></fieldset>}
 
-          <button className="add-to-cart" onClick={() => addToCart(selectedProduct, chosenSize, chosenColor)}>Add to bag <span>{formatCurrency(selectedProduct.price)}</span></button>
+          {!!activeProduct.sizes?.length && <fieldset className="product-options"><legend>Choose size</legend><div className="size-options">{activeProduct.sizes.map(size => <button key={size} className={chosenSize === size ? 'active' : ''} onClick={() => setChosenSize(size)} aria-pressed={chosenSize === size}>{size}</button>)}</div></fieldset>}
+
+          <button className="add-to-cart" onClick={() => addToCart(activeProduct, chosenSize, chosenColor)}>Add to bag <span>{formatCurrency(activeProduct.price)}</span></button>
           <a className="fit-help" href={`https://wa.me/2349033364994?text=${encodeURIComponent(`Hi YEENKSLUXE! I need sizing help with ${label}.`)}`} target="_blank" rel="noopener noreferrer">Unsure about your size? Ask us on WhatsApp ↗</a>
 
           <div className="product-accordions">
             <ProductAccordion title="Details & care" open={detailsOpen === 'details'} onClick={() => setDetailsOpen('details')}>
-              <ul>{(selectedProduct.features?.length ? selectedProduct.features : ['Limited release', selectedProduct.fit || 'Relaxed fit']).map(item => <li key={item}>{item}</li>)}</ul>
-              {!!selectedProduct.care?.length && <p>{selectedProduct.care.join(' · ')}</p>}
+              <ul>{(activeProduct.features?.length ? activeProduct.features : ['Limited release', activeProduct.fit || 'Relaxed fit']).map(item => <li key={item}>{item}</li>)}</ul>
+              {!!activeProduct.care?.length && <p>{activeProduct.care.join(' · ')}</p>}
             </ProductAccordion>
             <ProductAccordion title="Size guide" open={detailsOpen === 'size'} onClick={() => setDetailsOpen('size')}>
               <p>Use your usual size for a relaxed fit. Size down for a closer fit. Exact garment measurements should be confirmed with our team before dispatch.</p>

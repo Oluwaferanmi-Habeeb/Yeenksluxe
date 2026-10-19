@@ -20,7 +20,7 @@ export default function ProductGrid() {
   const { filteredProducts, selectedCategory, setSelectedCategory, openQuickView, formatCurrency, searchQuery, mounted } = useStore();
   const { user, savedProductIds, toggleSavedProduct } = useAccount();
   const [sort, setSort] = useState<SortOption>('featured');
-  const [limit, setLimit] = useState(12);
+  const [limit, setLimit] = useState(4);
 
   const sortedProducts = useMemo(() => {
     const next = [...filteredProducts];
@@ -43,14 +43,14 @@ export default function ProductGrid() {
         <div className="shop-toolbar">
           <div className="category-filters" aria-label="Filter by category">
             {['All', ...categories].map(category => (
-              <button key={category} className={selectedCategory === category ? 'active' : ''} onClick={() => { setSelectedCategory(category); setLimit(12); }}>
+              <button key={category} className={selectedCategory === category ? 'active' : ''} onClick={() => { setSelectedCategory(category); setLimit(4); }}>
                 {category === 'All' ? 'All pieces' : category}
               </button>
             ))}
           </div>
           <div className="sort-control">
             <label htmlFor="product-sort">Sort</label>
-            <select id="product-sort" value={sort} onChange={e => { setSort(e.target.value as SortOption); setLimit(12); }}>
+            <select id="product-sort" value={sort} onChange={e => { setSort(e.target.value as SortOption); setLimit(4); }}>
               <option value="featured">Featured</option>
               <option value="low">Price: low to high</option>
               <option value="high">Price: high to low</option>
@@ -83,7 +83,7 @@ export default function ProductGrid() {
                     <strong>{formatCurrency(product.price)}</strong>
                   </div>
                   <div className="product-meta">
-                    <span>{product.colors?.length || 1} {(product.colors?.length || 1) === 1 ? 'colour' : 'colours'}</span>
+                    <span>{product.styleVariants?.length ? `${product.styleVariants.length} styles` : `${product.colors?.length || 1} ${(product.colors?.length || 1) === 1 ? 'colour' : 'colours'}`}</span>
                     <button onClick={() => openQuickView(product)}>Select options</button>
                   </div>
                 </article>
